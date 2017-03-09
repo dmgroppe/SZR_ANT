@@ -1,0 +1,31 @@
+0. For the patients I manually marked, find onset channel and get a sense of how focal the onsets are by running something like:
+python plot_manual_onset_times.py NA
+
+It creates pdfs of the relative szr onsets at all channels.
+
+Indicate onset channel in chans_of_interest.csv
+
+
+1. Move the EEG data to /Users/davidgroppe/ONGOING/TWH_EEG
+mat files go in EEG_MAT, text files of data in EEG_TXT
+channel info simply goes in the subject’s root directory
+
+
+2. Create chan label csv file via: create_chan_label_csv_file.ipynb
+
+
+3. Create csv files of clinician onsets via:
+*create_skeleton_onset.ipynb: Makes a draft of a clinician onset csv file based on raw data text files
+*manually enter seizure onsets and offsets from Sumayya’s spreadsheet:
+*Run onset_time2tpts.ipynb to add additional columns (e.g., when the onset is)
+
+
+4. Plot clinician onsets to make sure they concur with onset in the target channel by running something like:
+plot_onsets_on_sgrams.py NA
+
+Fill out the column USE4CLASSIFIER with “use” if the data are usable. If not, provide the reason (e.g., noEEGdata, clinicianOnsetTooEarly)
+
+
+5. Run ?? classification algorithm
+
+

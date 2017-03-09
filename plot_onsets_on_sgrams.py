@@ -17,20 +17,24 @@ if len(sys.argv)<2:
 sub=sys.argv[1]
 
 # Define sub and onset channel
-onset_df=pd.read_csv('/Users/davidgroppe/PycharmProjects/SZR_ANT/chans_of_interest.csv',na_filter=False)
-row_id=onset_df[onset_df.iloc[:,0]==sub].index.tolist()
-onset_chan=onset_df.iloc[row_id[0],1].strip() #strip removes white space
-print('Sub=%s, onset chan=%s' % (sub,onset_chan))
-
+# TODO add this path_dict
+#onset_df=pd.read_csv('/Users/davidgroppe/PycharmProjects/SZR_ANT/chans_of_interest.csv',na_filter=False)
+#row_id=onset_df[onset_df.iloc[:,0]==sub].index.tolist()
+#onset_chan=onset_df.iloc[row_id[0],1].strip() #strip removes white space
+#print('Sub=%s, onset chan=%s' % (sub,onset_chan))
+print('Sub=%s' % sub)
 
 # Get list of mat files
-mat_file_path=os.path.join('/Users/davidgroppe/ONGOING/TWH_DATA/',sub)
+path_dict = ief.get_path_dict()
+ieeg_root = path_dict['ieeg_root']
+mat_file_path=os.path.join(ieeg_root,sub,'EEG_MAT')
 mat_file_list=list()
 for f in os.listdir(mat_file_path):
     if f.endswith('.mat') and f.startswith(sub+'_d'):
         print(f)
         mat_file_list.append(f)
 n_files=len(mat_file_list)
+print('n_files=%d' % n_files)
 
 # Load manual onset times
 # csv_path='/Users/davidgroppe/ONGOING/SZR_SPREAD/PATIENTS/'+sub+'/ONSETTIMES/'
@@ -44,6 +48,7 @@ n_files=len(mat_file_list)
 # print('%d manual wide-band onset files found' % n_files)
 
 # Import Clinician Szr Onset Times
+# TODO add this path_dict
 if sys.platform=='linux':
     onset_csv_dir='/home/dgroppe/TWH_INFO/CLINICIAN_ONSET_TIMES'
 else:
@@ -56,10 +61,11 @@ onset_df.head()
 
 # Get list of channels and ID of onset channel
 chan_labels=ief.import_chan_labels(sub)
-onset_chan_id=chan_labels.index(onset_chan)
+# onset_chan_id=chan_labels.index(onset_chan)
 
 n_chan=len(chan_labels)
 
+#TODO add this to path_dict
 figure_path='/Users/davidgroppe/PycharmProjects/SZR_ANT/PICS/ONSET_ACTIVITY'
 
 # Loop through manual files (since I have one for each mat file)
@@ -70,9 +76,13 @@ for man_file_loop in range(n_files):
 
     # See if I have a clinician onset
     print(szr_name)
-    onset_tpt=ief.clin_onset_tpt(szr_name, onset_df)
-    
-    if onset_tpt<0:
+    onset_tpt, onset_chan=ief.clin_onset_tpt_and_chan(szr_name, onset_df)
+
+    if onset_chan=='?':
+        print('Warning: %s does not have a DG specified onset channel.' % szr_name)
+        print('Ignoring this szr for the time being')
+        onset_tpt=np.nan
+    elif onset_tpt<0:
         print('Warning: %s has a clinician onset time that is earlier than the file start time.' % szr_name)
         print('Ignoring this szr for the time being')
         onset_tpt=np.nan
@@ -80,6 +90,9 @@ for man_file_loop in range(n_files):
         print('Warning: %s has no clinician onset time.'  % szr_name)
         print('Ignoring this szr for the time being')
     else:
+        # Get onset channel for this szr
+        onset_chan_id = chan_labels.index(onset_chan)
+
         # Load the ieeg data
         ieeg, Sf, tpts_sec=ief.import_ieeg(szr_name+'.mat')
         
