@@ -49,10 +49,11 @@ print('n_files=%d' % n_files)
 
 # Import Clinician Szr Onset Times
 # TODO add this path_dict
-if sys.platform=='linux':
-    onset_csv_dir='/home/dgroppe/TWH_INFO/CLINICIAN_ONSET_TIMES'
-else:
-    onset_csv_dir='/Users/davidgroppe/Dropbox/TWH_INFO/CLINICIAN_ONSET_TIMES'
+# if sys.platform=='linux':
+#     onset_csv_dir='/home/dgroppe/TWH_INFO/CLINICIAN_ONSET_TIMES'
+# else:
+#     onset_csv_dir='/Users/davidgroppe/Dropbox/TWH_INFO/CLINICIAN_ONSET_TIMES'
+onset_csv_dir=path_dict['onset_csv']
 onset_csv_fname=os.path.join(onset_csv_dir,sub+'_clinician_onset_offset.csv')
 print('Importing file %s' % onset_csv_fname)
 onset_df=pd.read_csv(onset_csv_fname)
@@ -65,11 +66,13 @@ chan_labels=ief.import_chan_labels(sub)
 
 n_chan=len(chan_labels)
 
-#TODO add this to path_dict
-figure_path='/Users/davidgroppe/PycharmProjects/SZR_ANT/PICS/ONSET_ACTIVITY'
+figure_path = os.path.join(path_dict['pics'],'ONSET_ACTIVITY',sub)
+#figure_path=os.path.join('/Users/davidgroppe/PycharmProjects/SZR_ANT/PICS/ONSET_ACTIVITY',sub)
+if not os.path.exists(figure_path):
+    os.makedirs(figure_path)
 
 # Loop through manual files (since I have one for each mat file)
-#for man_file_loop in range(1,2):
+#for man_file_loop in range(4,6): #??
 for man_file_loop in range(n_files):
     #szr_name=csv_list[man_file_loop].split('_manualOnsets')[0]
     szr_name=mat_file_list[man_file_loop].split('.')[0]
@@ -205,11 +208,12 @@ for man_file_loop in range(n_files):
             omni_sgram[chan_loop*n_freq:(chan_loop+1)*n_freq,:]=temp_sgram[:n_freq,:]
             omni_sgram_yticks[chan_loop]=(chan_loop*n_freq+(chan_loop+1)*n_freq)/2
         
-        # Plot sgram at just onset channel with onset overlay
+        # Plot sgram at all channels
         omni_sgram_z=omni_sgram.copy()
         #40% Trimmed normalization
         dg.trimmed_normalize(omni_sgram_z,.4)
-        abs_mx=np.max(np.abs(omni_sgram_z))
+        #abs_mx=np.max(np.abs(omni_sgram_z))
+        abs_mx=np.percentile(np.abs(sgram),99) #use a saturated color map
         plt.figure(5)
         plt.clf()
         ax = plt.gca()

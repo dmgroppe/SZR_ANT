@@ -19,13 +19,13 @@ channel info simply goes in the subject’s root directory
 *manually enter seizure onsets and offsets from Sumayya’s spreadsheet:
 *Run onset_time2tpts.ipynb to add additional columns (e.g., when the onset is)
 
+4. Fill out DG_ONSET_CHAN column of the CSV file created in step 3 with a guess as to what the onset channel is. You can edit these after plotting spectrograms in Step 5.
 
-4. Plot clinician onsets to make sure they concur with onset in the target channel by running something like:
+5. Plot clinician onsets to make sure they concur with onset in the target channel by running something like:
 plot_onsets_on_sgrams.py NA
 
 Fill out the column USE4CLASSIFIER with “use” if the data are usable. If not, provide the reason (e.g., noEEGdata, clinicianOnsetTooEarly)
 
 
-5. Run ?? classification algorithm
 
 
