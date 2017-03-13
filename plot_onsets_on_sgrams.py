@@ -72,7 +72,7 @@ if not os.path.exists(figure_path):
     os.makedirs(figure_path)
 
 # Loop through manual files (since I have one for each mat file)
-#for man_file_loop in range(4,6): #??
+#for man_file_loop in range(1,2): #??
 for man_file_loop in range(n_files):
     #szr_name=csv_list[man_file_loop].split('_manualOnsets')[0]
     szr_name=mat_file_list[man_file_loop].split('.')[0]
