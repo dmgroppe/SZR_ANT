@@ -1,4 +1,6 @@
-# # Draft of classification module
+# This script does LOOCV using 8/9 patients (9th is reserved for testing)
+# Various parameters of C are tried
+# Features are power in 6 frequency bands and 5 voltage domain features in a one second window
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -77,7 +79,7 @@ for sub in train_subs_list:
     sub_ct+=1
 
 
-# TODO grid search C and gamma values
+# TODO grid search gamma values?
 #gamma defines how much influence a single training example has. The larger gamma is, the closer other examples must be to be affected.
 # Proper choice of C and gamma is critical to the SVM’s performance. One is advised to 
 # use sklearn.model_selection.GridSearchCV with C and gamma spaced exponentially far apart 
@@ -85,7 +87,8 @@ for sub in train_subs_list:
 # C = 1.0  # SVM regularization parameter, the smaller it is, the stronger the regularization
 # C = 0.1
 
-try_C=np.arange(0.01,1.02,.2)
+#try_C=np.arange(0.01,1.02,.2) # search 1
+try_C=np.arange(0.01,0.17,.03)
 
 # LOOCV on training data
 n_train_subs = len(train_subs_list)
@@ -100,6 +103,8 @@ train_sens = np.zeros((n_train_subs,n_C))
 train_spec = np.zeros((n_train_subs,n_C))
 train_acc = np.zeros((n_train_subs,n_C))
 train_bal_acc = np.zeros((n_train_subs,n_C))
+pcnt_missed_szrs = np.zeros((n_train_subs,n_C))
+mn_stim_latency = np.zeros((n_train_subs,n_C))
 
 for C_ct, C in enumerate(try_C):
     print('Using C value of %f' % C)
@@ -149,7 +154,45 @@ for C_ct, C in enumerate(try_C):
         valid_bal_acc[left_out_id,C_ct] = (valid_spec[left_out_id,C_ct] + valid_sens[left_out_id,C_ct]) / 2
         print('Validation balanced accuracy: %f' % valid_bal_acc[left_out_id,C_ct])
 
-        # TODO Load validation data and calculate false positive rate, and peri-onset latency
+        # Load validation data and calculate false positive rate, and peri-onset latency
+        valid_sub = train_subs_list[left_out_id]
+        pwr_ftr_path = os.path.join(path_dict['ftrs_root'], 'PWR', valid_sub)
+        vltg_ftr_path = os.path.join(path_dict['ftrs_root'], 'VLTG', valid_sub)
+        onset_dif_sec_list=list()
+        n_valid_szrs=0
+        n_missed_szrs=0
+        mn_onset_dif=0
+        for f in os.listdir(pwr_ftr_path):
+            # Collect features for each seizure
+            n_valid_szrs+=1
+            print('Loading file %s' % f)
+            pwr_ftr_dict = np.load(os.path.join(pwr_ftr_path, f))
+            pwr_dim=pwr_ftr_dict['db_pwr'].shape[0]
+            temp_n_wind=pwr_ftr_dict['db_pwr'].shape[1]
+            file_stem=f.split('_bbpwr.npz')[0]
+            print('Loading file %s' % file_stem+'_vltg.npz')
+            vltg_ftr_dict = np.load(os.path.join(vltg_ftr_path, file_stem+'_vltg.npz'))
+            vltg_dim=vltg_ftr_dict['vltg_ftrs'].shape[0]
+            temp_ftrs=np.zeros((pwr_dim+vltg_dim,temp_n_wind))
+            temp_ftrs[:pwr_dim]=pwr_ftr_dict['db_pwr']
+            temp_ftrs[pwr_dim:]=vltg_ftr_dict['vltg_ftrs']
+
+            # Classify each time point
+            temp_class_hat=rbf_svc.predict(temp_ftrs)
+
+            # Compute latency of earliest ictal prediction relative to clinician onset
+            sgram_srate=1/10
+            onset_dif_sec=ief.cmpt_stim_latency(temp_class_hat,pwr_ftr_dict['peri_ictal'],sgram_srate)
+            if onset_dif_sec is None:
+                n_missed_szs+=1
+            else:
+                mn_onset_dif+=onset_dif_sec
+
+        pcnt_missed_szrs[left_out_id,C_ct] = n_missed_szrs/n_valid_szrs
+        if n_missed_szrs==n_valid_szrs:
+            mn_stim_latency[left_out_id,C_ct] = np.nan()
+        else:
+            mn_stim_latency[left_out_id, C_ct] = mn_onset_dif/(n_valid_szrs-n_missed_szrs)
 
         # Save current performance metrics
         np.savez('classification_metrics_pwr_vltg.npz',
@@ -160,6 +203,8 @@ for C_ct, C in enumerate(try_C):
              train_spec=train_spec,
              train_bal_acc=train_bal_acc,
              train_subs_list=train_subs_list,
+             mn_stim_latency=mn_stim_latency,
+             pcnt_missed_szrs=pcnt_missed_szrs,
              try_C=try_C,
              C_ct=C_ct,
              left_out_id=left_out_id)
