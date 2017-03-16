@@ -88,7 +88,8 @@ for sub in train_subs_list:
 # C = 0.1
 
 #try_C=np.arange(0.01,1.02,.2) # search 1
-try_C=np.arange(0.01,0.17,.03)
+#try_C=np.arange(0.01,0.17,.03) # search 2
+try_C=np.linspace(0.07,0.13,6) # search 3
 
 # LOOCV on training data
 n_train_subs = len(train_subs_list)
@@ -116,7 +117,7 @@ for C_ct, C in enumerate(try_C):
             del rbf_svc # clear model just in case
         rbf_svc = svm.SVC(class_weight='balanced',C=C)
         # rbf_svc.fit? # could add sample weight to weight each subject equally
-        rbf_svc.fit(ftrs[sub_id!=left_out_id,:], szr_class[sub_id!=left_out_id])
+        rbf_svc.fit(ftrs[sub_id!=left_out_id,:], szr_class[sub_id!=left_out_id]) # Correct training data
         #rbf_svc.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code ??
         #clf = svm.SVC()
         # >>> clf.fit(X, y)
