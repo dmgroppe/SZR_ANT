@@ -117,12 +117,12 @@ for C_ct, C in enumerate(try_C):
         rbf_svc = svm.SVC(class_weight='balanced',C=C)
         # rbf_svc.fit? # could add sample weight to weight each subject equally
         rbf_svc.fit(ftrs[sub_id!=left_out_id,:], szr_class[sub_id!=left_out_id])
-        #rbf_svc.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code
+        #rbf_svc.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code ??
         #clf = svm.SVC()
         # >>> clf.fit(X, y)
 
         # make predictions from training and validation data
-        training_class_hat=rbf_svc.predict(ftrs)
+        training_class_hat = rbf_svc.predict(ftrs)
         jive=training_class_hat==szr_class
 
         train_bool=sub_id!=left_out_id
@@ -169,28 +169,29 @@ for C_ct, C in enumerate(try_C):
             pwr_ftr_dict = np.load(os.path.join(pwr_ftr_path, f))
             pwr_dim=pwr_ftr_dict['db_pwr'].shape[0]
             temp_n_wind=pwr_ftr_dict['db_pwr'].shape[1]
-            file_stem=f.split('_bbpwr.npz')[0]
+            file_stem=f.split('_bppwr.npz')[0]
             print('Loading file %s' % file_stem+'_vltg.npz')
             vltg_ftr_dict = np.load(os.path.join(vltg_ftr_path, file_stem+'_vltg.npz'))
             vltg_dim=vltg_ftr_dict['vltg_ftrs'].shape[0]
-            temp_ftrs=np.zeros((pwr_dim+vltg_dim,temp_n_wind))
-            temp_ftrs[:pwr_dim]=pwr_ftr_dict['db_pwr']
-            temp_ftrs[pwr_dim:]=vltg_ftr_dict['vltg_ftrs']
+            temp_ftrs=np.zeros((temp_n_wind,pwr_dim+vltg_dim))
+            temp_ftrs[:,:pwr_dim]=pwr_ftr_dict['db_pwr'].T
+            temp_ftrs[:,pwr_dim:]=vltg_ftr_dict['vltg_ftrs'].T
 
             # Classify each time point
             temp_class_hat=rbf_svc.predict(temp_ftrs)
 
             # Compute latency of earliest ictal prediction relative to clinician onset
             sgram_srate=1/10
-            onset_dif_sec=ief.cmpt_stim_latency(temp_class_hat,pwr_ftr_dict['peri_ictal'],sgram_srate)
+            onset_dif_sec=ief.cmpt_postonset_stim_latency(temp_class_hat,pwr_ftr_dict['peri_ictal'],sgram_srate)
             if onset_dif_sec is None:
-                n_missed_szs+=1
+                # no positives during peri-onset time window
+                n_missed_szrs+=1
             else:
                 mn_onset_dif+=onset_dif_sec
 
         pcnt_missed_szrs[left_out_id,C_ct] = n_missed_szrs/n_valid_szrs
         if n_missed_szrs==n_valid_szrs:
-            mn_stim_latency[left_out_id,C_ct] = np.nan()
+            mn_stim_latency[left_out_id,C_ct] = np.nan
         else:
             mn_stim_latency[left_out_id, C_ct] = mn_onset_dif/(n_valid_szrs-n_missed_szrs)
 
