@@ -26,18 +26,21 @@ import pickle
 
 # Load list of subs to use
 #use_subs.txt TODO use this text file
-lag=3 # extent of moving average window in units of seconds
+lag=9 # extent of moving average window in units of seconds
 print('Extent of causal moving average is %d seconds!' % lag)
 path_dict=ief.get_path_dict()
 use_subs_df=pd.read_csv(os.path.join(path_dict['szr_ant_root'],'use_subs.txt'),header=None,na_filter=False)
 ieeg_root = path_dict['ieeg_root']
 
 for sub in use_subs_df.iloc[:,0]:
-
     # Define input and output directories
     ftr_root = '/Users/davidgroppe/PycharmProjects/SZR_ANT/FTRS'
     one_sec_path = os.path.join(path_dict['ftrs_root'], 'PWR', sub)
-    lag_path = os.path.join(path_dict['ftrs_root'], 'PWR_' + str(lag) + 'SEC', sub)
+    lag_root_path=os.path.join(path_dict['ftrs_root'], 'PWR_' + str(lag) + 'SEC')
+    if not os.path.isdir(lag_root_path):
+        print('Creating directory: %s' % lag_root_path)
+        os.mkdir(lag_root_path)
+    lag_path = os.path.join(lag_root_path, sub)
     if not os.path.isdir(lag_path):
         print('Creating directory: %s' % lag_path)
         os.mkdir(lag_path)
