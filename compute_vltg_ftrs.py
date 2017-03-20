@@ -96,7 +96,7 @@ for sub in use_subs_df.iloc[:,0]:
             os.mkdir(ftr_path)
         ftr_fname=os.path.join(ftr_path,szr_name+'_vltg.npz')
         print('Saving features to file %s' % ftr_fname)
-        np.savez(ftr_fname,peri_ictal=peri_ictal,time_wind_sec=moving_wind_sec,vltg_ftrs=vltg_ftrs,
+        np.savez(ftr_fname,peri_ictal=peri_ictal,time_wind_sec=moving_wind_sec,ftrs=vltg_ftrs,
                  ftr_list=ftr_list)
 
 

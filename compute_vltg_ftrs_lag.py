@@ -26,7 +26,7 @@ import pickle
 
 # Load list of subs to use
 #use_subs.txt TODO use this text file
-lag=9 # extent of moving average window in units of seconds
+lag=3 # extent of moving average window in units of seconds
 print('Extent of causal moving average is %d seconds!' % lag)
 path_dict=ief.get_path_dict()
 use_subs_df=pd.read_csv(os.path.join(path_dict['szr_ant_root'],'use_subs.txt'),header=None,na_filter=False)
@@ -55,7 +55,7 @@ for sub in use_subs_df.iloc[:,0]:
         peri_ictal = one_sec_dat['peri_ictal']
 
         # Preallocate mem
-        n_dim, n_wind = one_sec_dat['db_pwr'].shape
+        n_dim, n_wind = one_sec_dat['ftrs'].shape
         causal_avg_pwr = np.zeros((n_dim, n_wind))
 
         # Compute sampling rate
@@ -68,7 +68,7 @@ for sub in use_subs_df.iloc[:,0]:
             use_ids = np.arange(wind - n_meta_wind, wind + 1, dtype=int)  # avg between lag back and current time point
             use_ids = use_ids[use_ids >= 0]  # remove any window before beginning of file
             # use_ids=use_ids.astype(int)
-            causal_avg_pwr[:, wind] = np.mean(one_sec_dat['db_pwr'][:, use_ids], axis=1)
+            causal_avg_pwr[:, wind] = np.mean(one_sec_dat['ftrs'][:, use_ids], axis=1)
 
         # Save file
         f_stem = f.split('.')[0]
@@ -76,7 +76,7 @@ for sub in use_subs_df.iloc[:,0]:
         print('Saving file %s' % out_fname)
         np.savez(out_fname,
                  time_wind_sec=time_wind_sec,
-                 causal_avg_pwr=causal_avg_pwr,
+                 ftrs=causal_avg_pwr,
                  peri_ictal=peri_ictal)
 
 

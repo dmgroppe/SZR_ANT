@@ -109,7 +109,8 @@ for sub in use_subs_df.iloc[:,0]: #TODO revert this to use all subs
             os.mkdir(ftr_path)
         ftr_fname=os.path.join(ftr_path,szr_name+'_bppwr.npz')
         print('Saving features to file %s' % ftr_fname)
-        np.savez(ftr_fname,peri_ictal=peri_ictal,time_wind_sec=sgram_sec,db_pwr=db_pwr)
+        #np.savez(ftr_fname,peri_ictal=peri_ictal,time_wind_sec=sgram_sec,db_pwr=db_pwr)
+        np.savez(ftr_fname, peri_ictal=peri_ictal, time_wind_sec=sgram_sec, ftrs=db_pwr)
 
 
 print('Done!')

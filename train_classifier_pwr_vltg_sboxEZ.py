@@ -22,80 +22,133 @@ for sub in use_subs_df.iloc[:,0]:
         
 print('Training subs: {}'.format(train_subs_list))
 
-# Figure out how much data there is to preallocate mem
-# DFT Features
-n_ftrs1=0
+
+ftr_types=['PWR','PWR_3SEC','VLTG']
+n_ftr_types=len(ftr_types)
+n_dim=0
 n_wind=0
-for sub in train_subs_list:
-    ftr_path=os.path.join(path_dict['ftrs_root'],'PWR',sub)
-    for f in os.listdir(ftr_path):
-        ftr_dict=np.load(os.path.join(ftr_path,f))
-        if n_ftrs1==0:
-            n_ftrs1=ftr_dict['db_pwr'].shape[0]
-        n_wind+=np.sum(ftr_dict['peri_ictal']>=0)
+fname_stem_list=[]
+for type_ct, ftr_type in enumerate(ftr_types):
+    print('Checking dimensions of feature type %s' % ftr_type)
+    # Figure out how much data there is to preallocate mem
+    ftr_type_dir=os.path.join(path_dict['ftrs_root'],ftr_type)
 
-# Voltage domain features
-n_ftrs2=0
-n_wind2=0
-for sub in train_subs_list:
-    ftr_path=os.path.join(path_dict['ftrs_root'],'VLTG',sub)
-    for f in os.listdir(ftr_path):
-        ftr_dict=np.load(os.path.join(ftr_path,f))
-        if n_ftrs2==0:
-            n_ftrs2=ftr_dict['vltg_ftrs'].shape[0]
-        n_wind2+=np.sum(ftr_dict['peri_ictal']>=0)
+    if type_ct==0:
+        # count time windows and create fname_stem_list
+        for sub in train_subs_list:
+            ftr_path=os.path.join(ftr_type_dir,sub)
+            for f in os.listdir(ftr_path):
+                #get file stem
+                f_parts = f.split('_')
+                f_stem = f_parts[0]+'_'+f_parts[1]+'_'+f_parts[2]
+                fname_stem_list.append(f_stem)
+                ftr_dict=np.load(os.path.join(ftr_path,f))
+                n_wind+=np.sum(ftr_dict['peri_ictal']>=0)
+    else:
+        temp_n_wind=0
+        f_ct=0
+        for sub in train_subs_list:
+            ftr_path=os.path.join(ftr_type_dir,sub)
+            for f in os.listdir(ftr_path):
+                #get file stem
+                f_parts = f.split('_')
+                f_stem = f_parts[0]+'_'+f_parts[1]+'_'+f_parts[2]
+                if f_stem != fname_stem_list[f_ct]:
+                    print(f)
+                    print('{}'.format(f_parts))
+                    print('New stem %s' % f_stem)
+                    print('Orig stem %s' % fname_stem_list[f_ct])
+                    raise ValueError('File stems do not match across features')
+                ftr_dict=np.load(os.path.join(ftr_path,f))
+                temp_n_wind+=np.sum(ftr_dict['peri_ictal']>=0)
+                f_ct+=1
+        if temp_n_wind!=n_wind:
+            raise ValueError('# of time windows do not match across features')
+    n_dim += ftr_dict['ftrs'].shape[0]
 
-if n_wind!=n_wind2:
-    raise ValueError('Time windows in DFT and voltage domain features do not match')
+print('Total # of dimensions: %d ' % n_dim)
+print('Total # of time windows: %d ' % n_wind)
+print('Total # of files: %d' % len(fname_stem_list))
 
-n_ftrs=n_ftrs1+n_ftrs2
-print('n_ftrs=%d' % n_ftrs)
-print('n_wind=%d' % n_wind)
 
 # Load all training data into a giant matrix
-ftrs=np.zeros((n_wind,n_ftrs))
+ftrs=np.zeros((n_wind,n_dim))
 szr_class=np.zeros(n_wind)
 sub_id=np.zeros(n_wind)
 wind_ct=0
 sub_ct=0
-for sub in train_subs_list:
-    # Load DFT Features
-    ftr_path=os.path.join(path_dict['ftrs_root'],'PWR',sub)
-    ftr_path_vltg = os.path.join(path_dict['ftrs_root'], 'VLTG', sub)
+file_ct=0
+sub_stem_dict=dict()
+for sub_ct, sub in enumerate(train_subs_list):
+    print('Loading data for sub %s' % sub)
+
+    # Get list of seizure stems for this subject
+    ftr_type_dir = os.path.join(path_dict['ftrs_root'], ftr_types[0])
+    temp_stem_list=[]
+    ftr_path = os.path.join(ftr_type_dir, sub)
     for f in os.listdir(ftr_path):
-        ftr_dict=np.load(os.path.join(ftr_path,f))
-        neo_wind=np.sum(ftr_dict['peri_ictal']>=0)
-        ftrs[wind_ct:wind_ct+neo_wind,:n_ftrs1]=ftr_dict['db_pwr'][:,:neo_wind].T
-        szr_class[wind_ct:wind_ct+neo_wind]=ftr_dict['peri_ictal'][:neo_wind]
-        sub_id[wind_ct:wind_ct+neo_wind]=np.ones(neo_wind)*sub_ct
+        # get file stem
+        f_parts = f.split('_')
+        f_stem = f_parts[0] + '_' + f_parts[1] + '_' + f_parts[2]
+        temp_stem_list.append(f_stem)
+    sub_stem_dict[sub]=temp_stem_list
+    print(temp_stem_list)
 
-        # Load corresponding voltage domain features
-        vltg_fname=f.split('bppwr.npz')[0]+'vltg.npz'
-        ftr_vltg_dict=np.load(os.path.join(ftr_path_vltg,vltg_fname))
-        ftrs[wind_ct:wind_ct + neo_wind, n_ftrs1:] = ftr_vltg_dict['vltg_ftrs'][:, :neo_wind].T
-        wind_ct+=neo_wind
+    for f_stem in temp_stem_list:
+        dim_ct = 0
+        file_ct+=1
+        for ftr_type in ftr_types:
+            ftr_path = os.path.join(path_dict['ftrs_root'], ftr_type, sub)
+            file_found=False
+            for f in os.listdir(ftr_path):
+                # get file stem
+                f_parts = f.split('_')
+                temp_f_stem = f_parts[0] + '_' + f_parts[1] + '_' + f_parts[2]
+                if temp_f_stem==f_stem:
+                    # load file
+                    #print('Loading %s' % f)
+                    print('Loading %s' % os.path.join(ftr_path, f))
+                    ftr_dict = np.load(os.path.join(ftr_path, f))
+                    file_found=True
+                    # break out of for loop
+                    break
+            # Catch if new file was not loaded
+            if not file_found:
+                print('Trying to find %s for %s' % (f_stem,ftr_type))
+                raise ValueError('File stem not found')
+            # Add ftr to collection
+            temp_use_ids=ftr_dict['peri_ictal'] >= 0
+            temp_n_dim = ftr_dict['ftrs'].shape[0]
+            temp_n_wind=np.sum(temp_use_ids)
+            #temp_n_dim, temp_n_wind=ftr_dict['ftrs'].shape
+            ftrs[wind_ct:wind_ct + temp_n_wind, dim_ct:dim_ct + temp_n_dim] = ftr_dict['ftrs'][:,temp_use_ids].T
+            #ftrs[wind_ct:wind_ct+temp_n_wind,dim_ct:dim_ct+temp_n_dim]=ftr_dict['ftrs'].T
+            dim_ct+=temp_n_dim
+        szr_class[wind_ct:wind_ct+temp_n_wind]=ftr_dict['peri_ictal'][temp_use_ids]
+        sub_id[wind_ct:wind_ct+temp_n_wind]=np.ones(temp_n_wind)*sub_ct
+        wind_ct+=temp_n_wind
 
-    # Load Voltage domain features
-    sub_ct+=1
-
+# print('File ct=%d' % file_ct)
+# print('wind_ct=%d' % wind_ct)
+# np.savez('temp.npz',ftrs=ftrs,szr_class=szr_class,sub_id=sub_id)
 
 # TODO grid search gamma values?
 #gamma defines how much influence a single training example has. The larger gamma is, the closer other examples must be to be affected.
-# Proper choice of C and gamma is critical to the SVM’s performance. One is advised to 
-# use sklearn.model_selection.GridSearchCV with C and gamma spaced exponentially far apart 
+# Proper choice of C and gamma is critical to the SVM’s performance. One is advised to
+# use sklearn.model_selection.GridSearchCV with C and gamma spaced exponentially far apart
 # to choose good values.
 # C = 1.0  # SVM regularization parameter, the smaller it is, the stronger the regularization
 # C = 0.1
 
 #try_C=np.arange(0.01,1.02,.2) # search 1
 #try_C=np.arange(0.01,0.17,.03) # search 2
-try_C=np.linspace(0.07,0.13,6) # search 3
+try_C=np.linspace(0.04,0.1,6) # search 3
+n_C=len(try_C)
 
 # LOOCV on training data
 n_train_subs = len(train_subs_list)
-n_C=len(try_C)
-
 # n_train_subs=2 # TODO remove this!!! ??
+
 valid_sens = np.zeros((n_train_subs,n_C))
 valid_spec = np.zeros((n_train_subs,n_C))
 valid_acc = np.zeros((n_train_subs,n_C))
@@ -118,7 +171,7 @@ for C_ct, C in enumerate(try_C):
         rbf_svc = svm.SVC(class_weight='balanced',C=C)
         # rbf_svc.fit? # could add sample weight to weight each subject equally
         rbf_svc.fit(ftrs[sub_id!=left_out_id,:], szr_class[sub_id!=left_out_id]) # Correct training data
-        #rbf_svc.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code ??
+        #rbf_svc.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code ?? TODO remove this
         #clf = svm.SVC()
         # >>> clf.fit(X, y)
 
@@ -157,33 +210,51 @@ for C_ct, C in enumerate(try_C):
 
         # Load validation data and calculate false positive rate, and peri-onset latency
         valid_sub = train_subs_list[left_out_id]
-        pwr_ftr_path = os.path.join(path_dict['ftrs_root'], 'PWR', valid_sub)
-        vltg_ftr_path = os.path.join(path_dict['ftrs_root'], 'VLTG', valid_sub)
         onset_dif_sec_list=list()
         n_valid_szrs=0
         n_missed_szrs=0
         mn_onset_dif=0
-        for f in os.listdir(pwr_ftr_path):
+        for stem_loop in sub_stem_dict[valid_sub]:
             # Collect features for each seizure
             n_valid_szrs+=1
-            print('Loading file %s' % f)
-            pwr_ftr_dict = np.load(os.path.join(pwr_ftr_path, f))
-            pwr_dim=pwr_ftr_dict['db_pwr'].shape[0]
-            temp_n_wind=pwr_ftr_dict['db_pwr'].shape[1]
-            file_stem=f.split('_bppwr.npz')[0]
-            print('Loading file %s' % file_stem+'_vltg.npz')
-            vltg_ftr_dict = np.load(os.path.join(vltg_ftr_path, file_stem+'_vltg.npz'))
-            vltg_dim=vltg_ftr_dict['vltg_ftrs'].shape[0]
-            temp_ftrs=np.zeros((temp_n_wind,pwr_dim+vltg_dim))
-            temp_ftrs[:,:pwr_dim]=pwr_ftr_dict['db_pwr'].T
-            temp_ftrs[:,pwr_dim:]=vltg_ftr_dict['vltg_ftrs'].T
+            dim_ct=0
+            for ftr_type in ftr_types:
+                ftr_path = os.path.join(path_dict['ftrs_root'], ftr_type, valid_sub)
+                file_found=False
+                for f_valid in os.listdir(ftr_path):
+                    # get file stem
+                    f_parts = f_valid.split('_')
+                    temp_f_stem = f_parts[0] + '_' + f_parts[1] + '_' + f_parts[2]
+                    if temp_f_stem==stem_loop:
+                        # load file
+                        #print('Loading %s' % f)
+                        print('Loading %s' % os.path.join(ftr_path, f_valid))
+                        ftr_dict = np.load(os.path.join(ftr_path, f_valid))
+                        file_found=True
+                        # break out of for loop
+                        break
+                # Catch if new file was not loaded
+                if not file_found:
+                    print('Trying to find %s for %s' % (stem_loop,ftr_type))
+                    print('Looking in dir %s' % ftr_path)
+                    raise ValueError('File stem not found')
+                    exit()
+                # Add ftr to collection
+                temp_n_dim = ftr_dict['ftrs'].shape[0]
+                # Note that we use all time points (even ictal points long after ictal onset
+                if ftr_type==ftr_types[0]:
+                    # First feature being analyzed pre-allocate mem
+                    temp_n_wind=ftr_dict['ftrs'].shape[1]
+                    temp_valid_ftrs=np.zeros((temp_n_wind,n_dim))
+                temp_valid_ftrs[:, dim_ct:dim_ct + temp_n_dim] = ftr_dict['ftrs'].T
+                dim_ct += temp_n_dim
 
             # Classify each time point
-            temp_class_hat=rbf_svc.predict(temp_ftrs)
+            temp_class_hat=rbf_svc.predict(temp_valid_ftrs)
 
             # Compute latency of earliest ictal prediction relative to clinician onset
             sgram_srate=1/10
-            onset_dif_sec=ief.cmpt_postonset_stim_latency(temp_class_hat,pwr_ftr_dict['peri_ictal'],sgram_srate)
+            onset_dif_sec=ief.cmpt_postonset_stim_latency(temp_class_hat,ftr_dict['peri_ictal'],sgram_srate)
             if onset_dif_sec is None:
                 # no positives during peri-onset time window
                 n_missed_szrs+=1
