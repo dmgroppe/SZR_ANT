@@ -26,7 +26,7 @@ import pickle
 
 # Load list of subs to use
 #use_subs.txt TODO use this text file
-lag=3 # extent of moving average window in units of seconds
+lag=27 # extent of moving average window in units of seconds
 print('Extent of causal moving average is %d seconds!' % lag)
 path_dict=ief.get_path_dict()
 use_subs_df=pd.read_csv(os.path.join(path_dict['szr_ant_root'],'use_subs.txt'),header=None,na_filter=False)
