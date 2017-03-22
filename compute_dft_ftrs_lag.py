@@ -26,7 +26,7 @@ import pickle
 
 # Load list of subs to use
 #use_subs.txt TODO use this text file
-lag=27 # extent of moving average window in units of seconds
+lag=9 # extent of moving average window in units of seconds
 print('Extent of causal moving average is %d seconds!' % lag)
 path_dict=ief.get_path_dict()
 use_subs_df=pd.read_csv(os.path.join(path_dict['szr_ant_root'],'use_subs.txt'),header=None,na_filter=False)
@@ -54,6 +54,13 @@ for sub in use_subs_df.iloc[:,0]:
         time_wind_sec = one_sec_dat['time_wind_sec']
         peri_ictal = one_sec_dat['peri_ictal']
 
+        #Add suffix to feature names
+        one_sec_ftr_list = one_sec_dat['ftr_list']
+        ftr_list=[]
+        for ftr_label in one_sec_ftr_list:
+            ftr_list.append(ftr_label + '3SEC')
+            #ftr_list[ftr_ct]=ftr_list[ftr_ct]+'3SEC'
+
         # Preallocate mem
         n_dim, n_wind = one_sec_dat['ftrs'].shape
         causal_avg_pwr = np.zeros((n_dim, n_wind))
@@ -77,6 +84,7 @@ for sub in use_subs_df.iloc[:,0]:
         np.savez(out_fname,
                  time_wind_sec=time_wind_sec,
                  ftrs=causal_avg_pwr,
+                 ftr_list=ftr_list,
                  peri_ictal=peri_ictal)
 
 

@@ -41,6 +41,7 @@ bands.append((8,13)) # Alpha
 bands.append((13,30)) # Beta
 bands.append((30,50)) # Gamma
 bands.append((70,100)) # High Gamma
+ftr_list=['DeltaPwr','ThetaPwr','AlphaPwr','BetaPwr','GammaPwr','HGammaPwr']
 
 for sub in use_subs_df.iloc[:,0]: #TODO revert this to use all subs
     # Get list of files to use from clinician onset csv file
@@ -110,7 +111,7 @@ for sub in use_subs_df.iloc[:,0]: #TODO revert this to use all subs
         ftr_fname=os.path.join(ftr_path,szr_name+'_bppwr.npz')
         print('Saving features to file %s' % ftr_fname)
         #np.savez(ftr_fname,peri_ictal=peri_ictal,time_wind_sec=sgram_sec,db_pwr=db_pwr)
-        np.savez(ftr_fname, peri_ictal=peri_ictal, time_wind_sec=sgram_sec, ftrs=db_pwr)
+        np.savez(ftr_fname, peri_ictal=peri_ictal, time_wind_sec=sgram_sec, ftrs=db_pwr, ftr_list=ftr_list)
 
 
 print('Done!')

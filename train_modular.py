@@ -6,13 +6,30 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import scipy.io as sio
 import os
+import sys
 import ieeg_funcs as ief
 import dgFuncs as dg
 from sklearn import svm
 from sklearn.externals import joblib
 
+
+if len(sys.argv)!=3:
+    raise Exception('Error: train_ensemble.py requires 3 arumgents (model_name, ftr_list.txt)')
+model_name=sys.argv[1]
+print('Model name is %s' % model_name)
+ftr_types=[]
+print('Importing list of features to use from %s' % sys.argv[2])
+text_file = open(sys.argv[2], 'r')
+list1 = text_file.readlines()
+for temp_ftr in list1:
+    ftr_types.append(temp_ftr.rstrip())
+print('Features being used: {}'.format(ftr_types))
+
 # Import list of subjects to use
 path_dict=ief.get_path_dict()
+model_path=os.path.join(path_dict['szr_ant_root'],'MODELS',model_name)
+if os.path.exists(model_path)==False:
+    os.mkdir(model_path)
 use_subs_df=pd.read_csv(os.path.join(path_dict['szr_ant_root'],'use_subs.txt'),header=None,na_filter=False)
 test_sub_list=['NA']
 train_subs_list=[]
@@ -23,7 +40,7 @@ for sub in use_subs_df.iloc[:,0]:
 print('Training subs: {}'.format(train_subs_list))
 
 
-ftr_types=['PWR','PWR_3SEC','PWR_9SEC','PWR_27SEC','VLTG']
+# ftr_types=['PWR','PWR_3SEC','PWR_9SEC','PWR_27SEC','VLTG']
 n_ftr_types=len(ftr_types)
 n_dim=0
 n_wind=0
@@ -137,11 +154,12 @@ for sub_ct, sub in enumerate(train_subs_list):
 #try_C=np.arange(0.01,1.02,.2) # search 1
 #try_C=np.arange(0.01,0.17,.03) # search 2
 try_C=np.linspace(0.04,0.7,6) # search 3
+#try_C=np.linspace(0.04,0.7,1) # fast dummy search ??
 n_C=len(try_C)
 
 # LOOCV on training data
 n_train_subs = len(train_subs_list)
-# n_train_subs=2 # TODO remove this!!! ??
+#n_train_subs=2 # TODO remove this!!! ??
 
 valid_sens = np.zeros((n_train_subs,n_C))
 valid_spec = np.zeros((n_train_subs,n_C))
@@ -151,7 +169,8 @@ train_sens = np.zeros((n_train_subs,n_C))
 train_spec = np.zeros((n_train_subs,n_C))
 train_acc = np.zeros((n_train_subs,n_C))
 train_bal_acc = np.zeros((n_train_subs,n_C))
-pcnt_missed_szrs = np.zeros((n_train_subs,n_C))
+pptn_missed_szrs = np.zeros((n_train_subs,n_C))
+pptn_preonset_stim = np.zeros((n_train_subs,n_C))
 mn_stim_latency = np.zeros((n_train_subs,n_C))
 
 for C_ct, C in enumerate(try_C):
@@ -248,21 +267,24 @@ for C_ct, C in enumerate(try_C):
 
             # Compute latency of earliest ictal prediction relative to clinician onset
             sgram_srate=1/10
-            onset_dif_sec=ief.cmpt_postonset_stim_latency(temp_class_hat,ftr_dict['peri_ictal'],sgram_srate)
+            onset_dif_sec, preonset_stim=ief.cmpt_postonset_stim_latency(temp_class_hat,ftr_dict['peri_ictal'],sgram_srate)
+            pptn_preonset_stim[left_out_id,C_ct] += preonset_stim
             if onset_dif_sec is None:
                 # no positives during peri-onset time window
                 n_missed_szrs+=1
             else:
                 mn_onset_dif+=onset_dif_sec
 
-        pcnt_missed_szrs[left_out_id,C_ct] = n_missed_szrs/n_valid_szrs
+        pptn_preonset_stim[left_out_id, C_ct] = pptn_preonset_stim[left_out_id, C_ct]/n_valid_szrs
+        pptn_missed_szrs[left_out_id,C_ct] = n_missed_szrs/n_valid_szrs
         if n_missed_szrs==n_valid_szrs:
             mn_stim_latency[left_out_id,C_ct] = np.nan
         else:
             mn_stim_latency[left_out_id, C_ct] = mn_onset_dif/(n_valid_szrs-n_missed_szrs)
 
         # Save current performance metrics
-        np.savez('classification_metrics.npz',
+        out_fname=os.path.join(model_path,'classify_metrics_srch.npz')
+        np.savez(out_fname,
              valid_sens=valid_sens,
              valid_spec=valid_spec,
              valid_bal_acc=valid_bal_acc,
@@ -271,7 +293,8 @@ for C_ct, C in enumerate(try_C):
              train_bal_acc=train_bal_acc,
              train_subs_list=train_subs_list,
              mn_stim_latency=mn_stim_latency,
-             pcnt_missed_szrs=pcnt_missed_szrs,
+             pptn_missed_szrs=pptn_missed_szrs,
+             pptn_preonset_stim=pptn_preonset_stim,
              try_C=try_C,
              C_ct=C_ct,
              ftr_types=ftr_types,
