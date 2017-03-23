@@ -136,7 +136,7 @@ for sub_ct, sub in enumerate(train_subs_list):
 
 #try_C=np.arange(0.01,1.02,.2) # search 1
 #try_C=np.arange(0.01,0.17,.03) # search 2
-try_C=np.linspace(0.04,0.7,6) # search 3
+try_C=np.linspace(0.04,0.1,6) # search 3
 n_C=len(try_C)
 
 # LOOCV on training data
