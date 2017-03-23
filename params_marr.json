@@ -1,3 +1,5 @@
-{"model_type": "logreg", 
-"C": "10e42", 
-"use_ftrs": ["PWR","PWR_3SEC","PWRSTD_3SEC","PWR_9SEC","VLTG","VLTGSTD_3SEC"]}
+{"model_type": "logreg",
+"model_name": "var_sbox_C1", 
+"C": "1",
+"ictal_wind": "max",
+"use_ftrs": ["PWR","PWR_3SEC","PWRSTD_3SEC","PWR_9SEC","VLTG","VLTG_3SEC","VLTGSTD_3SEC"]}
