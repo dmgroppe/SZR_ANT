@@ -8,16 +8,11 @@ import scipy.io as sio
 import os
 import ieeg_funcs as ief
 import dgFuncs as dg
-from sklearn import linear_model
 from sklearn.externals import joblib
 import sys
-import json
 
-if len(sys.argv)==1:
-    print('Usage: train_ensemble.py params.json')
-    exit()
-if len(sys.argv)!=2:
-    raise Exception('Error: train_ensemble.py requires 1 arumgent: params.json')
+if len(sys.argv)!=4:
+    raise Exception('Error: train_ensemble.py requires 3 arumgents (C, model_name, ftr_list.txt)')
 try_C=[]
 try_C.append(float(np.sys.argv[1]))
 print('C value set to %f' % try_C[0])
@@ -30,6 +25,8 @@ list1 = text_file.readlines()
 for temp_ftr in list1:
     ftr_types.append(temp_ftr.rstrip())
 print('Features being used: {}'.format(ftr_types))
+
+model_type='logreg'
 
 # Import list of subjects to use
 path_dict=ief.get_path_dict()
@@ -162,7 +159,7 @@ n_C=len(try_C)
 
 # LOOCV on training data
 n_train_subs = len(train_subs_list)
-# n_train_subs=2 # TODO remove this!!! ??
+#n_train_subs=2 # TODO remove this!!! ??
 
 valid_sens = np.zeros((n_train_subs,n_C))
 valid_spec = np.zeros((n_train_subs,n_C))
@@ -184,8 +181,12 @@ for C_ct, C in enumerate(try_C):
         #model = svm.SVC(kernel='rbf', gamma=0.7, C=C).fit(ftrs.T, szr_class)
         if 'model' in locals():
             del model # clear model just in case
-        model = linear_model.LogisticRegression(class_weight='balanced',C=C)
-        # model = svm.SVC(class_weight='balanced',C=C)
+        if model_type=='svm':
+            from sklearn import svm
+            model = svm.SVC(class_weight='balanced',C=C)
+        else:
+            from sklearn import linear_model
+            model = linear_model.LogisticRegression(class_weight='balanced', C=C)
         # model.fit? # could add sample weight to weight each subject equally
         model.fit(ftrs[sub_id!=left_out_id,:], szr_class[sub_id!=left_out_id]) # Correct training data
         #model.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code ?? TODO remove this
@@ -267,7 +268,7 @@ for C_ct, C in enumerate(try_C):
                 dim_ct += temp_n_dim
 
             # Classify each time point
-            temp_class_hat=model.predict(temp_valid_ftrs) # Note this returns binary predictions, make continuous?
+            temp_class_hat=model.predict(temp_valid_ftrs)
 
             # Compute latency of earliest ictal prediction relative to clinician onset
             sgram_srate=1/10
@@ -281,7 +282,7 @@ for C_ct, C in enumerate(try_C):
                 mn_onset_dif+=onset_dif_sec
 
         pptn_missed_szrs[left_out_id,C_ct] = n_missed_szrs/n_valid_szrs
-        pptn_preonset_stim[left_out_id, C_ct]=pptn_preonset_stim[left_out_id,C_ct]/n_valid_szrs
+        pptn_preonset_stim[left_out_id, C_ct] = pptn_preonset_stim[left_out_id, C_ct] / n_valid_szrs
         if n_missed_szrs==n_valid_szrs:
             mn_stim_latency[left_out_id,C_ct] = np.nan
         else:

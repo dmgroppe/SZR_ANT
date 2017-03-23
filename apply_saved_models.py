@@ -44,15 +44,15 @@ def plot_fig(true_class, hat_class, ftr_vals, stem, fig_ct, model_dir):
 
 # Import held sub data
 #sub='NA' #TODO get this from command line
-if len(sys.argv)!=3:
-    raise Exception('Error: train_ensemble.py requires 2 arumgents (model_name, sub)')
+if len(sys.argv)==1:
+    print('Usage: python apply_saved_models.py model_name sub')
+    exit()
+elif len(sys.argv)!=3:
+    raise Exception('Error: apply_saved_models.py requires 2 arumgents (model_name, sub)')
 
 model_name=sys.argv[1]
 sub=sys.argv[2]
 #model_name='model_sbox'
-
-
-
 
 # Get list of models
 path_dict=ief.get_path_dict()
@@ -133,6 +133,8 @@ n_missed_szrs=0
 pptn_preonset_stim=0
 mn_onset_dif=0
 phat_list=[]
+sens=np.zeros(f_ct)
+spec=np.zeros(f_ct)
 for stem_ct, stem_loop in enumerate(stem_list):
     # Collect features for each seizure
     dim_ct=0
@@ -182,7 +184,11 @@ for stem_ct, stem_loop in enumerate(stem_list):
     temp_class_hat=np.mean(phat_list[stem_ct],axis=1)
     temp_class_hat_bool=temp_class_hat>0.5
     plot_fig(ftr_dict['peri_ictal'],temp_class_hat,temp_valid_ftrs,stem_loop,stem_ct,model_path)
-    
+
+    # Compute sensitivity and specificity
+    sens[stem_ct] = np.mean(temp_class_hat_bool[ftr_dict['peri_ictal'] == 1] == 1)
+    spec[stem_ct]=np.mean(temp_class_hat_bool[ftr_dict['peri_ictal']==0]==0)
+
     # Compute latency of earliest ictal prediction relative to clinician onset
     sgram_srate=1/10
     onset_dif_sec, preonset_stim=ief.cmpt_postonset_stim_latency(temp_class_hat_bool,ftr_dict['peri_ictal'],sgram_srate)
@@ -197,14 +203,18 @@ pptn_missed_szrs = n_missed_szrs/f_ct
 if n_missed_szrs==f_ct:
     mn_stim_latency = np.nan
 else:
-    mn_stim_latency= mn_onset_dif/(n_fct-n_missed_szrs)
-    
+    mn_stim_latency= mn_onset_dif/(f_ct-n_missed_szrs)
+
+print('Mean (SD) sensitivity %f (%f)' % (np.mean(sens),np.std(sens)))
+print('Mean (SD) specificity %f (%f)' % (np.mean(spec),np.std(spec)))
 print('Proportion of missed szrs: %f ' % pptn_missed_szrs)
 print('Proportion of szrs with pre-onset stimulation: %f ' % pptn_preonset_stim)
 print('Mean postonset stim latency %f' % mn_stim_latency)
 out_fname=os.path.join(model_path,'smry.npz')
 print('Saving summary results to %s' % out_fname)
 np.savez(out_fname,
+         spec=spec,
+         sens=sens,
          pptn_missed_szrs=pptn_missed_szrs,
          pptn_preonset_stim=pptn_preonset_stim,
          mn_stim_latency=mn_stim_latency,
