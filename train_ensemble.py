@@ -12,30 +12,42 @@ from sklearn import linear_model
 from sklearn.externals import joblib
 import sys
 import json
+from shutil import copyfile
 
 if len(sys.argv)==1:
     print('Usage: train_ensemble.py params.json')
     exit()
 if len(sys.argv)!=2:
     raise Exception('Error: train_ensemble.py requires 1 arumgent: params.json')
+
+param_fname=sys.argv[1]
+print('Importing model parameters from %s' % param_fname)
+with open(param_fname) as param_file:
+    params=json.load(param_file)
+
 try_C=[]
-try_C.append(float(np.sys.argv[1]))
+# try_C.append(float(np.sys.argv[1]))
+try_C.append(float(params['C']))
 print('C value set to %f' % try_C[0])
-model_name=sys.argv[2]
+# model_name=sys.argv[2]
+model_name=params['model_name']
 print('Model name is %s' % model_name)
-ftr_types=[]
-print('Importing list of features to use from %s' % sys.argv[3])
-text_file = open(sys.argv[3], 'r')
-list1 = text_file.readlines()
-for temp_ftr in list1:
-    ftr_types.append(temp_ftr.rstrip())
+model_type=params['model_type']
+print('Model type is %s' % model_type)
+ftr_types=params['use_ftrs']
 print('Features being used: {}'.format(ftr_types))
+if params['ictal_wind']=='small':
+    small_ictal_wind=True
+else:
+    small_ictal_wind=False
 
 # Import list of subjects to use
 path_dict=ief.get_path_dict()
 model_path=os.path.join(path_dict['szr_ant_root'],'MODELS',model_name)
 if os.path.exists(model_path)==False:
     os.mkdir(model_path)
+# Copy json parameter file to model path
+copyfile(param_fname,os.path.join(model_path,'params.json'))
 metrics_file=os.path.join(model_path,'classification_metrics.npz')
 use_subs_df=pd.read_csv(os.path.join(path_dict['szr_ant_root'],'use_subs.txt'),header=None,na_filter=False)
 test_sub_list=['NA']
@@ -66,7 +78,10 @@ for type_ct, ftr_type in enumerate(ftr_types):
                 #fname_stem_list.append(f_stem)
                 temp_stem_list.append(f_stem)
                 ftr_dict=np.load(os.path.join(ftr_path,f))
-                n_wind+=np.sum(ftr_dict['peri_ictal']>=0)
+                if small_ictal_wind:
+                    n_wind+=np.sum(ftr_dict['peri_ictal']>=0)
+                else:
+                    n_wind += len(ftr_dict['peri_ictal'])
             sub_stem_dict[sub]=temp_stem_list
     else:
         temp_n_wind=0
@@ -86,7 +101,10 @@ for type_ct, ftr_type in enumerate(ftr_types):
                 #     raise ValueError('File stems do not match across features')
                 print('Loading file %s' % targ_file)
                 ftr_dict=np.load(targ_file)
-                temp_n_wind+=np.sum(ftr_dict['peri_ictal']>=0)
+                if small_ictal_wind:
+                    temp_n_wind+=np.sum(ftr_dict['peri_ictal']>=0)
+                else:
+                    temp_n_wind += len(ftr_dict['peri_ictal'])
                 f_ct+=1
         if temp_n_wind!=n_wind:
             raise ValueError('# of time windows do not match across features')
@@ -131,14 +149,18 @@ for sub_ct, sub in enumerate(train_subs_list):
                 print('Trying to find %s for %s' % (f_stem,ftr_type))
                 raise ValueError('File stem not found')
             # Add ftr to collection
-            temp_use_ids=ftr_dict['peri_ictal'] >= 0
+            if small_ictal_wind:
+                temp_class=ftr_dict['peri_ictal']
+            else:
+                temp_class = ftr_dict['peri_ictal'] != 0
+            #temp_use_ids = ftr_dict['peri_ictal'] >= 0
+            temp_use_ids = temp_class >= 0
             temp_n_dim = ftr_dict['ftrs'].shape[0]
             temp_n_wind=np.sum(temp_use_ids)
-            #temp_n_dim, temp_n_wind=ftr_dict['ftrs'].shape
             ftrs[wind_ct:wind_ct + temp_n_wind, dim_ct:dim_ct + temp_n_dim] = ftr_dict['ftrs'][:,temp_use_ids].T
-            #ftrs[wind_ct:wind_ct+temp_n_wind,dim_ct:dim_ct+temp_n_dim]=ftr_dict['ftrs'].T
             dim_ct+=temp_n_dim
-        szr_class[wind_ct:wind_ct+temp_n_wind]=ftr_dict['peri_ictal'][temp_use_ids]
+        #szr_class[wind_ct:wind_ct+temp_n_wind]=ftr_dict['peri_ictal'][temp_use_ids]
+        szr_class[wind_ct:wind_ct + temp_n_wind] = temp_class[temp_use_ids]
         sub_id[wind_ct:wind_ct+temp_n_wind]=np.ones(temp_n_wind)*sub_ct
         wind_ct+=temp_n_wind
 
@@ -184,13 +206,17 @@ for C_ct, C in enumerate(try_C):
         #model = svm.SVC(kernel='rbf', gamma=0.7, C=C).fit(ftrs.T, szr_class)
         if 'model' in locals():
             del model # clear model just in case
-        model = linear_model.LogisticRegression(class_weight='balanced',C=C)
-        # model = svm.SVC(class_weight='balanced',C=C)
+        if 'model' in locals():
+            del model # clear model just in case
+        if model_type=='svm':
+            from sklearn import svm
+            model = svm.SVC(class_weight='balanced',C=C)
+        else:
+            from sklearn import linear_model
+            model = linear_model.LogisticRegression(class_weight='balanced', C=C)
         # model.fit? # could add sample weight to weight each subject equally
         model.fit(ftrs[sub_id!=left_out_id,:], szr_class[sub_id!=left_out_id]) # Correct training data
         #model.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code ?? TODO remove this
-        #clf = svm.SVC()
-        # >>> clf.fit(X, y)
 
         # make predictions from training and validation data
         training_class_hat = model.predict(ftrs)
@@ -312,6 +338,8 @@ for C_ct, C in enumerate(try_C):
     # Report mean CI performance
     print('# of patients=%d' % len(train_subs_list))
     print('Training Data')
+    mn, ci_low, ci_hi=dg.mean_and_cis(train_bal_acc[:,C_ct])
+    print('Mean (0.95 CI) Balanced Accuracy %.3f (%.3f-%.3f)' % (mn,ci_low,ci_hi))
     mn, ci_low, ci_hi=dg.mean_and_cis(train_sens[:,C_ct])
     print('Mean (0.95 CI) Sensitivity %.3f (%.3f-%.3f)' % (mn,ci_low,ci_hi))
     mn, ci_low, ci_hi=dg.mean_and_cis(train_spec[:,C_ct])
@@ -319,6 +347,8 @@ for C_ct, C in enumerate(try_C):
 
     # print('Mean (0.95 CI) Sensitivty %.3f (%.3f)' % (np.mean(perf['train_sens']),)
     print('Validation Data')
+    mn, ci_low, ci_hi=dg.mean_and_cis(valid_bal_acc[:,C_ct])
+    print('Mean (0.95 CI) Balanced Accuracy %.3f (%.3f-%.3f)' % (mn,ci_low,ci_hi))
     mn, ci_low, ci_hi=dg.mean_and_cis(valid_sens[:,C_ct])
     print('Mean (0.95 CI) Sensitivity %.3f (%.3f-%.3f)' % (mn,ci_low,ci_hi))
     mn, ci_low, ci_hi=dg.mean_and_cis(valid_spec[:,C_ct])

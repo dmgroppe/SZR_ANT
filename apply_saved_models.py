@@ -1,15 +1,14 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import scipy.io as sio
 import os
 import sys
+import json
 import ieeg_funcs as ief
 import dgFuncs as dg
 from sklearn import svm
 from sklearn.externals import joblib
-
 
 def plot_fig(true_class, hat_class, ftr_vals, stem, fig_ct, model_dir):
     plt.figure(1)
@@ -17,8 +16,9 @@ def plot_fig(true_class, hat_class, ftr_vals, stem, fig_ct, model_dir):
     plt.subplot(3, 1, 1)
     plt.plot(true_class, label='True')
     plt.plot(hat_class, 'r', label='Hat')
+    plt.ylim([-1.1, 1.1])
     plt.ylabel('Class')
-    plt.legend()
+    plt.legend(loc='lower right')
     plt.title(stem)
 
     plt.subplot(3, 1, 2)
@@ -66,15 +66,21 @@ n_models=len(model_list)
 print('%d models found' % n_models)
 print(model_list)
 
-# Get list of features to use:
-ftr_types=[]
-ftr_fname='ftr_list_lap.txt'
-print('Importing list of features to use from %s' % ftr_fname)
-text_file = open(ftr_fname, 'r')
-list1 = text_file.readlines()
-for temp_ftr in list1:
-    ftr_types.append(temp_ftr.rstrip())
+# Get list of features to use from json file that contains training parameters:
+param_fname=os.path.join(model_path,'params.json')
+print('Importing model parameters from %s' % param_fname)
+with open(param_fname) as param_file:
+    params=json.load(param_file)
+ftr_types=params['use_ftrs']
 print('Features being used: {}'.format(ftr_types))
+# ftr_types=[]
+# ftr_fname='ftr_list_lap.txt'
+# print('Importing list of features to use from %s' % ftr_fname)
+# text_file = open(ftr_fname, 'r')
+# list1 = text_file.readlines()
+# for temp_ftr in list1:
+#     ftr_types.append(temp_ftr.rstrip())
+# print('Features being used: {}'.format(ftr_types))
 
 # Get list of data files for this sub
 n_ftr_types=len(ftr_types)
@@ -135,6 +141,7 @@ mn_onset_dif=0
 phat_list=[]
 sens=np.zeros(f_ct)
 spec=np.zeros(f_ct)
+bal_acc=np.zeros(f_ct)
 for stem_ct, stem_loop in enumerate(stem_list):
     # Collect features for each seizure
     dim_ct=0
@@ -185,9 +192,10 @@ for stem_ct, stem_loop in enumerate(stem_list):
     temp_class_hat_bool=temp_class_hat>0.5
     plot_fig(ftr_dict['peri_ictal'],temp_class_hat,temp_valid_ftrs,stem_loop,stem_ct,model_path)
 
-    # Compute sensitivity and specificity
+    # Compute sensitivity, specificity, and balanced accuracy
     sens[stem_ct] = np.mean(temp_class_hat_bool[ftr_dict['peri_ictal'] == 1] == 1)
     spec[stem_ct]=np.mean(temp_class_hat_bool[ftr_dict['peri_ictal']==0]==0)
+    bal_acc[stem_ct]=(sens[stem_ct]+spec[stem_ct])/2
 
     # Compute latency of earliest ictal prediction relative to clinician onset
     sgram_srate=1/10
@@ -207,6 +215,7 @@ else:
 
 print('Mean (SD) sensitivity %f (%f)' % (np.mean(sens),np.std(sens)))
 print('Mean (SD) specificity %f (%f)' % (np.mean(spec),np.std(spec)))
+print('Mean (SD) balanced accuracy %f (%f)' % (np.mean(bal_acc),np.std(bal_acc)))
 print('Proportion of missed szrs: %f ' % pptn_missed_szrs)
 print('Proportion of szrs with pre-onset stimulation: %f ' % pptn_preonset_stim)
 print('Mean postonset stim latency %f' % mn_stim_latency)
@@ -215,6 +224,7 @@ print('Saving summary results to %s' % out_fname)
 np.savez(out_fname,
          spec=spec,
          sens=sens,
+         bal_acc=bal_acc,
          pptn_missed_szrs=pptn_missed_szrs,
          pptn_preonset_stim=pptn_preonset_stim,
          mn_stim_latency=mn_stim_latency,
