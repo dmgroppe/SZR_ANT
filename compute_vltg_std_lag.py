@@ -1,4 +1,4 @@
-# # Computes spectral power features for later classification
+# # Computes stdev of spectral power features for later classification
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -25,9 +25,8 @@ import pickle
 # -10 seconds past onset window
 
 # Load list of subs to use
-#use_subs.txt TODO use this text file
-lag=9 # extent of moving average window in units of seconds
-print('Extent of causal moving average is %d seconds!' % lag)
+lag=3 # extent of moving average window in units of seconds
+print('Extent of causal moving window is %d seconds!' % lag)
 path_dict=ief.get_path_dict()
 use_subs_df=pd.read_csv(os.path.join(path_dict['szr_ant_root'],'use_subs.txt'),header=None,na_filter=False)
 ieeg_root = path_dict['ieeg_root']
@@ -35,8 +34,8 @@ ieeg_root = path_dict['ieeg_root']
 for sub in use_subs_df.iloc[:,0]:
     # Define input and output directories
     ftr_root = '/Users/davidgroppe/PycharmProjects/SZR_ANT/FTRS'
-    one_sec_path = os.path.join(path_dict['ftrs_root'], 'PWR', sub)
-    lag_root_path=os.path.join(path_dict['ftrs_root'], 'PWR_' + str(lag) + 'SEC')
+    one_sec_path = os.path.join(path_dict['ftrs_root'], 'VLTG', sub)
+    lag_root_path=os.path.join(path_dict['ftrs_root'], 'VLTGSTD_' + str(lag) + 'SEC')
     if not os.path.isdir(lag_root_path):
         print('Creating directory: %s' % lag_root_path)
         os.mkdir(lag_root_path)
@@ -58,12 +57,12 @@ for sub in use_subs_df.iloc[:,0]:
         one_sec_ftr_list = one_sec_dat['ftr_list']
         ftr_list=[]
         for ftr_label in one_sec_ftr_list:
-            ftr_list.append(ftr_label + '3SEC')
+            ftr_list.append(ftr_label + 'Std3Sec')
             #ftr_list[ftr_ct]=ftr_list[ftr_ct]+'3SEC'
 
-        # Preallocate mem
+        # Preallocate mm
         n_dim, n_wind = one_sec_dat['ftrs'].shape
-        causal_avg_pwr = np.zeros((n_dim, n_wind))
+        causal_std_vltgftrs = np.zeros((n_dim, n_wind))
 
         # Compute sampling rate
         dlt = time_wind_sec[1] - time_wind_sec[0]
@@ -75,15 +74,18 @@ for sub in use_subs_df.iloc[:,0]:
             use_ids = np.arange(wind - n_meta_wind, wind + 1, dtype=int)  # avg between lag back and current time point
             use_ids = use_ids[use_ids >= 0]  # remove any window before beginning of file
             # use_ids=use_ids.astype(int)
-            causal_avg_pwr[:, wind] = np.mean(one_sec_dat['ftrs'][:, use_ids], axis=1)
+            causal_std_vltgftrs[:, wind] = np.log(1+np.std(one_sec_dat['ftrs'][:, use_ids], axis=1)) # log trans to make data
+            # more normally distributed
+
+        dg.trimmed_normalize(causal_std_vltgftrs, .4)
 
         # Save file
         f_stem = f.split('.')[0]
-        out_fname = os.path.join(lag_path, f_stem + '_' + str(lag) + 'sec.npz')
+        out_fname = os.path.join(lag_path, f_stem + '_std' + str(lag) + 'sec.npz')
         print('Saving file %s' % out_fname)
         np.savez(out_fname,
                  time_wind_sec=time_wind_sec,
-                 ftrs=causal_avg_pwr,
+                 ftrs=causal_std_vltgftrs,
                  ftr_list=ftr_list,
                  peri_ictal=peri_ictal)
 

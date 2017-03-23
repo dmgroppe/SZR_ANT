@@ -1,0 +1,3 @@
+{"model_type": "logreg", 
+"C": "10e42", 
+"use_ftrs": ["PWR","PWR_3SEC","PWRSTD_3SEC","PWR_9SEC","VLTG","VLTGSTD_3SEC"]}

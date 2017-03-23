@@ -1,31 +1,25 @@
 # This script does LOOCV using 8/9 patients (9th is reserved for testing)
-# One parameter of C is tried, first argument to the function
-# Features are specified by ftr_types
+# Various parameters of C are tried
+# Features are power in 6 frequency bands and 5 voltage domain features in a one second window
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import scipy.io as sio
 import os
+import sys
 import ieeg_funcs as ief
 import dgFuncs as dg
-from sklearn import linear_model
+from sklearn import svm
 from sklearn.externals import joblib
-import sys
-import json
 
-if len(sys.argv)==1:
-    print('Usage: train_ensemble.py params.json')
-    exit()
-if len(sys.argv)!=2:
-    raise Exception('Error: train_ensemble.py requires 1 arumgent: params.json')
-try_C=[]
-try_C.append(float(np.sys.argv[1]))
-print('C value set to %f' % try_C[0])
-model_name=sys.argv[2]
+
+if len(sys.argv)!=3:
+    raise Exception('Error: train_ensemble.py requires 3 arumgents (model_name, ftr_list.txt)')
+model_name=sys.argv[1]
 print('Model name is %s' % model_name)
 ftr_types=[]
-print('Importing list of features to use from %s' % sys.argv[3])
-text_file = open(sys.argv[3], 'r')
+print('Importing list of features to use from %s' % sys.argv[2])
+text_file = open(sys.argv[2], 'r')
 list1 = text_file.readlines()
 for temp_ftr in list1:
     ftr_types.append(temp_ftr.rstrip())
@@ -36,15 +30,17 @@ path_dict=ief.get_path_dict()
 model_path=os.path.join(path_dict['szr_ant_root'],'MODELS',model_name)
 if os.path.exists(model_path)==False:
     os.mkdir(model_path)
-metrics_file=os.path.join(model_path,'classification_metrics.npz')
 use_subs_df=pd.read_csv(os.path.join(path_dict['szr_ant_root'],'use_subs.txt'),header=None,na_filter=False)
 test_sub_list=['NA']
 train_subs_list=[]
 for sub in use_subs_df.iloc[:,0]:
     if not sub in test_sub_list:
         train_subs_list.append(sub)
+        
 print('Training subs: {}'.format(train_subs_list))
 
+
+# ftr_types=['PWR','PWR_3SEC','PWR_9SEC','PWR_27SEC','VLTG']
 n_ftr_types=len(ftr_types)
 n_dim=0
 n_wind=0
@@ -156,13 +152,18 @@ for sub_ct, sub in enumerate(train_subs_list):
 # C = 0.1
 
 #try_C=np.arange(0.01,1.02,.2) # search 1
-# try_C=np.arange(0.01,0.17,.03) # search 2
-#try_C=np.linspace(0.04,0.1,6) # search 3
+#try_C=np.arange(0.01,0.17,.03) # search 2
+<<<<<<< HEAD
+try_C=np.linspace(0.04,0.1,6) # search 3
+=======
+try_C=np.linspace(0.04,0.7,6) # search 3
+#try_C=np.linspace(0.04,0.7,1) # fast dummy search ??
+>>>>>>> 87dacaf9eaac3f6ea63508ad9d6e54f54ad8482d
 n_C=len(try_C)
 
 # LOOCV on training data
 n_train_subs = len(train_subs_list)
-# n_train_subs=2 # TODO remove this!!! ??
+#n_train_subs=2 # TODO remove this!!! ??
 
 valid_sens = np.zeros((n_train_subs,n_C))
 valid_spec = np.zeros((n_train_subs,n_C))
@@ -181,19 +182,18 @@ for C_ct, C in enumerate(try_C):
 
     for left_out_id in range(n_train_subs):
         print('Left out sub %d of %d' % (left_out_id+1,n_train_subs))
-        #model = svm.SVC(kernel='rbf', gamma=0.7, C=C).fit(ftrs.T, szr_class)
-        if 'model' in locals():
-            del model # clear model just in case
-        model = linear_model.LogisticRegression(class_weight='balanced',C=C)
-        # model = svm.SVC(class_weight='balanced',C=C)
-        # model.fit? # could add sample weight to weight each subject equally
-        model.fit(ftrs[sub_id!=left_out_id,:], szr_class[sub_id!=left_out_id]) # Correct training data
-        #model.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code ?? TODO remove this
+        #rbf_svc = svm.SVC(kernel='rbf', gamma=0.7, C=C).fit(ftrs.T, szr_class)
+        if 'rbf_svc' in locals():
+            del rbf_svc # clear model just in case
+        rbf_svc = svm.SVC(class_weight='balanced',C=C)
+        # rbf_svc.fit? # could add sample weight to weight each subject equally
+        rbf_svc.fit(ftrs[sub_id!=left_out_id,:], szr_class[sub_id!=left_out_id]) # Correct training data
+        #rbf_svc.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code ?? TODO remove this
         #clf = svm.SVC()
         # >>> clf.fit(X, y)
 
         # make predictions from training and validation data
-        training_class_hat = model.predict(ftrs)
+        training_class_hat = rbf_svc.predict(ftrs)
         jive=training_class_hat==szr_class
 
         train_bool=sub_id!=left_out_id
@@ -267,33 +267,28 @@ for C_ct, C in enumerate(try_C):
                 dim_ct += temp_n_dim
 
             # Classify each time point
-            temp_class_hat=model.predict(temp_valid_ftrs) # Note this returns binary predictions, make continuous?
+            temp_class_hat=rbf_svc.predict(temp_valid_ftrs)
 
             # Compute latency of earliest ictal prediction relative to clinician onset
             sgram_srate=1/10
             onset_dif_sec, preonset_stim=ief.cmpt_postonset_stim_latency(temp_class_hat,ftr_dict['peri_ictal'],sgram_srate)
             pptn_preonset_stim[left_out_id,C_ct] += preonset_stim
-
             if onset_dif_sec is None:
                 # no positives during peri-onset time window
                 n_missed_szrs+=1
             else:
                 mn_onset_dif+=onset_dif_sec
 
+        pptn_preonset_stim[left_out_id, C_ct] = pptn_preonset_stim[left_out_id, C_ct]/n_valid_szrs
         pptn_missed_szrs[left_out_id,C_ct] = n_missed_szrs/n_valid_szrs
-        pptn_preonset_stim[left_out_id, C_ct]=pptn_preonset_stim[left_out_id,C_ct]/n_valid_szrs
         if n_missed_szrs==n_valid_szrs:
             mn_stim_latency[left_out_id,C_ct] = np.nan
         else:
             mn_stim_latency[left_out_id, C_ct] = mn_onset_dif/(n_valid_szrs-n_missed_szrs)
 
-        # Save model
-        model_file = os.path.join(model_path, 'model'+str(left_out_id)+'.pkl')
-        print('Saving model as %s' % model_file)
-        _ = joblib.dump(model,model_file,compress=3)
-
         # Save current performance metrics
-        np.savez(metrics_file,
+        out_fname=os.path.join(model_path,'classify_metrics_srch.npz')
+        np.savez(out_fname,
              valid_sens=valid_sens,
              valid_spec=valid_spec,
              valid_bal_acc=valid_bal_acc,
@@ -303,6 +298,7 @@ for C_ct, C in enumerate(try_C):
              train_subs_list=train_subs_list,
              mn_stim_latency=mn_stim_latency,
              pptn_missed_szrs=pptn_missed_szrs,
+             pptn_preonset_stim=pptn_preonset_stim,
              try_C=try_C,
              C_ct=C_ct,
              ftr_types=ftr_types,
