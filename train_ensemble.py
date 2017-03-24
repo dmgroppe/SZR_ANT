@@ -210,7 +210,10 @@ for C_ct, C in enumerate(try_C):
             del model # clear model just in case
         if model_type=='svm':
             from sklearn import svm
-            model = svm.SVC(class_weight='balanced',C=C)
+            model = svm.SVC(class_weight='balanced', C=C)
+        elif model_type=='lsvm':
+            from sklearn import svm
+            model = svm.SVC(class_weight='balanced', kernel='linear', C=C)
         else:
             from sklearn import linear_model
             model = linear_model.LogisticRegression(class_weight='balanced', C=C)
