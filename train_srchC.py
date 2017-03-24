@@ -11,19 +11,35 @@ import ieeg_funcs as ief
 import dgFuncs as dg
 from sklearn import svm
 from sklearn.externals import joblib
+import json
 
 
-if len(sys.argv)!=3:
-    raise Exception('Error: train_ensemble.py requires 3 arumgents (model_name, ftr_list.txt)')
-model_name=sys.argv[1]
+if len(sys.argv)==1:
+    print('Usage: train_srchC.py srch_params.json')
+    exit()
+if len(sys.argv)!=2:
+    raise Exception('Error: train_srchC.py requires 1 argument: srch_params.json')
+
+param_fname=sys.argv[1]
+print('Importing model parameters from %s' % param_fname)
+with open(param_fname) as param_file:
+    params=json.load(param_file)
+
+#print('C={}'.format(params['C']))
+try_C=np.linspace(params['C'][0],params['C'][1],params['C'][2])
+print('try_C={}'.format(try_C))
+model_name=params['model_name']
 print('Model name is %s' % model_name)
-ftr_types=[]
-print('Importing list of features to use from %s' % sys.argv[2])
-text_file = open(sys.argv[2], 'r')
-list1 = text_file.readlines()
-for temp_ftr in list1:
-    ftr_types.append(temp_ftr.rstrip())
+model_type=params['model_type']
+print('Model type is %s' % model_type)
+ftr_types=params['use_ftrs']
 print('Features being used: {}'.format(ftr_types))
+if params['ictal_wind']=='small':
+    small_ictal_wind=True
+else:
+    small_ictal_wind=False
+print('Ictal wind feature currently ignored')
+
 
 # Import list of subjects to use
 path_dict=ief.get_path_dict()
@@ -40,7 +56,6 @@ for sub in use_subs_df.iloc[:,0]:
 print('Training subs: {}'.format(train_subs_list))
 
 
-# ftr_types=['PWR','PWR_3SEC','PWR_9SEC','PWR_27SEC','VLTG']
 n_ftr_types=len(ftr_types)
 n_dim=0
 n_wind=0
@@ -153,12 +168,9 @@ for sub_ct, sub in enumerate(train_subs_list):
 
 #try_C=np.arange(0.01,1.02,.2) # search 1
 #try_C=np.arange(0.01,0.17,.03) # search 2
-<<<<<<< HEAD
-try_C=np.linspace(0.04,0.1,6) # search 3
-=======
-try_C=np.linspace(0.04,0.7,6) # search 3
+#try_C=np.linspace(0.04,0.1,6) # search 3
+#try_C=np.linspace(0.04,0.7,6) # search 3
 #try_C=np.linspace(0.04,0.7,1) # fast dummy search ??
->>>>>>> 87dacaf9eaac3f6ea63508ad9d6e54f54ad8482d
 n_C=len(try_C)
 
 # LOOCV on training data
@@ -308,6 +320,8 @@ for C_ct, C in enumerate(try_C):
     # Report mean CI performance
     print('# of patients=%d' % len(train_subs_list))
     print('Training Data')
+    mn, ci_low, ci_hi=dg.mean_and_cis(train_bal_acc[:,C_ct])
+    print('Mean (0.95 CI) Balanced Accuracy %.3f (%.3f-%.3f)' % (mn,ci_low,ci_hi))
     mn, ci_low, ci_hi=dg.mean_and_cis(train_sens[:,C_ct])
     print('Mean (0.95 CI) Sensitivity %.3f (%.3f-%.3f)' % (mn,ci_low,ci_hi))
     mn, ci_low, ci_hi=dg.mean_and_cis(train_spec[:,C_ct])
@@ -315,6 +329,8 @@ for C_ct, C in enumerate(try_C):
 
     # print('Mean (0.95 CI) Sensitivty %.3f (%.3f)' % (np.mean(perf['train_sens']),)
     print('Validation Data')
+    mn, ci_low, ci_hi=dg.mean_and_cis(valid_bal_acc[:,C_ct])
+    print('Mean (0.95 CI) Balanced Accuracy %.3f (%.3f-%.3f)' % (mn,ci_low,ci_hi))
     mn, ci_low, ci_hi=dg.mean_and_cis(valid_sens[:,C_ct])
     print('Mean (0.95 CI) Sensitivity %.3f (%.3f-%.3f)' % (mn,ci_low,ci_hi))
     mn, ci_low, ci_hi=dg.mean_and_cis(valid_spec[:,C_ct])
