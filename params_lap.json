@@ -1,5 +1,5 @@
-{"model_type": "lsvm",
-"model_name": "var_sbox_lsvm", 
+{"model_type": "logreg",
+"model_name": "logreg_w_coh_small_wind", 
 "C": "10e42",
-"ictal_wind": "max",
+"ictal_wind": "small",
 "use_ftrs": ["PWR","PWR_3SEC","PWRSTD_3SEC","PWR_9SEC","VLTG","VLTGSTD_3SEC","COH"]}
