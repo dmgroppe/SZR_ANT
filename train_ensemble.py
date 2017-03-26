@@ -206,8 +206,6 @@ for C_ct, C in enumerate(try_C):
         #model = svm.SVC(kernel='rbf', gamma=0.7, C=C).fit(ftrs.T, szr_class)
         if 'model' in locals():
             del model # clear model just in case
-        if 'model' in locals():
-            del model # clear model just in case
         if model_type=='svm':
             from sklearn import svm
             model = svm.SVC(class_weight='balanced', C=C)

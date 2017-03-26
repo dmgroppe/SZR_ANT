@@ -195,17 +195,26 @@ for C_ct, C in enumerate(try_C):
     for left_out_id in range(n_train_subs):
         print('Left out sub %d of %d' % (left_out_id+1,n_train_subs))
         #rbf_svc = svm.SVC(kernel='rbf', gamma=0.7, C=C).fit(ftrs.T, szr_class)
-        if 'rbf_svc' in locals():
-            del rbf_svc # clear model just in case
-        rbf_svc = svm.SVC(class_weight='balanced',C=C)
-        # rbf_svc.fit? # could add sample weight to weight each subject equally
-        rbf_svc.fit(ftrs[sub_id!=left_out_id,:], szr_class[sub_id!=left_out_id]) # Correct training data
-        #rbf_svc.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code ?? TODO remove this
+        if 'model' in locals():
+            del model # clear model just in case
+        if model_type=='svm':
+            from sklearn import svm
+            model = svm.SVC(class_weight='balanced', C=C)
+        elif model_type=='lsvm':
+            from sklearn import svm
+            model = svm.SVC(class_weight='balanced', kernel='linear', C=C)
+        else:
+            from sklearn import linear_model
+            model = linear_model.LogisticRegression(class_weight='balanced', C=C)
+
+        # model.fit? # could add sample weight to weight each subject equally
+        model.fit(ftrs[sub_id!=left_out_id,:], szr_class[sub_id!=left_out_id]) # Correct training data
+        #model.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code ?? TODO remove this
         #clf = svm.SVC()
         # >>> clf.fit(X, y)
 
         # make predictions from training and validation data
-        training_class_hat = rbf_svc.predict(ftrs)
+        training_class_hat = model.predict(ftrs)
         jive=training_class_hat==szr_class
 
         train_bool=sub_id!=left_out_id
@@ -279,7 +288,7 @@ for C_ct, C in enumerate(try_C):
                 dim_ct += temp_n_dim
 
             # Classify each time point
-            temp_class_hat=rbf_svc.predict(temp_valid_ftrs)
+            temp_class_hat=model.predict(temp_valid_ftrs)
 
             # Compute latency of earliest ictal prediction relative to clinician onset
             sgram_srate=1/10
