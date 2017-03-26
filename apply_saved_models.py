@@ -10,7 +10,7 @@ import dgFuncs as dg
 from sklearn import svm
 from sklearn.externals import joblib
 
-def plot_fig(true_class, hat_class, ftr_vals, stem, fig_ct, model_dir):
+def plot_fig(true_class, hat_class, ftr_vals, stem, model_dir):
     plt.figure(1)
     plt.clf()
     plt.subplot(3, 1, 1)
@@ -32,7 +32,7 @@ def plot_fig(true_class, hat_class, ftr_vals, stem, fig_ct, model_dir):
     plt.xlabel('Seconds')
     plt.ylabel('Z-Ftrs')
 
-    fig_path = os.path.join(model_path, 'PICS')
+    fig_path = os.path.join(model_dir, 'PICS')
     if os.path.exists(fig_path) == False:
         os.mkdir(fig_path)
     #fig_fname = os.path.join(fig_path, stem + '.jpg')
@@ -40,6 +40,139 @@ def plot_fig(true_class, hat_class, ftr_vals, stem, fig_ct, model_dir):
     print('Creating file %s' % fig_fname)
     #plt.savefig(fig_fname,format='jpg') #try pdf?
     plt.savefig(fig_fname, format='pdf')  # try pdf?
+
+def plot_fig_w_sgrams(chan_data,Sf,tpts_sec,true_class, hat_class, stem, model_dir):
+    # Presentation version of this code
+
+    # Compute spectrogram at onset channel
+    wind_len = Sf
+    wind_step = Sf / 10
+    n_tapers = 4
+    sgram, f, sgram_sec = ief.mt_sgram(chan_data, Sf, wind_len, wind_step, n_tapers, tpts_sec)
+    cutoff_freq = Sf * .4  # remove frequencies above anti-aliasing filter cutoff
+    f = f[f <= cutoff_freq]
+    n_freq = len(f)
+    sgram = sgram[:n_freq, :]
+    n_wind = len(sgram_sec)
+    dg.trimmed_normalize(sgram, .4)
+
+    plt.figure(2)
+    plt.clf()
+    plt.subplot(3, 1, 1)
+    ax = plt.gca()
+    #plt.plot(sgram_sec,true_class, label='True')
+    onset_ids=np.where(true_class==1)
+    #plt.plot(sgram_sec,hat_class, 'r', label='Predicted',linewidth=2.0)
+    plt.fill_between(sgram_sec, 0, hat_class,facecolor='red',edgecolor='red')
+    ylim=[-.03, 1.03]
+    plt.ylim(ylim)
+    onset_in_sec=sgram_sec[onset_ids[0][0]]
+    plt.plot([onset_in_sec, onset_in_sec],ylim,'--k',linewidth=2.0)
+    plt.xlim([0, sgram_sec[-1]])
+    ytick_labels = ['Preictal','Ictal']
+    plt.yticks([0,1])
+    #plt.yticks([0, 1], ytick_labels)
+    plt.ylabel('P(Ictal)')
+    #plt.title(stem)
+    plt.title('Model Predictions')
+    ax.set_aspect(16)
+
+    plt.subplot(3, 1, 2)
+    ax = plt.gca()
+    plt.plot(tpts_sec,chan_data,'b-',linewidth=1.0)
+    ylim = plt.ylim()
+    plt.plot([onset_in_sec, onset_in_sec], ylim, '--k', linewidth=2.0)
+    plt.ylabel('Voltage')
+    plt.xlim([tpts_sec[0], tpts_sec[-1]])
+    plt.ylim(ylim)
+    raw_yticks = plt.yticks()
+    print(raw_yticks)
+    print(type(raw_yticks))
+    plt.yticks([raw_yticks[0][0], 0, raw_yticks[0][-1]])
+    ax.set_aspect(12)
+    plt.title('Onset Channel Trace & Spectrogram')
+
+    plt.subplot(3, 1, 3)
+    ax = plt.gca()
+    _ = ax.imshow(sgram)
+    # Overlay onset
+    ylim = plt.ylim()
+    plt.plot([onset_ids[0][0], onset_ids[0][0]], ylim, 'k--',linewidth=2.0)
+    raw_xticks = plt.xticks()
+    xtick_labels = list()
+    for tick in raw_xticks[0]:
+        if tick < n_wind:
+            xtick_labels.append(str(int(sgram_sec[int(tick)])))
+        else:
+            xtick_labels.append('noData')
+    _ = plt.xticks(raw_xticks[0], xtick_labels)  # works
+    plt.xlim([0, n_wind])
+    plt.ylim(ylim)
+    plt.ylabel('Hz')
+    plt.xlabel('Seconds')
+    plt.gca().invert_yaxis()
+    # plt.title('Onset Channel Spectrogram')
+    x0, x1 = ax.get_xlim()
+    y0, y1 = ax.get_ylim()
+    print(abs(x1-x0)/abs(y1-y0))
+    ax.set_aspect(2)
+
+    fig_path = os.path.join(model_dir, 'PICS')
+    if os.path.exists(fig_path) == False:
+        os.mkdir(fig_path)
+    #fig_fname = os.path.join(fig_path, stem + '_sgram.pdf')
+    fig_fname = os.path.join(fig_path, stem + '_sgram.png')
+    print('Creating file %s' % fig_fname)
+    #plt.savefig(fig_fname, format='pdf')
+    plt.savefig(fig_fname, format='png')
+
+
+# def plot_fig_w_sgrams(chan_data,Sf,tpts_sec,true_class, hat_class, stem, model_dir):
+#     # Compute spectrogram at onset channel
+#     wind_len = Sf
+#     wind_step = Sf / 10
+#     n_tapers = 4
+#     sgram, f, sgram_sec = ief.mt_sgram(chan_data, Sf, wind_len, wind_step, n_tapers, tpts_sec)
+#     cutoff_freq = Sf * .4  # remove frequencies above anti-aliasing filter cutoff
+#     f = f[f <= cutoff_freq]
+#     n_freq = len(f)
+#     sgram = sgram[:n_freq, :]
+#     n_wind = len(sgram_sec)
+#     dg.trimmed_normalize(sgram, .4)
+#
+#     plt.figure(2)
+#     plt.clf()
+#     plt.subplot(2, 1, 1)
+#     plt.plot(sgram_sec,true_class, label='True')
+#     plt.plot(sgram_sec,hat_class, 'r', label='Predicted')
+#     plt.ylim([-1.1, 1.1])
+#     plt.xlim([0, sgram_sec[-1]])
+#     plt.ylabel('Class')
+#     plt.legend(loc='lower right')
+#     plt.title(stem)
+#
+#     plt.subplot(2, 1, 2)
+#     ax = plt.gca()
+#     im = ax.imshow(sgram)
+#     raw_xticks = plt.xticks()
+#     xtick_labels = list()
+#     for tick in raw_xticks[0]:
+#         if tick < n_wind:
+#             xtick_labels.append(str(int(sgram_sec[int(tick)])))
+#         else:
+#             xtick_labels.append('noData')
+#     _ = plt.xticks(raw_xticks[0], xtick_labels)  # works
+#     plt.xlim([0, n_wind])
+#     plt.ylabel('Hz')
+#     plt.xlabel('Seconds')
+#     plt.gca().invert_yaxis()
+#
+#     fig_path = os.path.join(model_dir, 'PICS')
+#     if os.path.exists(fig_path) == False:
+#         os.mkdir(fig_path)
+#     fig_fname = os.path.join(fig_path, stem + '_sgram.pdf')
+#     print('Creating file %s' % fig_fname)
+#     plt.savefig(fig_fname, format='pdf')
 
 
 # Import held sub data
@@ -190,7 +323,17 @@ for stem_ct, stem_loop in enumerate(stem_list):
     # Average predictions across all models and take the majority vote
     temp_class_hat=np.mean(phat_list[stem_ct],axis=1)
     temp_class_hat_bool=temp_class_hat>0.5
-    plot_fig(ftr_dict['peri_ictal'],temp_class_hat,temp_valid_ftrs,stem_loop,stem_ct,model_path)
+    # Plot true class, predicted class, and butterfly plots of features
+    plot_fig(ftr_dict['peri_ictal'],temp_class_hat,temp_valid_ftrs,stem_loop,model_path)
+
+    # ?? remove!
+    # np.savez('temp.npz',class_hat=temp_class_hat,class_true=ftr_dict['peri_ictal'])
+    # exit()
+
+    # Plot sgrams
+    ieeg, Sf, tpts_sec = ief.import_ieeg(stem_loop + '.mat')
+    print(ieeg.shape)
+    plot_fig_w_sgrams(ieeg[12,:],Sf,tpts_sec,ftr_dict['peri_ictal'],temp_class_hat, stem_loop, model_path)
 
     # Compute sensitivity, specificity, and balanced accuracy
     sens[stem_ct] = np.mean(temp_class_hat_bool[ftr_dict['peri_ictal'] == 1] == 1)
