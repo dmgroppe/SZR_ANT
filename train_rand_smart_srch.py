@@ -20,14 +20,11 @@ if len(sys.argv)==1:
 if len(sys.argv)!=2:
     raise Exception('Error: train_srchC.py requires 1 argument: srch_params.json')
 
+# Import Parameters from json file
 param_fname=sys.argv[1]
 print('Importing model parameters from %s' % param_fname)
 with open(param_fname) as param_file:
     params=json.load(param_file)
-
-#print('C={}'.format(params['C']))
-try_C=np.linspace(params['C'][0],params['C'][1],params['C'][2])
-print('try_C={}'.format(try_C))
 model_name=params['model_name']
 print('Model name is %s' % model_name)
 model_type=params['model_type']
@@ -39,6 +36,10 @@ if params['ictal_wind']=='small':
 else:
     small_ictal_wind=False
 print('Ictal wind feature currently ignored')
+n_rand_params=int(params['n_rand_params'])
+print('# of random initial hyperparameters to try %d' % n_rand_params)
+patience=int(params['patience'])
+print('# of steps to wait when performance no longer increases %d' % patience)
 
 
 # Import list of subjects to use
@@ -158,7 +159,6 @@ for sub_ct, sub in enumerate(train_subs_list):
 # print('wind_ct=%d' % wind_ct)
 # np.savez('temp.npz',ftrs=ftrs,szr_class=szr_class,sub_id=sub_id)
 
-# TODO grid search gamma values?
 #gamma defines how much influence a single training example has. The larger gamma is, the closer other examples must be to be affected.
 # Proper choice of C and gamma is critical to the SVM’s performance. One is advised to
 # use sklearn.model_selection.GridSearchCV with C and gamma spaced exponentially far apart
@@ -179,8 +179,6 @@ for sub_ct, sub in enumerate(train_subs_list):
 # LOOCV on training data
 n_train_subs = len(train_subs_list)
 #n_train_subs=2 # TODO remove this!!! ??
-n_rand_params=3 # TODO get this from json file
-patience=2 # TODO get this from json file
 
 valid_sens = np.zeros((n_train_subs,n_rand_params))
 valid_spec = np.zeros((n_train_subs,n_rand_params))
@@ -314,27 +312,6 @@ for rand_ct in range(n_rand_params):
             C_direction = -1
 
 
-    # Save current performance metrics
-    out_fname=os.path.join(model_path,'classify_metrics_srch.npz')
-    np.savez(out_fname,
-         valid_sens=valid_sens,
-         valid_spec=valid_spec,
-         valid_bal_acc=valid_bal_acc,
-         train_sens=train_sens,
-         train_spec=train_spec,
-         train_bal_acc=train_bal_acc,
-         train_subs_list=train_subs_list,
-         mn_stim_latency=mn_stim_latency,
-         pptn_missed_szrs=pptn_missed_szrs,
-         pptn_preonset_stim=pptn_preonset_stim,
-         rand_ct=rand_ct,
-         C_vals=C_vals,
-         gamma_vals=gamma_vals,
-         best_models=best_models,
-         ftr_types=ftr_types,
-         left_out_id=left_out_id)
-
-
     # Report mean CI performance
     # print('# of patients=%d' % len(train_subs_list))
     print('DONE WITH RANDOM GAMMA VALUE of %.2E' % gam)
@@ -366,6 +343,29 @@ for rand_ct in range(n_rand_params):
     else:
         print('Best accuracy so far is still: %f' % best_valid_bal_acc)
         print('Using C=%.2E and gam=%.2E' % (best_C,best_gam))
+
+    # Save current performance metrics
+    out_fname=os.path.join(model_path,'classify_metrics_srch.npz')
+    np.savez(out_fname,
+         valid_sens=valid_sens,
+         valid_spec=valid_spec,
+         valid_bal_acc=valid_bal_acc,
+         train_sens=train_sens,
+         train_spec=train_spec,
+         train_bal_acc=train_bal_acc,
+         train_subs_list=train_subs_list,
+         mn_stim_latency=mn_stim_latency,
+         pptn_missed_szrs=pptn_missed_szrs,
+         pptn_preonset_stim=pptn_preonset_stim,
+         rand_ct=rand_ct,
+         C_vals=C_vals,
+         gamma_vals=gamma_vals,
+         best_valid_bal_acc=best_valid_bal_acc,
+         best_C = best_C,
+         best_gam=best_gam,
+         best_models=best_models,
+         ftr_types=ftr_types,
+         left_out_id=left_out_id)
 
 print('Done!')
 print('Best accuracy: %f' % best_valid_bal_acc)
