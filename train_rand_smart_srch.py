@@ -298,17 +298,17 @@ for rand_ct in range(n_rand_params):
             break
         elif C_direction==1:
             print('Train Acc=%.2f Valid Acc=%.2f, still increasing C' % (mn_temp_train_bacc, mn_temp_valid_bacc))
-            C = C * 10
+            C = C * 5
         elif C_direction==-1:
             print('Train Acc=%.2f Valid Acc=%.2f, still decreasing C' % (mn_temp_train_bacc, mn_temp_valid_bacc))
-            C = C/10
+            C = C/5
         elif mn_temp_train_bacc<mn_temp_valid_bacc:
             print('Train Acc=%.2f Valid Acc=%.2f, increasing C' % (mn_temp_train_bacc,mn_temp_valid_bacc))
-            C=C*10
+            C=C*5
             C_direction=1
         else:
             print('Train Acc=%.2f Valid Acc=%.2f, decreasing C' % (mn_temp_train_bacc, mn_temp_valid_bacc))
-            C=C/10
+            C=C/5
             C_direction = -1
 
 
