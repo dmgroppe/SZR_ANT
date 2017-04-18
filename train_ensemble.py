@@ -18,7 +18,7 @@ if len(sys.argv)==1:
     print('Usage: train_ensemble.py params.json')
     exit()
 if len(sys.argv)!=2:
-    raise Exception('Error: train_ensemble.py requires 1 arumgent: params.json')
+    raise Exception('Error: train_ensemble.py requires 1 argument: params.json')
 
 param_fname=sys.argv[1]
 print('Importing model parameters from %s' % param_fname)
@@ -34,6 +34,10 @@ model_name=params['model_name']
 print('Model name is %s' % model_name)
 model_type=params['model_type']
 print('Model type is %s' % model_type)
+if model_type!='logreg':
+    # Read gamma SVM hyperparameter
+    gamma = float(params['gamma'])
+    print('Gamma is %f' % gamma)
 ftr_types=params['use_ftrs']
 print('Features being used: {}'.format(ftr_types))
 if params['ictal_wind']=='small':
@@ -208,10 +212,10 @@ for C_ct, C in enumerate(try_C):
             del model # clear model just in case
         if model_type=='svm':
             from sklearn import svm
-            model = svm.SVC(class_weight='balanced', C=C)
+            model = svm.SVC(class_weight='balanced', C=C, gamma=gamma)
         elif model_type=='lsvm':
             from sklearn import svm
-            model = svm.SVC(class_weight='balanced', kernel='linear', C=C)
+            model = svm.SVC(class_weight='balanced', kernel='linear', C=C, gamma=gamma)
         else:
             from sklearn import linear_model
             model = linear_model.LogisticRegression(class_weight='balanced', C=C)
