@@ -28,4 +28,6 @@ Fill out the column USE4CLASSIFIER with “use” if the data are usable. If not
 
 
 
+*. Target stimulation window is 4 seconds before clinician onset until 9 seconds after clinician onset. Note that due to rounding, exact timing of clinician onset is +/- 2 seconds.
+
 
