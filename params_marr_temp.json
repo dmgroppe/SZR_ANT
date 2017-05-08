@@ -1,6 +1,6 @@
 {"model_type": "svm",
-"model_name": "rep_smart_srch", 
-"C": "1.28E-05",
-"gamma": "1.29E-04",
+"model_name": "ensemb_temp", 
+"C": "1",
+"gamma": "1",
 "ictal_wind": "small",
 "use_ftrs": ["PWR","PWR_3SEC","PWRSTD_3SEC","PWR_9SEC","VLTG","VLTG_3SEC","VLTGSTD_3SEC"]}

@@ -12,6 +12,7 @@ from sklearn import linear_model
 from sklearn.externals import joblib
 import sys
 import json
+import pickle
 from shutil import copyfile
 
 if len(sys.argv)==1:
@@ -168,6 +169,8 @@ for sub_ct, sub in enumerate(train_subs_list):
         sub_id[wind_ct:wind_ct+temp_n_wind]=np.ones(temp_n_wind)*sub_ct
         wind_ct+=temp_n_wind
 
+np.savez('temp_data_ensemb.npz', ftrs=ftrs, szr_class=szr_class, sub_id=sub_id)
+exit()
 
 # print('File ct=%d' % file_ct)
 # print('wind_ct=%d' % wind_ct)

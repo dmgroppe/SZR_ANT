@@ -9,6 +9,7 @@ import os
 import sys
 import ieeg_funcs as ief
 import dgFuncs as dg
+import pickle
 from sklearn import svm
 from sklearn.externals import joblib
 import json
@@ -132,8 +133,7 @@ for sub_ct, sub in enumerate(train_subs_list):
                 temp_f_stem = f_parts[0] + '_' + f_parts[1] + '_' + f_parts[2]
                 if temp_f_stem==f_stem:
                     # load file
-                    #print('Loading %s' % f)
-                    print('Loading %s' % os.path.join(ftr_path, f))
+                    #print('Loading %s' % os.path.join(ftr_path, f))
                     ftr_dict = np.load(os.path.join(ftr_path, f))
                     file_found=True
                     # break out of for loop
@@ -154,6 +154,8 @@ for sub_ct, sub in enumerate(train_subs_list):
         sub_id[wind_ct:wind_ct+temp_n_wind]=np.ones(temp_n_wind)*sub_ct
         wind_ct+=temp_n_wind
 
+#np.savez('temp_data.npz',ftrs=ftrs, szr_class=szr_class, sub_id=sub_id)
+#exit()
 
 # print('File ct=%d' % file_ct)
 # print('wind_ct=%d' % wind_ct)
@@ -191,6 +193,7 @@ train_bal_acc = np.zeros((n_train_subs,n_rand_params))
 pptn_missed_szrs = np.zeros((n_train_subs,n_rand_params))
 pptn_preonset_stim = np.zeros((n_train_subs,n_rand_params))
 mn_stim_latency = np.zeros((n_train_subs,n_rand_params))
+n_train_steps=np.zeros(n_rand_params)
 #C_vals=np.random.exponential(1,n_rand_params)
 #gamma_vals=np.random.exponential(1,n_rand_params)
 C_vals=np.ones(n_rand_params)
@@ -241,6 +244,8 @@ for rand_ct in range(n_rand_params):
             #model.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code ?? TODO remove this
             #clf = svm.SVC()
             # >>> clf.fit(X, y)
+
+            # Save model from this left out sub
             temp_models[left_out_id]=model
 
             # make predictions from training and validation data
@@ -268,7 +273,15 @@ for rand_ct in range(n_rand_params):
         mn_temp_train_bacc = np.mean(temp_train_bacc)
         if mn_temp_valid_bacc>best_vbal_acc_this_gam:
             best_vbal_acc_this_gam=mn_temp_valid_bacc
-            print('Best valid acc so far: %.2f' % best_vbal_acc_this_gam)
+            best_models_this_gam=temp_models.copy()
+            C_vals[rand_ct]=C #Store current best C value for this gamma value
+
+            #TODO: remove this?
+            # out_model_fname = os.path.join(model_path, 'temp_classify_models_srch.pkl')
+            # print('Saving best for model for this gamma value as %s' % out_model_fname)
+            # pickle.dump(best_models_this_gam, open(out_model_fname, 'wb'))
+
+            print('Best valid acc so far: %.2f for current gamma value' % best_vbal_acc_this_gam)
             # Training Data Results
             # train_acc[:,rand_ct]=np.mean(jive[train_bool]) #TODO remove!
             #print('Training accuracy: %f' % train_acc[left_out_id,rand_ct])
@@ -289,26 +302,31 @@ for rand_ct in range(n_rand_params):
             valid_bal_acc[:,rand_ct] = temp_valid_bacc
             #print('Validation balanced accuracy: %f' % valid_bal_acc[left_out_id,rand_ct])
 
-            C_vals[rand_ct]=C
             steps_since_best=0
         else:
             steps_since_best+=1
+
+        C_change=np.abs(mn_temp_train_bacc-mn_temp_valid_bacc)*20
+        if C_change<2:
+            C_change=2
+        print('C_change=%f' % C_change)
+        n_train_steps[rand_ct] += 1
 
         if steps_since_best>patience:
             break
         elif C_direction==1:
             print('Train Acc=%.2f Valid Acc=%.2f, still increasing C' % (mn_temp_train_bacc, mn_temp_valid_bacc))
-            C = C * 5
+            C = C * C_change
         elif C_direction==-1:
             print('Train Acc=%.2f Valid Acc=%.2f, still decreasing C' % (mn_temp_train_bacc, mn_temp_valid_bacc))
-            C = C/5
+            C = C/C_change
         elif mn_temp_train_bacc<mn_temp_valid_bacc:
             print('Train Acc=%.2f Valid Acc=%.2f, increasing C' % (mn_temp_train_bacc,mn_temp_valid_bacc))
-            C=C*5
+            C=C*C_change
             C_direction=1
         else:
             print('Train Acc=%.2f Valid Acc=%.2f, decreasing C' % (mn_temp_train_bacc, mn_temp_valid_bacc))
-            C=C/5
+            C=C/C_change
             C_direction = -1
 
 
@@ -334,19 +352,24 @@ for rand_ct in range(n_rand_params):
 
     temp_mn_acc=np.mean(valid_bal_acc[:, rand_ct],axis=0)
     if  temp_mn_acc> best_valid_bal_acc:
-        best_models = temp_models
-        best_C=C
+        best_models = best_models_this_gam.copy()
+        out_model_fname = os.path.join(model_path, 'classify_models_srch.pkl')
+        print('Saving model as %s' % out_model_fname)
+        pickle.dump(best_models, open(out_model_fname, 'wb'))
+        #best_C=C
+        best_C=C_vals[rand_ct]
         best_gam=gam
         best_valid_bal_acc = temp_mn_acc
         print('NEW best accuracy so far: %f' % best_valid_bal_acc)
         print('Using C=%.2E and gam=%.2E' % (best_C,best_gam))
     else:
+        print('No improvement')
         print('Best accuracy so far is still: %f' % best_valid_bal_acc)
         print('Using C=%.2E and gam=%.2E' % (best_C,best_gam))
 
     # Save current performance metrics
-    out_fname=os.path.join(model_path,'classify_metrics_srch.npz')
-    np.savez(out_fname,
+    out_metrics_fname=os.path.join(model_path,'classify_metrics_srch.npz')
+    np.savez(out_metrics_fname,
          valid_sens=valid_sens,
          valid_spec=valid_spec,
          valid_bal_acc=valid_bal_acc,
@@ -357,6 +380,7 @@ for rand_ct in range(n_rand_params):
          mn_stim_latency=mn_stim_latency,
          pptn_missed_szrs=pptn_missed_szrs,
          pptn_preonset_stim=pptn_preonset_stim,
+         n_train_steps=n_train_steps,
          rand_ct=rand_ct,
          C_vals=C_vals,
          gamma_vals=gamma_vals,
@@ -366,6 +390,10 @@ for rand_ct in range(n_rand_params):
          best_models=best_models,
          ftr_types=ftr_types,
          left_out_id=left_out_id)
+    # out_model_fname=os.path.join(model_path,'classify_models_srch.pkl')
+    # pickle.dump(best_models,open(out_model_fname,'wb'))
+    # print('TEMP DONE!!!!') #TODO REMOVE ??
+    # exit()
 
 print('Done!')
 print('Best accuracy: %f' % best_valid_bal_acc)
