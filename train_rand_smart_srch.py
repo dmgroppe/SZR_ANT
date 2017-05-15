@@ -36,7 +36,7 @@ if params['ictal_wind']=='small':
     small_ictal_wind=True
 else:
     small_ictal_wind=False
-print('Ictal wind feature currently ignored')
+#TODO make small_ictal_wind feature work
 n_rand_params=int(params['n_rand_params'])
 print('# of random initial hyperparameters to try %d' % n_rand_params)
 patience=int(params['patience'])
@@ -57,7 +57,7 @@ for sub in use_subs_df.iloc[:,0]:
         
 print('Training subs: {}'.format(train_subs_list))
 
-
+# Find out how much data exists to preallocate memory
 n_ftr_types=len(ftr_types)
 n_dim=0
 n_wind=0
@@ -79,7 +79,10 @@ for type_ct, ftr_type in enumerate(ftr_types):
                 #fname_stem_list.append(f_stem)
                 temp_stem_list.append(f_stem)
                 ftr_dict=np.load(os.path.join(ftr_path,f))
-                n_wind+=np.sum(ftr_dict['peri_ictal']>=0)
+                if small_ictal_wind:
+                    n_wind+=np.sum(ftr_dict['peri_ictal']>=0)
+                else:
+                    n_wind += len(ftr_dict['peri_ictal'])
             sub_stem_dict[sub]=temp_stem_list
     else:
         temp_n_wind=0
@@ -99,7 +102,10 @@ for type_ct, ftr_type in enumerate(ftr_types):
                 #     raise ValueError('File stems do not match across features')
                 print('Loading file %s' % targ_file)
                 ftr_dict=np.load(targ_file)
-                temp_n_wind+=np.sum(ftr_dict['peri_ictal']>=0)
+                if small_ictal_wind:
+                    temp_n_wind+=np.sum(ftr_dict['peri_ictal']>=0)
+                else:
+                    temp_n_wind += len(ftr_dict['peri_ictal'])
                 f_ct+=1
         if temp_n_wind!=n_wind:
             raise ValueError('# of time windows do not match across features')
@@ -143,16 +149,19 @@ for sub_ct, sub in enumerate(train_subs_list):
                 print('Trying to find %s for %s' % (f_stem,ftr_type))
                 raise ValueError('File stem not found')
             # Add ftr to collection
-            temp_use_ids=ftr_dict['peri_ictal'] >= 0
+            if small_ictal_wind:
+                temp_class=ftr_dict['peri_ictal']
+            else:
+                temp_class = ftr_dict['peri_ictal'] != 0
+            temp_use_ids = temp_class >= 0
             temp_n_dim = ftr_dict['ftrs'].shape[0]
             temp_n_wind=np.sum(temp_use_ids)
-            #temp_n_dim, temp_n_wind=ftr_dict['ftrs'].shape
             ftrs[wind_ct:wind_ct + temp_n_wind, dim_ct:dim_ct + temp_n_dim] = ftr_dict['ftrs'][:,temp_use_ids].T
-            #ftrs[wind_ct:wind_ct+temp_n_wind,dim_ct:dim_ct+temp_n_dim]=ftr_dict['ftrs'].T
             dim_ct+=temp_n_dim
-        szr_class[wind_ct:wind_ct+temp_n_wind]=ftr_dict['peri_ictal'][temp_use_ids]
+        szr_class[wind_ct:wind_ct + temp_n_wind] = temp_class[temp_use_ids]
         sub_id[wind_ct:wind_ct+temp_n_wind]=np.ones(temp_n_wind)*sub_ct
         wind_ct+=temp_n_wind
+
 
 #np.savez('temp_data.npz',ftrs=ftrs, szr_class=szr_class, sub_id=sub_id)
 #exit()
@@ -160,13 +169,6 @@ for sub_ct, sub in enumerate(train_subs_list):
 # print('File ct=%d' % file_ct)
 # print('wind_ct=%d' % wind_ct)
 # np.savez('temp.npz',ftrs=ftrs,szr_class=szr_class,sub_id=sub_id)
-
-#gamma defines how much influence a single training example has. The larger gamma is, the closer other examples must be to be affected.
-# Proper choice of C and gamma is critical to the SVM’s performance. One is advised to
-# use sklearn.model_selection.GridSearchCV with C and gamma spaced exponentially far apart
-# to choose good values.
-# C = 1.0  # SVM regularization parameter, the smaller it is, the stronger the regularization
-# C = 0.1
 
 # np.savez('temp_ftrs.npz',ftrs=ftrs,szr_class=szr_class,sub_id=sub_id)
 # exit()
@@ -197,20 +199,21 @@ n_train_steps=np.zeros(n_rand_params)
 #C_vals=np.random.exponential(1,n_rand_params)
 #gamma_vals=np.random.exponential(1,n_rand_params)
 C_vals=np.ones(n_rand_params)
+# C = SVM regularization parameter, the smaller it is, the stronger the regularization
 gamma_vals=10**np.random.uniform(-10,10,n_rand_params)
+#gamma defines how much influence a single training example has. The larger gamma is, the closer other examples must be to be affected.
 best_valid_bal_acc=0
 best_models=None
 best_C=None
 best_gam=None
 
 for rand_ct in range(n_rand_params):
-    C=C_vals[rand_ct]
+    C=C_vals[rand_ct]  # Start with C=1 and then change it according to train-testing error dif
     C_direction=0
     gam=gamma_vals[rand_ct]
     print('Random run %d/%d' % (rand_ct+1,n_rand_params))
     print('Using gamma value of %.2E' % gam)
 
-    # Start with C=1 and then change it according to train-testing error dif
     best_vbal_acc_this_gam=0 # best balanced accuracy for this value of gamma
     steps_since_best = 0
     for C_loop in range(10):
@@ -239,7 +242,7 @@ for rand_ct in range(n_rand_params):
                 from sklearn import linear_model
                 model = linear_model.LogisticRegression(class_weight='balanced', C=C, penalty='l1')
 
-            # model.fit? # could add sample weight to weight each subject equally
+            # TODO model.fit? # could add sample weight to weight each subject equally (worthwhile?)
             model.fit(ftrs[sub_id!=left_out_id,:], szr_class[sub_id!=left_out_id]) # Correct training data
             #model.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code ?? TODO remove this
             #clf = svm.SVC()
@@ -321,10 +324,14 @@ for rand_ct in range(n_rand_params):
             print('Train Acc=%.2f Valid Acc=%.2f, still decreasing C' % (mn_temp_train_bacc, mn_temp_valid_bacc))
             C = C/C_change
         elif mn_temp_train_bacc<mn_temp_valid_bacc:
+            C = C/5
+        elif (mn_temp_train_bacc*.99)<mn_temp_valid_bacc:
+            # First time through, C_direction has not been set yet
             print('Train Acc=%.2f Valid Acc=%.2f, increasing C' % (mn_temp_train_bacc,mn_temp_valid_bacc))
             C=C*C_change
             C_direction=1
         else:
+            # First time through, C_direction has not been set yet
             print('Train Acc=%.2f Valid Acc=%.2f, decreasing C' % (mn_temp_train_bacc, mn_temp_valid_bacc))
             C=C/C_change
             C_direction = -1

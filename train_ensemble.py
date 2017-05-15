@@ -21,6 +21,7 @@ if len(sys.argv)==1:
 if len(sys.argv)!=2:
     raise Exception('Error: train_ensemble.py requires 1 argument: params.json')
 
+# Import parameters from json file
 param_fname=sys.argv[1]
 print('Importing model parameters from %s' % param_fname)
 with open(param_fname) as param_file:
@@ -30,7 +31,7 @@ try_C=[]
 # try_C.append(float(np.sys.argv[1]))
 try_C.append(float(params['C']))
 print('C value set to %f' % try_C[0])
-# model_name=sys.argv[2]
+# C = SVM regularization parameter, the smaller it is, the stronger the regularization
 model_name=params['model_name']
 print('Model name is %s' % model_name)
 model_type=params['model_type']
@@ -39,6 +40,7 @@ if model_type!='logreg':
     # Read gamma SVM hyperparameter
     gamma = float(params['gamma'])
     print('Gamma is %f' % gamma)
+    #gamma defines how much influence a single training example has. The larger gamma is, the closer other examples must be to be affected.
 ftr_types=params['use_ftrs']
 print('Features being used: {}'.format(ftr_types))
 if params['ictal_wind']=='small':
@@ -62,6 +64,8 @@ for sub in use_subs_df.iloc[:,0]:
         train_subs_list.append(sub)
 print('Training subs: {}'.format(train_subs_list))
 
+
+# Find out how much data exists to preallocate memory
 n_ftr_types=len(ftr_types)
 n_dim=0
 n_wind=0
@@ -175,14 +179,6 @@ exit()
 # print('File ct=%d' % file_ct)
 # print('wind_ct=%d' % wind_ct)
 # np.savez('temp.npz',ftrs=ftrs,szr_class=szr_class,sub_id=sub_id)
-
-# TODO grid search gamma values?
-#gamma defines how much influence a single training example has. The larger gamma is, the closer other examples must be to be affected.
-# Proper choice of C and gamma is critical to the SVM’s performance. One is advised to
-# use sklearn.model_selection.GridSearchCV with C and gamma spaced exponentially far apart
-# to choose good values.
-# C = 1.0  # SVM regularization parameter, the smaller it is, the stronger the regularization
-# C = 0.1
 
 #try_C=np.arange(0.01,1.02,.2) # search 1
 # try_C=np.arange(0.01,0.17,.03) # search 2
