@@ -1,0 +1,10 @@
+#	classif.	onset	pattern	vigilance	origin
+1:	UC	eeg: 20.09.'07 01:34:13.148438	repetitive spiking	unclear	IHB3
+2:	SG	eeg: 25.09.'07 03:10:57.964844	low amplitude fast activity (lafa)	sleep stage II	IHB2
+3:	SG	eeg: 25.09.'07 06:18:50.765625	rhythmic beta waves	sleep stage II	IHB2,IHB3,GC7,GC8,GD7,GD8
+4:	SP	clin: 25.09.'07 08:35:44.58594	NA	awake	IHB1
+5:	SG	eeg: 25.09.'07 09:06:48.359375	low amplitude fast activity (lafa)	sleep stage II	IHB1,IHB2
+6:	SG	eeg: 25.09.'07 10:46:05.417969	rhythmic beta waves	sleep stage II	IHB2,IHB3
+7:	UC	eeg: 26.09.'07 04:29:05.699219	rhythmic beta waves	sleep stage II	IHB1,IHB2
+8:	SP	clin: 26.09.'07 08:47:25.390625	NA	awake	IHB1
+9:	UC	eeg: 27.09.'07 07:09:09.207031	rhythmic beta waves	unclear	IHB1,IHB2

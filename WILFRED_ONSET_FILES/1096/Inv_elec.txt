@@ -1,0 +1,1 @@
+G (4x8 grid ), TP (1x4 strip ), TBA (1x4 strip ), TBB (1x4 strip ), TBC (1x6 strip ), HL (1x10 depth ), HRA (1x5 depth ), HRB (1x5 depth ), HRC (1x5 depth )

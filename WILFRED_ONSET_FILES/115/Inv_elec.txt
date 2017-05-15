@@ -1,0 +1,1 @@
+TO (1x4 strip ), IH (1x8 strip ), FR (1x12 strip ), TBA (1x4 strip ), TBB (1x4 strip ), HR (1x10 depth ), G (1x16 grid )

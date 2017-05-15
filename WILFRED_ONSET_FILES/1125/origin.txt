@@ -1,0 +1,15 @@
+#	classif.	onset	pattern	vigilance	origin
+1:	CP	eeg: 15.09.'09 17:35:42.650391	rhythmic alpha waves	unclear	HR12
+2:	UC	eeg: 15.09.'09 21:31:23.825195	rhythmic beta waves	unclear	HR12
+3:	UC	eeg: 16.09.'09 03:11:40.125000	rhythmic alpha waves	unclear	HR12
+4:	CP	eeg: 16.09.'09 07:45:53.591797	rhythmic beta waves	awake	HR12
+5:	CP	eeg: 16.09.'09 11:45:34.333008	rhythmic beta waves	unclear	HR12
+6:	CP	eeg: 16.09.'09 17:42:03.783203	rhythmic beta waves	unclear	HR12
+7:	UC	eeg: 16.09.'09 22:53:01.233398	rhythmic alpha waves	awake	HR12
+8:	SP	eeg: 17.09.'09 04:26:59.383789	rhythmic alpha waves	unclear	HR12
+9:	UC	eeg: 17.09.'09 07:23:34.591797	rhythmic alpha waves	awake	HR12
+10:	SP	eeg: 17.09.'09 10:44:17.974609	rhythmic theta waves	awake	HR12
+11:	SP	eeg: 17.09.'09 14:03:44.758789	rhythmic alpha waves	awake	HR12
+12:	UC	eeg: 17.09.'09 18:21:08.66406	rhythmic theta waves	awake	HR12
+13:	SP	eeg: 18.09.'09 19:46:23.233398	rhythmic alpha waves	awake	HR12
+14:	UC	eeg: 19.09.'09 08:35:59.291992	rhythmic alpha waves	awake	HR12

@@ -1,0 +1,3 @@
+A lot of dc drifts in general
+#3 has some oscillation before "seizure", strange looking
+#5 osillcation and a big seizure coming

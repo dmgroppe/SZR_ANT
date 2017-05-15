@@ -1,0 +1,1 @@
+HLA (1x5 depth ), HLB (1x5 depth ), HLC (1x5 depth ), TPR (1x5 depth ), HRA (1x5 depth ), HRB (1x5 depth ), HRC (1x5 depth ), BFLA (1x9 depth ), BFRA (1x9 depth ), BFLB (1x9 depth ), BFRB (1x9 depth )

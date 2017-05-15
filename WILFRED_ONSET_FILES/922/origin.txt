@@ -1,0 +1,31 @@
+#	classif.	onset	pattern	vigilance	origin
+1:	UC	eeg: 09.09.'08 00:21:38.150391	low amplitude fast activity (lafa)	unclear	IHD2,IHD3,IHD4
+2:	UC	clin: 09.09.'08 10:50:28.400391	NA	unclear	IHD2
+3:	SP	eeg: 09.09.'08 15:10:02.116211	low amplitude fast activity (lafa)	unclear	IHD1,IHD2,IHD3,IHD4
+4:	UC	eeg: 09.09.'08 21:15:31.533203	low amplitude fast activity (lafa)	unclear	IHD2,IHD3,IHD4
+5:	CP	eeg: 09.09.'08 21:35:52.283203	polyspikes	unclear	GA2,GA3,GB1,GB2,GB3,GB4,GC1,GC2,GC3,GC4,GD1,GD2,GD3
+6:	UC	eeg: 10.09.'08 00:49:07.241211	polyspikes	unclear	GA2,GA3,GA4,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+7:	UC	eeg: 10.09.'08 01:51:02.891602	polyspikes	unclear	GA2,GA3,GA4,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+8:	CP	eeg: 10.09.'08 02:19:34.150391	polyspikes	unclear	GA2,GA3,GA4,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+9:	UC	eeg: 10.09.'08 07:26:28.808594	polyspikes	unclear	GA2,GA3,GA4,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+10:	UC	eeg: 10.09.'08 08:01:53.758789	polyspikes	unclear	GA2,GA3,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+11:	UC	eeg: 10.09.'08 09:10:07.641602	polyspikes	awake	GA2,GA3,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+12:	UC	eeg: 10.09.'08 10:23:34.849609	polyspikes	awake	GA2,GA3,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+13:	UC	eeg: 10.09.'08 11:46:21.816406	polyspikes	unclear	GA2,GA3,GA4,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+14:	UC	eeg: 11.09.'08 01:26:47.316406	polyspikes	unclear	GA2,GA3,GA4,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+15:	UC	eeg: 11.09.'08 03:41:58.150391	polyspikes	awake	GA2,GA3,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+16:	SP	eeg: 11.09.'08 07:28:10.683594	polyspikes	awake	GA2,GA3,GA4,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+17:	SP	eeg: 11.09.'08 08:03:57.325195	polyspikes	awake	GA2,GA3,GB2,GB3,GB4,GC1,GC2,GC3
+18:	UC	eeg: 11.09.'08 20:23:08.983398	rhythmic beta waves	unclear	GA2,GA3,GA4,GB1,GB2,GB3,GC1,GC2,GC3
+19:	UC	eeg: 11.09.'08 22:31:44.891602	polyspikes	unclear	GA2,GA3,GA4,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+20:	UC	eeg: 11.09.'08 23:06:46.133789	polyspikes	unclear	GA2,GA3,GA4,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+21:	UC	eeg: 12.09.'08 00:29:58.116211	polyspikes	unclear	GA2,GA3,GA4,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+22:	UC	eeg: 12.09.'08 03:48:28.974609	polyspikes	unclear	GA2,GA3,GA4,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+23:	UC	eeg: 12.09.'08 07:06:47.633789	polyspikes	awake	GA2,GA3,GA4,GB2,GB3,GB4,GC1,GC2
+24:	UC	eeg: 12.09.'08 09:50:10.575195	polyspikes	unclear	GA2,GA3,GA4,GB1,GB2,GB3,GB4,GC1,GC2
+25:	UC	eeg: 12.09.'08 14:55:15.741211	polyspikes	awake	GA2,GA3,GA4,GB1,GB2,GB3,GB4,GC1,GC2
+26:	UC	eeg: 12.09.'08 23:20:29.0	rhythmic beta waves	sleep stage II	GA2,GA3,GA4,GA5,GB1,GB2,GB3,GB4,GC1,GC2,GC3,GC4
+27:	UC	eeg: 13.09.'08 00:29:32.608398	rhythmic beta waves	sleep stage II	GA2,GA3,GA4,GB1,GB2,GB3,GB4,GC1,GC2,GC3
+28:	UC	eeg: 13.09.'08 01:28:30.325195	rhythmic beta waves	awake	GA2,GA3,GA4,GB1,GB2,GB3,GB4,GC2,GC3,GC4
+29:	UC	eeg: 13.09.'08 02:27:18.750000	polyspikes	sleep stage II	GB2,GB3,GB4
+30:	UC	eeg: 13.09.'08 05:41:27.658203	polyspikes	awake	GB2,GB3,GC1,GC2,GC3

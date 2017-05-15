@@ -1,0 +1,32 @@
+#	classif.	onset	pattern	vigilance	origin
+1:	UC	eeg: 20.10.'09 18:42:14.20000	rhythmic alpha waves	awake	HAT11,HMT21
+2:	UC	eeg: 20.10.'09 22:41:06.20000	low amplitude fast activity (lafa)	unclear	OPF31,OMF12,OMF13
+3:	UC	eeg: 21.10.'09 02:45:05.20000	low amplitude fast activity (lafa)	unclear	OPF31
+4:	UC	eeg: 21.10.'09 03:45:10.20000	low amplitude fast activity (lafa)	unclear	OPF32
+5:	UC	eeg: 21.10.'09 04:36:27.20000	low amplitude fast activity (lafa)	unclear	OPF31
+6:	UC	eeg: 21.10.'09 04:53:12.20000	low amplitude fast activity (lafa)	unclear	OPF32
+7:	UC	eeg: 21.10.'09 08:07:34.20000	low amplitude fast activity (lafa)	unclear	OPF31,OMF11
+8:	UC	eeg: 21.10.'09 08:09:11.20000	low amplitude fast activity (lafa)	unclear	OAF21,OAF22,OPF31,OMF11
+9:	UC	eeg: 21.10.'09 08:10:19.20000	low amplitude fast activity (lafa)	unclear	OPF31,OPF36,OAF21
+10:	UC	eeg: 21.10.'09 08:11:17.20000	low amplitude fast activity (lafa)	unclear	OPF31,OMF11,OAF21
+11:	UC	eeg: 22.10.'09 01:43:59.20000	low amplitude fast activity (lafa)	unclear	OAF21,OAF22,OPF31,OMF12
+12:	UC	eeg: 22.10.'09 03:44:16.20000	low amplitude fast activity (lafa)	unclear	OPF31
+13:	UC	eeg: 22.10.'09 03:58:09.20000	low amplitude fast activity (lafa)	unclear	OPF31,OPF32,OAF21
+14:	UC	eeg: 22.10.'09 04:06:28.20000	low amplitude fast activity (lafa)	unclear	OPF31
+15:	UC	eeg: 22.10.'09 04:35:16.20000	low amplitude fast activity (lafa)	unclear	OAF21,OAF22,OPF31
+16:	UC	eeg: 22.10.'09 05:24:19.20000	low amplitude fast activity (lafa)	unclear	HAT11
+17:	UC	eeg: 24.10.'09 05:34:07.20000	low amplitude fast activity (lafa)	unclear	OPF31
+18:	UC	eeg: 24.10.'09 08:53:47.20000	low amplitude fast activity (lafa)	unclear	OAF21,OAF22,OMF12,OMF13,OPF31
+19:	UC	eeg: 27.10.'09 01:12:33.10000	low amplitude fast activity (lafa)	unclear	OAF21,OAF22,OPF31,OMF11
+20:	UC	eeg: 28.10.'09 02:28:57.10000	low amplitude fast activity (lafa)	unclear	OPF31,OMF11
+21:	UC	eeg: 28.10.'09 02:49:29.10000	low amplitude fast activity (lafa)	unclear	OPF31,OAF21,OMF11
+22:	UC	eeg: 29.10.'09 00:48:34.10000	low amplitude fast activity (lafa)	unclear	OAF21,OAF22,OPF31,OMF12
+23:	UC	eeg: 29.10.'09 13:35:40.10000	low amplitude fast activity (lafa)	awake	AMT11,HAT11
+24:	UC	eeg: 29.10.'09 13:39:04.10000	low amplitude fast activity (lafa)	unclear	HAT11,AMT11
+25:	CP	eeg: 29.10.'09 17:15:59.10000	low amplitude fast activity (lafa)	awake	HPT21,HPT22,AMT11
+26:	UC	eeg: 29.10.'09 18:13:12.10000	low amplitude fast activity (lafa)	awake	HPT21,HAT11
+27:	UC	eeg: 29.10.'09 18:42:10.10000	low amplitude fast activity (lafa)	awake	OPF31,OPF32,OPF34,OPF35,OMF12,OMF13,OMF14,HPT21,HAT12,OAF21
+28:	UC	eeg: 29.10.'09 18:56:43.10000	low amplitude fast activity (lafa)	awake	HPT21,HPT22,HPT23,HAT11,AMT11
+29:	UC	eeg: 29.10.'09 20:07:29.10000	low amplitude fast activity (lafa)	awake	HAT11
+30:	SP	eeg: 30.10.'09 16:16:36.10000	low amplitude fast activity (lafa)	awake	OAF21,HPT21,HAT11
+31:	SP	eeg: 30.10.'09 18:26:47.10000	low amplitude fast activity (lafa)	awake	HPT21,HAT11

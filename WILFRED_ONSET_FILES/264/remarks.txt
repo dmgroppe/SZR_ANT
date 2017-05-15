@@ -1,0 +1,4 @@
+1 (right before dc shift)
+2 (right before low amp)
+3 (right before dc shift)
+4 (right before dc shift, signal not so good)
