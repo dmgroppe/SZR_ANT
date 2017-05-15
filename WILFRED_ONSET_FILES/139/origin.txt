@@ -1,0 +1,7 @@
+#	classif.	onset	pattern	vigilance	origin
+1:	SP	eeg: 19.11.'03 21:06:03.707031	rhythmic beta waves	unclear	HL2,HL3
+2:	CP	eeg: 24.11.'03 19:23:38.166016	rhythmic beta waves	awake	HL2,HL3,HL4
+3:	SP	eeg: 25.11.'03 06:20:23.19531	rhythmic theta waves	awake	HL4,FT10,HL5,F8,T8
+4:	CP	eeg: 26.11.'03 00:14:51.498047	rhythmic beta waves	sleep stage II	HL4
+5:	CP	eeg: 26.11.'03 05:22:10.158203	rhythmic beta waves	awake	HL4,HL5
+6:	SP	eeg: 26.11.'03 14:55:28.433594	repetitive spiking	awake	HL2,HL3,HL4,HL5,TBA1

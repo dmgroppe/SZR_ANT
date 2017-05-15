@@ -1,0 +1,9 @@
+#	classif.	onset	pattern	vigilance	origin
+1:	CP	eeg: 26.01.'05 23:48:52.945313	rhythmic beta waves	unclear	BRA1,BRA2,BRA3,BRA4,BRB1,BRB2,BRB3,BRB4,HR1,HR2,HR3,HR4,HR5,HR6,HR7,HR8,HR9,HR10
+2:	CP	eeg: 27.01.'05 11:06:21.800781	rhythmic beta waves	unclear	BLA1,BLB1,BLB2
+3:	CP	eeg: 27.01.'05 19:12:30.74219	rhythmic sharp waves	sleep stage II	TRA1,TRA2,TRA3,TRA4,BRA1,BRA2,BRA3,BRA4,BRB1,BRB2,BRB3,HR1,HR2,HR3,HR4,HR5,HR6,HR7,HR8
+4:	UC	eeg: 27.01.'05 23:32:13.699219	rhythmic beta waves	sleep stage II	BLC1,BLC2
+5:	UC	eeg: 27.01.'05 23:44:08.398438	rhythmic beta waves	sleep stage II	BLC1,BLC2,BLC3,BLC4
+6:	UC	eeg: 27.01.'05 23:55:16.351563	repetitive spiking	sleep stage II	TRA1,TRA2,TRA3,BRA3
+7:	CP	eeg: 28.01.'05 00:03:10.425781	rhythmic sharp waves	sleep stage II	TRA2,BRA1,TRA1,TRA3,TRA4,HR4,HR5,HR6,HR7
+8:	CP	eeg: 28.01.'05 09:50:29.683594	repetitive spiking	sleep stage II	TRA3

@@ -1,0 +1,20 @@
+#	classif.	onset	pattern	vigilance	origin
+1:	CP	eeg: 29.01.'08 22:10:05.74219	repetitive spiking	unclear	GF4,GG3,GH2,GH3,TL3,TBA3
+2:	CP	eeg: 31.01.'08 22:51:18.148438	low amplitude fast activity (lafa)	unclear	TBA1
+3:	CP	eeg: 01.02.'08 21:44:26.242188	rhythmic beta waves	sleep stage II	TBA3,GG1,GG2,GG3,GH1,GH2,GH3
+4:	CP	eeg: 02.02.'08 00:27:04.882813	rhythmic beta waves	sleep stage II	TL2,GG4,GH3
+5:	CP	eeg: 02.02.'08 13:51:12.207031	rhythmic beta waves	sleep stage II	GG3,GG4,GH2,GH3,TL2
+6:	CP	eeg: 03.02.'08 01:59:10.523438	rhythmic beta waves	sleep stage II	TL2,TL3,GG3
+7:	CP	eeg: 03.02.'08 05:04:31.300781	rhythmic beta waves	sleep stage II	TL2,TL3,GG3,GH3,TBA1,TBA2,TBA3,TBA4
+8:	CP	eeg: 03.02.'08 20:02:08.359375	low amplitude fast activity (lafa)	awake	TBB2
+9:	CP	eeg: 03.02.'08 22:18:53.50781	rhythmic beta waves	sleep stage II	TL1,TL2
+10:	CP	eeg: 04.02.'08 02:13:38.441406	low amplitude fast activity (lafa)	sleep stage II	TBA4
+11:	CP	eeg: 04.02.'08 05:53:59.859375	rhythmic beta waves	REM	TL2
+12:	CP	eeg: 04.02.'08 14:50:01.433594	rhythmic beta waves	awake	TBA4
+13:	CP	eeg: 05.02.'08 00:40:50.699219	rhythmic beta waves	sleep stage II	TL2,TL3,GG3,GH1,GH2,GH3
+14:	CP	eeg: 05.02.'08 03:26:30.816406	rhythmic beta waves	sleep stage II	TL2,TL3,GG3,GG4,GH1,GH2,GH3,TBA2,TBA3,TBA4
+15:	UC	eeg: 05.02.'08 23:27:14.589844	rhythmic beta waves	sleep stage II	TBA1,TBA2,TBA3,TBA4,TL1,TL2,TL3,TL4,GG2,GG3,GG4,GH1,GH2,GH3
+16:	UC	eeg: 06.02.'08 00:18:43.792969	rhythmic beta waves	sleep stage II	TBA1,TBA2,TBA3,TBA4,TL1,TL2,TL3,TL4,GG2,GG3,GG4,GH1,GH2,GH3
+17:	UC	eeg: 06.02.'08 01:43:23.339844	repetitive spiking	sleep stage II	GG2,GG3,GG4,GH1,GH2,GH3
+18:	UC	eeg: 06.02.'08 03:27:28.351563	repetitive spiking	sleep stage II	GG2,GG3,GG4,GH1,GH2,GH3
+19:	UC	eeg: 06.02.'08 05:24:08.332031	repetitive spiking	sleep stage II	GG3,GH3

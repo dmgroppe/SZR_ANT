@@ -1,0 +1,1 @@
+P (1x8 strip ), PO (1x8 strip ), TO (1x8 strip ), TBLA (1x4 strip ), TBLB (1x4 strip ), TBLC (1x6 strip ), TBRA (1x4 strip ), TBRB (1x4 strip ), HLB (1x5 depth )

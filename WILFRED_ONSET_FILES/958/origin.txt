@@ -1,0 +1,17 @@
+#	classif.	onset	pattern	vigilance	origin
+1:	CP	eeg: 07.07.'09 16:25:44.275391	low amplitude fast activity (lafa)	awake	GE3,GE4,GD3,GD4
+2:	CP	eeg: 10.07.'09 18:28:19.383789	low amplitude fast activity (lafa)	awake	TBC4,TBC5
+3:	UC	eeg: 10.07.'09 19:06:35.729492	low amplitude fast activity (lafa)	sleep stage II	GE3
+4:	CP	eeg: 11.07.'09 08:46:14.383789	low amplitude fast activity (lafa)	awake	TBB3,TBC4,TBC5
+5:	UC	eeg: 12.07.'09 15:28:49.416992	low amplitude fast activity (lafa)	awake	TBC1,TBD5,TBD6
+6:	CP	eeg: 13.07.'09 01:37:29.758789	low amplitude fast activity (lafa)	sleep stage II	GG6,GH6
+7:	CP	eeg: 13.07.'09 02:17:02.233398	low amplitude fast activity (lafa)	sleep stage II	GE8,GF8,OPL5
+8:	UC	eeg: 13.07.'09 02:49:43.404297	low amplitude fast activity (lafa)	sleep stage II	OPL3,OPL4,OPL5,GD8
+9:	UC	eeg: 13.07.'09 02:52:16.845703	low amplitude fast activity (lafa)	sleep stage II	OPL5,OPL6,GH6
+10:	CP	eeg: 13.07.'09 02:53:49.583008	low amplitude fast activity (lafa)	sleep stage II	OPL5,OPL6
+11:	CP	eeg: 13.07.'09 08:42:31.349609	low amplitude fast activity (lafa)	sleep stage II	OPL5,OPL6
+12:	UC	eeg: 13.07.'09 16:10:35.983398	low amplitude fast activity (lafa)	sleep stage II	TBB2
+13:	SG	eeg: 13.07.'09 21:52:27.858398	low amplitude fast activity (lafa)	awake	TBB2
+14:	SG	eeg: 13.07.'09 22:11:41.16602	low amplitude fast activity (lafa)	sleep stage II	OPL5,OPL6,TBD4,TBD5
+15:	SG	eeg: 13.07.'09 22:59:45.983398	low amplitude fast activity (lafa)	sleep stage II	OPL5,OPL6
+16:	SG	eeg: 13.07.'09 23:31:50.108398	low amplitude fast activity (lafa)	sleep stage II	OPL5,OPL6

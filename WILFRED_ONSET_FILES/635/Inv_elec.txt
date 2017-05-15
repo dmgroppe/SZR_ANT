@@ -1,0 +1,1 @@
+TBA (1x4 strip ), TBB (1x4 strip ), TBC (1x6 strip ), TLA (1x4 strip ), TLB (1x4 strip ), TLC (1x6 strip ), HL (1x14 depth ), HRA (1x5 depth ), HRB (1x5 depth ), HRC (1x5 depth )

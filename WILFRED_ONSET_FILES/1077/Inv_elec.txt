@@ -1,0 +1,1 @@
+AMR (1x12 depth ), HAR (1x12 depth ), HPR (1x12 depth ), OTR (1x11 depth ), OIR (1x13 depth ), ICR (1x8 depth ), SCR (1x10 depth ), POR (1x14 depth ), TPR (1x10 depth ), TAR (1x7 depth ), PIR (1x12 depth )

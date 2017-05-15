@@ -1,0 +1,14 @@
+#	classif.	onset	pattern	vigilance	origin
+1:	SP	eeg: 11.07.'06 16:53:12.900391	repetitive spiking	awake	BLB1
+2:	SP	eeg: 11.07.'06 18:08:20.93750	repetitive spiking	awake	BLB1
+3:	UC	eeg: 11.07.'06 23:30:42.429688	repetitive spiking	unclear	BRA2
+4:	SP	eeg: 12.07.'06 08:47:58.75195	repetitive spiking	awake	BLB2
+5:	SG	eeg: 16.07.'06 05:03:20.816406	rhythmic beta waves	sleep stage II	GC1,GC2
+6:	SG	eeg: 16.07.'06 22:17:36.691406	low amplitude fast activity (lafa)	sleep stage II	GD1
+7:	CP	eeg: 17.07.'06 01:17:09.58594	repetitive spiking	sleep stage II	BRA1,BRA2,BRA3,HR1,HR2,HR3,HR4,HR5
+8:	SG	eeg: 17.07.'06 02:42:38.616211	repetitive spiking	sleep stage II	BLB1
+9:	CP	eeg: 17.07.'06 06:24:11.283203	rhythmic beta waves	sleep stage II	GC1
+10:	SP	eeg: 19.07.'06 16:39:35.0	low amplitude fast activity (lafa)	awake	BLA1
+11:	CP	eeg: 19.07.'06 22:48:04.549805	low amplitude fast activity (lafa)	sleep stage II	BRA1
+12:	CP	eeg: 20.07.'06 04:55:24.950195	repetitive spiking	sleep stage II	BLA2
+13:	SG	eeg: 20.07.'06 06:01:18.345703	rhythmic beta waves	sleep stage II	GC1,GD1,BLA3,BLB3

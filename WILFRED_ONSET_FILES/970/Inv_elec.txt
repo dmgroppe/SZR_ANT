@@ -1,0 +1,1 @@
+G (8x7 grid ), FL (1x6 strip ), TL (1x4 strip ), FBA (1x4 strip ), FBB (1x4 strip ), TBA (1x4 strip ), TBB (1x4 strip ), TBC (1x6 strip ), HR (1x10 depth )

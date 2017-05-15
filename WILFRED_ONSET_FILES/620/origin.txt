@@ -1,0 +1,8 @@
+#	classif.	onset	pattern	vigilance	origin
+1:	SG	eeg: 22.09.'06 07:28:40.608398	low amplitude fast activity (lafa)	sleep stage II	TLB3,TLB4
+2:	SP	eeg: 24.09.'06 21:22:49.727539	repetitive spiking	awake	TLB2
+3:	UC	eeg: 24.09.'06 22:45:45.966797	repetitive spiking	awake	TLB2
+4:	UC	eeg: 24.09.'06 22:59:31.483398	repetitive spiking	awake	TLB2
+5:	CP	eeg: 25.09.'06 22:32:11.341797	repetitive spiking	awake	TLB2
+6:	SP	eeg: 26.09.'06 19:42:54.366211	repetitive spiking	awake	TLB2
+7:	SG	eeg: 27.09.'06 00:12:29.308594	low amplitude fast activity (lafa)	sleep stage II	TLA1,TLA2

@@ -1,0 +1,10 @@
+#	classif.	onset	pattern	vigilance	origin
+1:	CP	eeg: 21.06.'09 11:52:24.783203	rhythmic beta waves	awake	HL2,HL3,HL4
+2:	CP	eeg: 21.06.'09 13:56:49.808594	rhythmic beta waves	awake	HL4
+3:	CP	eeg: 22.06.'09 10:33:35.216797	repetitive spiking	awake	HL2,HL2,HL3,HL3,HL4,HL4,HL5,HL6,HL7,HL8,HL9
+4:	CP	eeg: 22.06.'09 14:58:49.866211	rhythmic beta waves	awake	HL4,HL5,HL6
+5:	CP	eeg: 23.06.'09 10:13:36.33203	rhythmic beta waves	awake	HL4
+6:	CP	eeg: 23.06.'09 11:45:01.8789	rhythmic beta waves	awake	HL4,HL5,HL6,HL7,HL8
+7:	CP	eeg: 23.06.'09 14:25:52.366211	rhythmic beta waves	awake	HL2,HL3,HL4,HL5,HL6,HL7,HL8
+8:	CP	eeg: 23.06.'09 16:09:33.741211	repetitive spiking	awake	HL3,HL4
+9:	UC	eeg: 24.06.'09 14:00:30.941406	rhythmic beta waves	awake	HL3,HL4
