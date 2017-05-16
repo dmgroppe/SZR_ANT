@@ -108,7 +108,7 @@ for type_ct, ftr_type in enumerate(ftr_types):
                 # if os.path.isfile(targ_file)==False:
                 #     print('File not found: %s' % targ_file)
                 #     raise ValueError('File stems do not match across features')
-                print('Loading file %s' % targ_file)
+                #print('Loading file %s' % targ_file)
                 ftr_dict=np.load(targ_file)
                 if small_ictal_wind:
                     temp_n_wind+=np.sum(ftr_dict['peri_ictal']>=0)
@@ -148,7 +148,7 @@ for sub_ct, sub in enumerate(train_subs_list):
                 if temp_f_stem==f_stem:
                     # load file
                     #print('Loading %s' % f)
-                    print('Loading %s' % os.path.join(ftr_path, f))
+                    #print('Loading %s' % os.path.join(ftr_path, f))
                     ftr_dict = np.load(os.path.join(ftr_path, f))
                     file_found=True
                     # break out of for loop
@@ -174,7 +174,6 @@ for sub_ct, sub in enumerate(train_subs_list):
         wind_ct+=temp_n_wind
 
 np.savez('temp_data_ensemb.npz', ftrs=ftrs, szr_class=szr_class, sub_id=sub_id)
-exit()
 
 # print('File ct=%d' % file_ct)
 # print('wind_ct=%d' % wind_ct)
@@ -275,7 +274,7 @@ for C_ct, C in enumerate(try_C):
                     if temp_f_stem==stem_loop:
                         # load file
                         #print('Loading %s' % f)
-                        print('Loading %s' % os.path.join(ftr_path, f_valid))
+                        #print('Loading %s' % os.path.join(ftr_path, f_valid))
                         ftr_dict = np.load(os.path.join(ftr_path, f_valid))
                         file_found=True
                         # break out of for loop
