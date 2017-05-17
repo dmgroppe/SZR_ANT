@@ -1,0 +1,6 @@
+{"model_type": "svm",
+"model_name": "smart_srch_small5",
+"n_rand_params": 5,
+"patience": 1,
+"ictal_wind": "small",
+"use_ftrs": ["PWR","PWR_3SEC","PWRSTD_3SEC","PWR_9SEC","VLTG","VLTG_3SEC","VLTGSTD_3SEC"]}
