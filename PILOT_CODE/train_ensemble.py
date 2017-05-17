@@ -1,6 +1,14 @@
 # This script does LOOCV to create an ensemble of classifiers (e.g., 8 patients produces 8 classifiers)
 # Model parameters and features are specified in json file
 # Features are specified by ftr_types
+# Here's an example json parameter file:
+# {"model_type": "logreg", (other options are "svm" and "lsvm")
+# "model_name": "code_testing",
+# "C": "1",
+# "gamma": "1", (ignored for logreg)
+# "ictal_wind": "small", (can be small or max, small=late ictal data ignored, max=preictal, early and late ictal data used)
+# "use_ftrs": ["PWR","PWR_3SEC","PWRSTD_3SEC","PWR_9SEC","VLTG","VLTG_3SEC","VLTGSTD_3SEC"]}
+
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -20,6 +28,8 @@ if len(sys.argv)==1:
     exit()
 if len(sys.argv)!=2:
     raise Exception('Error: train_ensemble.py requires 1 argument: params.json')
+
+#TODO: add error if params wrong
 
 # Import parameters from json file
 param_fname=sys.argv[1]
@@ -45,8 +55,10 @@ ftr_types=params['use_ftrs']
 print('Features being used: {}'.format(ftr_types))
 if params['ictal_wind']=='small':
     small_ictal_wind=True
-else:
+elif params['ictal_wind']=='max':
     small_ictal_wind=False
+else:
+    raise Exception('ictal_wind needs to be "small" or "max"')
 
 # Import list of subjects to use
 path_dict=ief.get_path_dict()
@@ -173,7 +185,8 @@ for sub_ct, sub in enumerate(train_subs_list):
         sub_id[wind_ct:wind_ct+temp_n_wind]=np.ones(temp_n_wind)*sub_ct
         wind_ct+=temp_n_wind
 
-np.savez('temp_data_ensemb.npz', ftrs=ftrs, szr_class=szr_class, sub_id=sub_id)
+# Uncomment below if you want to save the features for exploration in a notebook
+#np.savez('temp_data_ensemb.npz', ftrs=ftrs, szr_class=szr_class, sub_id=sub_id)
 
 # print('File ct=%d' % file_ct)
 # print('wind_ct=%d' % wind_ct)
