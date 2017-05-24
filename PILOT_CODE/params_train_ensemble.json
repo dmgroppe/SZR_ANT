@@ -1,6 +1,6 @@
 {"model_type": "svm",
-"model_name": "code_testing_svm", 
-"C": "4.18e-03",
-"gamma": "1.18e-03",
+"model_name": "temp", 
+"C": "2.50E-01",
+"gamma": "1.67E-05",
 "ictal_wind": "small",
 "use_ftrs": ["PWR","PWR_3SEC","PWRSTD_3SEC","PWR_9SEC","VLTG","VLTG_3SEC","VLTGSTD_3SEC"]}
