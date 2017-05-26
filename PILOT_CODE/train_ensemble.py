@@ -87,6 +87,7 @@ for type_ct, ftr_type in enumerate(ftr_types):
     # Figure out how much data there is to preallocate mem
     ftr_type_dir=os.path.join(path_dict['ftrs_root'],ftr_type)
 
+    f_ct = 0
     if type_ct==0:
         # count time windows and create fname_stem_list
         for sub in train_subs_list:
@@ -103,10 +104,10 @@ for type_ct, ftr_type in enumerate(ftr_types):
                     n_wind+=np.sum(ftr_dict['peri_ictal']>=0)
                 else:
                     n_wind += len(ftr_dict['peri_ictal'])
+                f_ct += 1
             sub_stem_dict[sub]=temp_stem_list
     else:
         temp_n_wind=0
-        f_ct=0
         # Load file extension
         ext_fname = os.path.join(ftr_type_dir, 'ext.txt')
         with open(ext_fname, 'r') as f_ext:
