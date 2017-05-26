@@ -1,6 +1,6 @@
-{"model_type": "svm",
+{"model_type": "logreg",
 "model_name": "temp", 
-"C": "2.50E-01",
+"C": "1E-06",
 "gamma": "1.67E-05",
 "ictal_wind": "small",
-"use_ftrs": ["PWR","PWR_3SEC","PWRSTD_3SEC","PWR_9SEC","VLTG","VLTG_3SEC","VLTGSTD_3SEC"]}
+"use_ftrs": ["MAG","MAG_LAG2","MAG_LAG4","MAG_LAG6","MAG_LAG8"]}

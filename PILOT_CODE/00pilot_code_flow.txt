@@ -26,7 +26,7 @@ plot_onsets_on_sgrams.py NA
 
 Fill out the column USE4CLASSIFIER with “use” if the data are usable. If not, provide the reason (e.g., noEEGdata, clinicianOnsetTooEarly)
 
-6. Compute features with copmute_*_ftrs*.py. *_lag.py means that the code extracts features by averaging over multiple time points of the 0 lag code (e.g., a 3 sec moving avg).
+6. Compute features with compute_*_ftrs*.py. *_lag.py means that the code extracts features by averaging over multiple time points of the 0 lag code (e.g., a 3 sec moving avg).
 
 
 *. Target stimulation window is 4 seconds before clinician onset until 9 seconds after clinician onset. Note that due to rounding, exact timing of clinician onset is +/- 2 seconds.
