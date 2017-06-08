@@ -2,4 +2,4 @@
 "model_name": "code_testing", 
 "C": "1",
 "ictal_wind": "small",
-"use_ftrs": ["MAG","MAG_LAG4","MAG_LAG8","DIFREQ_LAG4","DIFREQ_LAG8"]}
+"use_ftrs": ["DIFREQ_LAG2"]}
