@@ -2,4 +2,4 @@
 "model_name": "code_testing", 
 "C": "1",
 "ictal_wind": "small",
-"use_ftrs": ["DIFREQ_LAG2"]}
+"use_ftrs": ["ADELT_LAG4"]}
