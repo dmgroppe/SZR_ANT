@@ -99,7 +99,7 @@ for sub in use_subs_df.iloc[:,0]:
         # Extract freq band magnitude via IIR filtering and Hilbert transform
         wind_len=int(np.round(Sf))
         wind_step=int(np.round(Sf/10))
-        abs_mag, sgram_sec=ief.bp_hilb_mag(ieeg[onset_chan_id:onset_chan_id+1,:], Sf, wind_len, wind_step,
+        abs_mag, hilb_inst_freq, sgram_sec=ief.bp_hilb_mag(ieeg[onset_chan_id:onset_chan_id+1,:], Sf, wind_len, wind_step,
                                           tpts_sec, bands)
         # abs_mag, sgram_sec=ief.bp_pwr(ieeg[onset_chan_id:onset_chan_id+1,:], Sf, wind_len, wind_step,
         #                          n_tapers, tpts_sec, bands, taper='slepian')

@@ -143,7 +143,8 @@ for man_file_loop in range(n_files):
         ax = plt.gca()
         # 40% Trimmed normalization
         dg.trimmed_normalize(sgram,.4)
-        abs_mx = np.max(np.abs(sgram))
+        #abs_mx = np.max(np.abs(sgram))
+        abs_mx = np.percentile(np.abs(sgram), 99)  # use a saturated color map
         im=ax.imshow(sgram,vmin=-abs_mx,vmax=abs_mx)
         onset_sgram_tpt_lower=dg.find_nearest(sgram_sec,onset_lower_bnd_sec)
         onset_sgram_tpt_upper=dg.find_nearest(sgram_sec,onset_upper_bnd_sec)
@@ -210,10 +211,13 @@ for man_file_loop in range(n_files):
         
         # Plot sgram at all channels
         omni_sgram_z=omni_sgram.copy()
+        # get rid of possible inf values
+        omni_sgram_z[omni_sgram_z==np.inf]=0
+        omni_sgram_z[omni_sgram_z == -np.inf] = 0
         #40% Trimmed normalization
         dg.trimmed_normalize(omni_sgram_z,.4)
         #abs_mx=np.max(np.abs(omni_sgram_z))
-        abs_mx=np.percentile(np.abs(sgram),99) #use a saturated color map
+        abs_mx=np.percentile(np.abs(omni_sgram_z),98) #use a saturated color map
         plt.figure(5)
         plt.clf()
         ax = plt.gca()
@@ -234,8 +238,12 @@ for man_file_loop in range(n_files):
                 xtick_labels.append('noData')
         _=plt.xticks(raw_xticks[0],xtick_labels) #works
         plt.ylim(ylim)
-        plt.yticks(omni_sgram_yticks,chan_labels,fontsize=8)
-        plt.xlim([0,n_wind])
+        if n_chan>36:
+            plt.yticks(omni_sgram_yticks, chan_labels, fontsize=4)
+        else:
+            plt.yticks(omni_sgram_yticks,chan_labels,fontsize=8)
+        #plt.xlim([0,n_wind])
+        plt.xlim([onset_sgram_tpt_lower-250, np.min([onset_sgram_tpt_lower+250, n_wind])])
         plt.ylabel('Hz')
         plt.xlabel('Seconds')
         plt.gca().invert_yaxis()
@@ -251,4 +259,3 @@ for man_file_loop in range(n_files):
         cbar=plt.colorbar(im, cax=cax,ticks=[cbar_min_tick, 0, cbar_max_tick])
         cbar.set_label('40% trim z-score log10(pwr)')
         plt.savefig(os.path.join(figure_path, szr_name + '_omni_sgram.pdf'))
-

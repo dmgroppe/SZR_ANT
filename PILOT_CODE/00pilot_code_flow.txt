@@ -15,7 +15,7 @@ channel info simply goes in the subject’s root directory
 
 
 3. Create csv files of clinician onsets via:
-*create_skeleton_onset.ipynb: Makes a draft of a clinician onset csv file based on raw data text files
+*/Users/davidgroppe/Dropbox/TWH_INFO/CLINICIAN_ONSET_TIMES/create_skeleton_onset.ipynb: Makes a draft of a clinician onset csv file based on raw data text files
 *manually enter seizure onsets and offsets from Sumayya’s spreadsheet:
 *Run onset_time2tpts.ipynb to add additional columns (e.g., when the onset is)
 
