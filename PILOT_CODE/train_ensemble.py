@@ -69,8 +69,8 @@ if os.path.exists(model_path)==False:
 copyfile(param_fname,os.path.join(model_path,'params.json'))
 metrics_file=os.path.join(model_path,'classification_metrics.npz')
 use_subs_df=pd.read_csv(os.path.join(path_dict['szr_ant_root'],'PILOT_CODE','use_subs.txt'),header=None,na_filter=False)
-test_sub_list=[]
-#test_sub_list=['NA']
+#test_sub_list=[]
+test_sub_list=['NA','SV','CC','CT']
 train_subs_list=[]
 for sub in use_subs_df.iloc[:,0]:
     if not sub in test_sub_list:
