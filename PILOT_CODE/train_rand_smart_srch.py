@@ -409,3 +409,5 @@ for rand_ct in range(n_rand_params):
 print('Done!')
 print('Best accuracy: %f' % best_valid_bal_acc)
 print('Using C=%.2E and gam=%.2E' % (best_C,best_gam))
+print('Model name: {}'.format(model_name))
+print('Features used: {}'.format(use_ftrs))

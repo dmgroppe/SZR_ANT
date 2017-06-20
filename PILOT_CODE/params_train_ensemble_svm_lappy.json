@@ -1,0 +1,6 @@
+{"model_type": "svm",
+"model_name": "code_testing_svm", 
+"C": "0.004691",
+"gamma": "5.54E-04",
+"ictal_wind": "small",
+"use_ftrs": ["MAG","MAG_LAG2","MAG_LAG4","MAG_LAG6","MAG_LAG8"]}

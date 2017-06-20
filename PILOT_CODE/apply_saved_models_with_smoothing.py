@@ -41,8 +41,7 @@ def plot_fig(true_class, hat_class, ftr_vals, stem, model_dir):
     #plt.savefig(fig_fname,format='jpg') #try pdf?
     plt.savefig(fig_fname, format='pdf')  # try pdf?
 
-
-def plot_fig_w_sgrams(chan_data,Sf,tpts_sec,true_class, hat_class, stem, model_dir, onset_chan_id, onset_chan):
+def plot_fig_w_sgrams(chan_data,Sf,tpts_sec,true_class, hat_class, stem, model_dir):
     # Presentation version of this code
 
     # Compute spectrogram at onset channel
@@ -68,16 +67,14 @@ def plot_fig_w_sgrams(chan_data,Sf,tpts_sec,true_class, hat_class, stem, model_d
     ylim=[-.03, 1.03]
     plt.ylim(ylim)
     onset_in_sec=sgram_sec[onset_ids[0][0]]
-    offset_in_sec = sgram_sec[onset_ids[0][-1]]
     plt.plot([onset_in_sec, onset_in_sec],ylim,'--k',linewidth=2.0)
-    plt.plot([offset_in_sec, offset_in_sec], ylim, '--k', linewidth=2.0)
     plt.xlim([0, sgram_sec[-1]])
     ytick_labels = ['Preictal','Ictal']
     plt.yticks([0,1])
     #plt.yticks([0, 1], ytick_labels)
     plt.ylabel('P(Ictal)')
     #plt.title(stem)
-    plt.title('Model Predictions: ' + str(onset_chan) + ' chan#' + str(onset_chan_id))
+    plt.title('Model Predictions')
     ax.set_aspect(16)
 
     plt.subplot(3, 1, 2)
@@ -85,15 +82,14 @@ def plot_fig_w_sgrams(chan_data,Sf,tpts_sec,true_class, hat_class, stem, model_d
     plt.plot(tpts_sec,chan_data,'b-',linewidth=1.0)
     ylim = plt.ylim()
     plt.plot([onset_in_sec, onset_in_sec], ylim, '--k', linewidth=2.0)
-    plt.plot([offset_in_sec, offset_in_sec], ylim, '--k', linewidth=2.0)
     plt.ylabel('Voltage')
     plt.xlim([tpts_sec[0], tpts_sec[-1]])
+    plt.ylim(ylim)
     raw_yticks = plt.yticks()
     print(raw_yticks)
     print(type(raw_yticks))
     plt.yticks([raw_yticks[0][0], 0, raw_yticks[0][-1]])
     ax.set_aspect(12)
-    plt.ylim(ylim)
     plt.title('Onset Channel Trace & Spectrogram')
 
     plt.subplot(3, 1, 3)
@@ -102,7 +98,6 @@ def plot_fig_w_sgrams(chan_data,Sf,tpts_sec,true_class, hat_class, stem, model_d
     # Overlay onset
     ylim = plt.ylim()
     plt.plot([onset_ids[0][0], onset_ids[0][0]], ylim, 'k--',linewidth=2.0)
-    plt.plot([onset_ids[0][-1], onset_ids[0][-1]], ylim, 'k--', linewidth=2.0)
     raw_xticks = plt.xticks()
     xtick_labels = list()
     for tick in raw_xticks[0]:
@@ -280,6 +275,8 @@ phat_list=[]
 sens=np.zeros(f_ct)
 spec=np.zeros(f_ct)
 bal_acc=np.zeros(f_ct)
+#alph=0.5 # Smoothing factor 1=no smoothing
+alph=1 # No smoothing
 for stem_ct, stem_loop in enumerate(stem_list):
     # Collect features for each seizure
     dim_ct=0
@@ -327,6 +324,10 @@ for stem_ct, stem_loop in enumerate(stem_list):
     
     # Average predictions across all models and take the majority vote
     temp_class_hat=np.mean(phat_list[stem_ct],axis=1)
+    # Smooth predictions
+    print('Smoothing data with a "now" factor of %f (1=no smoothing)' % alph)
+    for t in range(1,len(temp_class_hat)):
+        temp_class_hat[t]=temp_class_hat[t]*alph+(1-alph)*temp_class_hat[t-1]
     temp_class_hat_bool=temp_class_hat>0.5
     # Plot true class, predicted class, and butterfly plots of features
     plot_fig(ftr_dict['peri_ictal'],temp_class_hat,temp_valid_ftrs,stem_loop,model_path)
@@ -337,8 +338,8 @@ for stem_ct, stem_loop in enumerate(stem_list):
 
     # Plot sgrams
     ieeg, Sf, tpts_sec = ief.import_ieeg(stem_loop + '.mat')
-    plot_fig_w_sgrams(ieeg[ftr_dict['onset_chan_id'],:],Sf,tpts_sec,ftr_dict['peri_ictal'],temp_class_hat, stem_loop,
-                      model_path,ftr_dict['onset_chan_id'],ftr_dict['onset_chan'])
+    print(ieeg.shape)
+    plot_fig_w_sgrams(ieeg[12,:],Sf,tpts_sec,ftr_dict['peri_ictal'],temp_class_hat, stem_loop, model_path)
 
     # Compute sensitivity, specificity, and balanced accuracy
     sens[stem_ct] = np.mean(temp_class_hat_bool[ftr_dict['peri_ictal'] == 1] == 1)

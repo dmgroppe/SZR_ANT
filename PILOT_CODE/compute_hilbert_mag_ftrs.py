@@ -89,6 +89,7 @@ for sub in use_subs_df.iloc[:,0]:
         # Get time point and channel of szr onset
         onset_orig_tpt, onset_chan=ief.clin_onset_tpt_and_chan(szr_name, onset_df)
         onset_chan_id = chan_labels.index(onset_chan)
+
         # Need to recompute time point of clinician onset due to possible change in sampling rate
         onset_sec=orig_tpts_sec[onset_orig_tpt]
         onset_tpt=dg.find_nearest(tpts_sec,onset_sec)
@@ -124,7 +125,8 @@ for sub in use_subs_df.iloc[:,0]:
         ftr_fname=os.path.join(ftr_path,szr_name+'_bpmag.npz')
         print('Saving features to file %s' % ftr_fname)
         #np.savez(ftr_fname,peri_ictal=peri_ictal,time_wind_sec=sgram_sec,abs_mag=abs_mag)
-        np.savez(ftr_fname, peri_ictal=peri_ictal, time_wind_sec=sgram_sec, ftrs=abs_mag, ftr_list=ftr_list)
+        np.savez(ftr_fname, peri_ictal=peri_ictal, time_wind_sec=sgram_sec, ftrs=abs_mag, ftr_list=ftr_list,
+                 onset_chan=onset_chan,onset_chan_id=onset_chan_id)
 
 
 print('Done!')

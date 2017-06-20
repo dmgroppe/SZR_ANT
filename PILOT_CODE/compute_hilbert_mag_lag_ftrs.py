@@ -157,7 +157,8 @@ for sub in use_subs_df.iloc[:,0]:
         ftr_fname=os.path.join(ftr_path,szr_name+'_bpmag_lag'+str(decay_fact)+'.npz')
         print('Saving features to file %s' % ftr_fname)
         #np.savez(ftr_fname,peri_ictal=peri_ictal,time_wind_sec=sgram_sec,abs_mag=abs_mag)
-        np.savez(ftr_fname, peri_ictal=peri_ictal, time_wind_sec=sgram_sec, ftrs=abs_mag, ftr_list=ftr_list)
+        np.savez(ftr_fname, peri_ictal=peri_ictal, time_wind_sec=sgram_sec, ftrs=abs_mag, ftr_list=ftr_list,
+                 onset_chan=onset_chan, onset_chan_id=onset_chan_id)
 
 
 print('Done!')
