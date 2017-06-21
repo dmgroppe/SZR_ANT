@@ -212,7 +212,7 @@ best_valid_bal_acc=0
 best_models=None
 best_C=None
 best_gam=None
-
+best_valid_bal_acc_by_sub=None
 for rand_ct in range(n_rand_params):
     C=C_vals[rand_ct]  # Start with C=1 and then change it according to train-testing error dif
     C_direction=0
@@ -284,6 +284,7 @@ for rand_ct in range(n_rand_params):
             best_vbal_acc_this_gam=mn_temp_valid_bacc
             best_models_this_gam=temp_models.copy()
             C_vals[rand_ct]=C #Store current best C value for this gamma value
+            best_valid_bal_acc_by_sub=temp_valid_bacc
 
             #TODO: remove this?
             # out_model_fname = os.path.join(model_path, 'temp_classify_models_srch.pkl')
@@ -386,6 +387,7 @@ for rand_ct in range(n_rand_params):
          valid_sens=valid_sens,
          valid_spec=valid_spec,
          valid_bal_acc=valid_bal_acc,
+         best_valid_bal_acc_by_sub=best_valid_bal_acc_by_sub,
          train_sens=train_sens,
          train_spec=train_spec,
          train_bal_acc=train_bal_acc,
