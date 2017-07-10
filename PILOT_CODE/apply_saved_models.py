@@ -39,7 +39,7 @@ def plot_fig(true_class, hat_class, ftr_vals, stem, model_dir):
     fig_fname = os.path.join(fig_path, stem + '.pdf')
     print('Creating file %s' % fig_fname)
     #plt.savefig(fig_fname,format='jpg') #try pdf?
-    plt.savefig(fig_fname, format='pdf')  # try pdf?
+    plt.savefig(fig_fname, format='pdf')
 
 
 def plot_fig_w_sgrams(chan_data,Sf,tpts_sec,true_class, hat_class, stem, model_dir, onset_chan_id, onset_chan):
@@ -280,10 +280,13 @@ phat_list=[]
 sens=np.zeros(f_ct)
 spec=np.zeros(f_ct)
 bal_acc=np.zeros(f_ct)
-for stem_ct, stem_loop in enumerate(stem_list):
+
+for stem_ct, stem_loop in enumerate(stem_list): # stem_list contains the "stem" of each szr (e.g., 'NA_d1_sz2')
     # Collect features for each seizure
     dim_ct=0
-    phat_list.append(np.zeros((n_wind_list[stem_ct],n_models)))
+    phat_list.append(np.zeros((n_wind_list[stem_ct],n_models))) # list of model predictions
+    print('ftr_types {}'.format(ftr_types))
+    exit()
     for ftr_type in ftr_types:
         ftr_path = os.path.join(path_dict['ftrs_root'], ftr_type, sub)
         file_found=False
