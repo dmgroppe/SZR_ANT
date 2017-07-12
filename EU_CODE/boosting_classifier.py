@@ -227,10 +227,23 @@ for ensemble_ct in range(n_ensemble):
     # valid_bal_acc[ensemble_ct]=(valid_sens[ensemble_ct]+valid_spec[ensemble_ct])/2
     # print('Balanced Accuracy=%f' % valid_bal_acc[ensemble_ct])
 
-print('Grand mean train acc %f' % np.mean(train_bal_acc))
-print('Grand mean validation acc %f' % np.mean(valid_bal_acc))
-print('Train bal acc={}'.format(train_bal_acc))
-print('Valid bal acc={}'.format(valid_bal_acc))
+# print('Grand mean train acc %f' % np.mean(train_bal_acc))
+# print('Grand mean validation acc %f' % np.mean(valid_bal_acc))
+# print('Train bal acc={}'.format(train_bal_acc))
+# print('Valid bal acc={}'.format(valid_bal_acc))
+
+#Apply ensemble to training data
+train_class_hat=np.zeros(n_szr_wind*2)
+for ensemble_ct in range(n_ensemble):
+    train_class_hat+=ensemble_wts[ensemble_ct]*(model_list[ensemble_ct].predict(train_ftrs.T)*2-1) #predictions are -1 or 1
+print('Ensemble training data performance:')
+jive=(train_class_hat>=0)==train_class #sign of prediction is what counts
+train_sens=np.sum(jive[train_class==1])/np.sum(train_class==1)
+print('Sensitivity %f' % train_sens)
+train_spec=np.sum(jive[train_class==0])/np.sum(train_class==0)
+print('Specificity %f' % train_spec)
+train_bal_acc=(train_sens+train_spec)/2
+print('Balanced Accuracy=%f' % train_bal_acc)
 
 #Apply ensemble to validation data
 valid_class_hat=np.zeros(n_valid_wind)

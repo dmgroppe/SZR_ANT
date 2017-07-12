@@ -20,7 +20,8 @@ print('Patient being processed is %s' % sub)
 ftr_name=sys.argv[2]
 print('Feature being processed is %s' % ftr_name)
 
-trim_pptn=0.15
+trim_pptn=0.15 # Not clear if this makes a difference
+#trim_pptn=0
 
 # Get key directories
 dir_dict=ief.get_path_dict()
