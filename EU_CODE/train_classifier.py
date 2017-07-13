@@ -157,7 +157,6 @@ print('Done normalizing training data!')
 
 
 #### TRAIN CLASSIFIER
-print('Training classifier...')
 # Train classifier
 if model_type=='logreg':
     model = linear_model.LogisticRegression(C=1)
@@ -168,7 +167,7 @@ model.fit(train_ftrs.T, train_class)
 # Accuracy on training data
 train_class_hat = model.predict(train_ftrs.T) # outputs 0 or 1
 train_bal_acc, train_sens, train_spec=ief.perf_msrs(train_class, train_class_hat)
-print('Training data results:')
+print('Subsampled training data results:')
 print('Accuracy: %f' % train_bal_acc)
 print('Sensitivity: %f' % train_sens)
 print('Specificity: %f' % train_spec)
@@ -186,6 +185,16 @@ print('Raw accuracy: %f' % valid_acc)
 print('Balanced accuracy: %f' % valid_bal_acc)
 print('Sensitivity: %f' % valid_sens)
 print('Specificity: %f' % valid_spec)
+
+
+tfull_bal_acc, tfull_sens, tfull_spec, tfull_acc=ief.apply_model_2_file_list(model, train_files, ftr_names,
+                                                                             ftr_nrm_dicts, sub, n_ftr_dim, ext_list)
+
+print('FULL training data results:')
+print('Raw accuracy: %f' % tfull_acc)
+print('Balanced accuracy: %f' % tfull_bal_acc)
+print('Sensitivity: %f' % tfull_sens)
+print('Specificity: %f' % tfull_spec)
 
 
 
