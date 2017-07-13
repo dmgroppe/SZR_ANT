@@ -1,6 +1,0 @@
-{"model_type": "svm",
-"model_name_stem": "logreg_sbox", 
-"n_rand_params": 2,
-"patience": 1,
-"sub": "1096",
-"use_ftrs": ["EU_MAG_LAG0","EU_MAG_LAG2","EU_MAG_LAG4","EU_MAG_LAG6"]}

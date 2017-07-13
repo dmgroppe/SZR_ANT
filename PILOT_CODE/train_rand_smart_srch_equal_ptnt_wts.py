@@ -16,8 +16,6 @@ from sklearn import svm
 from sklearn.externals import joblib
 import json
 
-
-
 if len(sys.argv)==1:
     print('Usage: train_rand_smart_srch.py srch_params.json')
     exit()
