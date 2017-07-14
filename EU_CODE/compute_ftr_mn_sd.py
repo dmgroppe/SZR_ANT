@@ -20,6 +20,7 @@ print('Patient being processed is %s' % sub)
 ftr_name=sys.argv[2]
 print('Feature being processed is %s' % ftr_name)
 
+edge_pts=1177 # # of time pts at the start of each file to ignore due to edge effects
 trim_pptn=0.15 # Not clear if this makes a difference
 #trim_pptn=0
 
@@ -73,14 +74,16 @@ for f_ct, f_stem in enumerate(file_stems):
     
     # Load szr classes
     class_dict=np.load(os.path.join(class_dir,f_stem+'_szr_class.npz'))
+    ignore_tpts=np.copy(class_dict['szr_class'])
+    ignore_tpts[:edge_pts]=1 #ignore initial time points that are corrupted by edge effects
     #Compute trimmed mean and sd (70% of data will be used for estimating mean & SD)
     if trim_pptn == 0:
         # Compute regular mean and SD
-        mns[:, f_ct] = np.mean(ftr_dict['ftrs'][:, class_dict['szr_class'] == 0], axis=1)
-        sds[:, f_ct] = np.std(ftr_dict['ftrs'][:, class_dict['szr_class'] == 0], axis=1)
+        mns[:, f_ct] = np.mean(ftr_dict['ftrs'][:, ignore_tpts==0], axis=1)
+        sds[:, f_ct] = np.std(ftr_dict['ftrs'][:, ignore_tpts==0], axis=1)
     else:
         for ftr_ct in range(n_ftr):
-            mns[ftr_ct,f_ct], sds[ftr_ct,f_ct]=dg.trimmed_mn_sd(ftr_dict['ftrs'][ftr_ct, class_dict['szr_class']==0],trim_pptn)
+            mns[ftr_ct,f_ct], sds[ftr_ct,f_ct]=dg.trimmed_mn_sd(ftr_dict['ftrs'][ftr_ct, ignore_tpts==0],trim_pptn)
 
 # Get trimmed mean and SD (70% of data will be used for estimating mean & SD)
 nrm_mn=np.zeros(n_ftr)

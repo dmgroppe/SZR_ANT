@@ -19,10 +19,15 @@ from sklearn.externals import joblib
 sub='1096'
 #ftr_names=['EU_MAG_LAG2']
 #ftr_names=['EU_MAG_LAG0','EU_MAG_LAG2']
-ftr_names=['EU_MAG_LAG0','EU_MAG_LAG2','EU_MAG_LAG4','EU_MAG_LAG6']
+ftr_names=['EU_MAG_LAG0','EU_MAG_LAG2','EU_MAG_LAG4','EU_MAG_LAG6','EU_MAG_LAG8']
 #ftr_name='EU_MAG_LAG0'
 n_ftr_types=len(ftr_names)
-model_type='logreg'
+# model_type='logreg'
+# C=1
+model_type='svm'
+C=0.093445
+gam=0.000021
+edge_pts=1177 # # of time pts at the start of each file to ignore due to edge effects
 
 # Get key directories
 dir_dict=ief.get_path_dict()
@@ -159,9 +164,9 @@ print('Done normalizing training data!')
 #### TRAIN CLASSIFIER
 # Train classifier
 if model_type=='logreg':
-    model = linear_model.LogisticRegression(C=1)
+    model = linear_model.LogisticRegression(C=C)
 else:
-    model = svm.SVC(C=1, gamma=1e-5)
+    model = svm.SVC(C=C, gamma=gam)
 model.fit(train_ftrs.T, train_class)
 
 # Accuracy on training data
@@ -178,7 +183,8 @@ print('Saving model as %s' % model_file)
 _ = joblib.dump(model, model_file, compress=3)
 
 valid_bal_acc, valid_sens, valid_spec, valid_acc=ief.apply_model_2_file_list(model, valid_files, ftr_names,
-                                                                             ftr_nrm_dicts, sub, n_ftr_dim, ext_list)
+                                                                             ftr_nrm_dicts, sub, n_ftr_dim,
+                                                                             ext_list,edge_pts)
 
 print('Validation data results:')
 print('Raw accuracy: %f' % valid_acc)
@@ -188,7 +194,8 @@ print('Specificity: %f' % valid_spec)
 
 
 tfull_bal_acc, tfull_sens, tfull_spec, tfull_acc=ief.apply_model_2_file_list(model, train_files, ftr_names,
-                                                                             ftr_nrm_dicts, sub, n_ftr_dim, ext_list)
+                                                                             ftr_nrm_dicts, sub, n_ftr_dim,
+                                                                             ext_list,edge_pts)
 
 print('FULL training data results:')
 print('Raw accuracy: %f' % tfull_acc)

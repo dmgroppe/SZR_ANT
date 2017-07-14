@@ -32,7 +32,7 @@ with open(param_fname) as param_file:
 sub=params['sub']
 print('Subject ID is %s' % sub)
 model_name_stem=params['model_name_stem']
-model_name=model_name_stem+sub
+model_name=model_name_stem+'_'+sub
 print('Model name is %s' % model_name)
 model_type=params['model_type']
 print('Model type is %s' % model_type)
@@ -363,3 +363,8 @@ np.savez(metrics_file,
          best_g=best_g,
          best_C=best_C)
 print('Done with %s' % model_name)
+print('I repeat:')
+print('Best balanced accuracy is %f' % best_valid_bal_acc)
+print('Best training accuracy is %f' % best_train_bal_acc)
+print('Best C value is %f' % best_C)
+print('Best gamma value is %f' % best_g)
