@@ -53,13 +53,12 @@ n_ftr_types=len(ftr_names)
 #ftr_name='EU_MAG_LAG0'
 # model_type='logreg'
 
-# Get key directories
+# Get key directories (create if necessary)
 dir_dict=ief.get_path_dict()
 # print(dir_dict.keys())
 ftrs_root=dir_dict['ftrs_root']
 # print(ftrs_root)
 meta_dir=dir_dict['eu_meta']
-
 model_path=os.path.join(dir_dict['szr_ant_root'],'MODELS',model_name)
 if os.path.exists(model_path)==False:
     os.mkdir(model_path)
@@ -211,6 +210,7 @@ steps_since_best = 0
 C_list=list()
 train_bal_acc_list=list()
 valid_bal_acc_list=list()
+edge_pts=1177 # # of time pts at the start of each file to ignore due to edge effects
 for C_loop in range(10): #10 max iterations
     print('Using C value of %f' % C)
 
@@ -231,7 +231,7 @@ for C_loop in range(10): #10 max iterations
 
 
     valid_bal_acc, valid_sens, valid_spec, valid_acc=ief.apply_model_2_file_list(model, valid_files, ftr_names,
-                                                                                 ftr_nrm_dicts, sub, n_ftr_dim, ext_list)
+                                                                                 ftr_nrm_dicts, sub, n_ftr_dim, ext_list,edge_pts)
     print('Validation data results:')
     print('Raw accuracy: %f' % valid_acc)
     print('Balanced accuracy: %f' % valid_bal_acc)
@@ -302,7 +302,7 @@ model = joblib.load(model_file)
 
 # Apply model to all training data
 tfull_bal_acc, tfull_sens, tfull_spec, tfull_acc=ief.apply_model_2_file_list(model, train_files, ftr_names,
-                                                                             ftr_nrm_dicts, sub, n_ftr_dim, ext_list)
+                                                                             ftr_nrm_dicts, sub, n_ftr_dim, ext_list,edge_pts)
 print('FULL training data results:')
 print('Raw accuracy: %f' % tfull_acc)
 print('Balanced accuracy: %f' % tfull_bal_acc)
@@ -311,7 +311,7 @@ print('Specificity: %f' % tfull_spec)
 
 # Apply model to all test data
 test_bal_acc, test_sens, test_spec, test_acc=ief.apply_model_2_file_list(model, test_files, ftr_names,
-                                                                             ftr_nrm_dicts, sub, n_ftr_dim, ext_list)
+                                                                             ftr_nrm_dicts, sub, n_ftr_dim, ext_list,edge_pts)
 print('Test data results:')
 print('Raw accuracy: %f' % test_acc)
 print('Balanced accuracy: %f' % test_bal_acc)

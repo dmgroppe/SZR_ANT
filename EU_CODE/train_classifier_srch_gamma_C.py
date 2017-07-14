@@ -17,7 +17,6 @@ import matplotlib.pyplot as plt
 from sklearn import svm, linear_model
 from sklearn.externals import joblib
 
-
 if len(sys.argv)==1:
     print('Usage: train_classifier_srch_gamma_C.py params.json')
     exit()
@@ -198,6 +197,7 @@ print('Done normalizing training data!')
 
 #### TRAIN CLASSIFIER
 print('Training classifier...')
+edge_pts=1177 # # of time pts at the start of each file to ignore due to edge effects
 best_valid_bal_acc=0
 best_train_bal_acc=0
 best_model=None
@@ -238,7 +238,8 @@ for g_loop in range(n_rand_params):
 
         #Accuracy on validation data
         valid_bal_acc, valid_sens, valid_spec, valid_acc=ief.apply_model_2_file_list(model, valid_files, ftr_names,
-                                                                                     ftr_nrm_dicts, sub, n_ftr_dim, ext_list)
+                                                                                     ftr_nrm_dicts, sub, n_ftr_dim,
+                                                                                     ext_list, edge_pts)
         print('Validation data results:')
         print('Raw accuracy: %f' % valid_acc)
         print('Balanced accuracy: %f' % valid_bal_acc)
@@ -317,7 +318,8 @@ model = joblib.load(model_file)
 
 # Apply model to all training data
 tfull_bal_acc, tfull_sens, tfull_spec, tfull_acc=ief.apply_model_2_file_list(model, train_files, ftr_names,
-                                                                             ftr_nrm_dicts, sub, n_ftr_dim, ext_list)
+                                                                             ftr_nrm_dicts, sub, n_ftr_dim,
+                                                                             ext_list, edge_pts)
 print('FULL training data results:')
 print('Raw accuracy: %f' % tfull_acc)
 print('Balanced accuracy: %f' % tfull_bal_acc)
@@ -326,7 +328,8 @@ print('Specificity: %f' % tfull_spec)
 
 # Apply model to all test data
 test_bal_acc, test_sens, test_spec, test_acc=ief.apply_model_2_file_list(model, test_files, ftr_names,
-                                                                             ftr_nrm_dicts, sub, n_ftr_dim, ext_list)
+                                                                             ftr_nrm_dicts, sub, n_ftr_dim,
+                                                                         ext_list, edge_pts)
 print('Test data results:')
 print('Raw accuracy: %f' % test_acc)
 print('Balanced accuracy: %f' % test_bal_acc)
