@@ -1,4 +1,5 @@
 # Computes seizure class for moving window hilbert transformed data
+# Note that seizure onsets are EXTENDED 4 SECONDS INTO THE FUTURE so that the classifier can anticipate onset
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -42,7 +43,6 @@ for fname in mat_fnames_dirty:
     if fname.endswith('.mat'):
         mat_fnames.append(fname)
 
-
 # Loop over files
 #for fname in mat_fnames[:1]: # use a subset of files for debugging
 for fname in mat_fnames:
@@ -51,10 +51,20 @@ for fname in mat_fnames:
     szr_mat = sio.loadmat(os.path.join(eu_root_dir, fname))
     Sf=szr_mat['Fs'][0][0]
     tpts_sec = szr_mat['tpts_sec'][0, :]
+    is_szr=szr_mat['is_szr']
+    orig_is_szr=np.copy(is_szr)
+    n_tpt=len(tpts_sec)
+
+    # Loop over class and extend szrs forward by 4 seconds
+    pre_onset_horizon=Sf*4
+    for tpt in range(n_tpt-pre_onset_horizon-1,-1,-1):
+        if orig_is_szr[tpt+pre_onset_horizon]==1:
+            is_szr[tpt]=1
+        # elif orig_is_szr[tpt]==1:
+        #     is_szr[tpt]=1
 
     wind_len = int(np.round(Sf))
     wind_step = int(np.round(Sf / 10))
-    n_tpt=len(tpts_sec)
 
     n_half_wind = int(np.round(wind_len / 2))
     n_hilby_tpt = len(np.arange(n_half_wind, n_tpt - n_half_wind, wind_step))
@@ -63,7 +73,7 @@ for fname in mat_fnames:
     # Moving window
     hilb_ct = 0
     for tpt_ct in range(n_half_wind, n_tpt - n_half_wind, wind_step):
-        mn_class = np.mean(szr_mat['is_szr'][(tpt_ct - n_half_wind):(tpt_ct + n_half_wind)])
+        mn_class = np.mean(is_szr[(tpt_ct - n_half_wind):(tpt_ct + n_half_wind)])
         szr_class[hilb_ct] = (mn_class>=0.5) # Note, if training a classifier with continuous outputs, there would be no need to threshold
         hilb_sec[hilb_ct] = np.mean(tpts_sec[(tpt_ct - n_half_wind):(tpt_ct + n_half_wind)])
         hilb_ct += 1
