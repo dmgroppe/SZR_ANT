@@ -41,8 +41,8 @@ print('Features being used: {}'.format(ftr_names))
 n_ftr_types=len(ftr_names)
 gam=float(params['gamma'])
 print('Gamma is %f' % gam)
-#try_C=np.logspace(-1,2,10)
-try_C=np.logspace(-1,2,12)
+try_C=np.logspace(-1,2,2)
+# try_C=np.logspace(-1,2,12)
 n_try_C=len(try_C)
 
 # Get key directories
@@ -199,15 +199,12 @@ best_C=None
 best_g=None
 
 #gamma defines how much influence a single training example has. The larger gamma is, the closer other examples must be to be affected.
-train_bal_acc_list=list()
-valid_bal_acc_list=list()
-gamma_vals=np.zeros(n_try_C)
+gamma_vals=np.ones(n_try_C)*gam
 train_bal_acc_ray=np.zeros(n_try_C)
 valid_bal_acc_ray=np.zeros(n_try_C)
 for C_ct, C in enumerate(try_C):
     print('**** Run %d/%d' % (C_ct+1,n_try_C))
     print('Using gamma value of %.2E' % gam)
-
     print('Using C value of %f' % C)
 
     # Train classifier
@@ -246,15 +243,15 @@ for C_ct, C in enumerate(try_C):
         best_train_bal_acc = train_bal_acc
         best_C=C
         best_g=gam
-        # print('Saving BEST model so far as %s (C=%f, g=%f)' % (model_file, C, gam))
-        # _ = joblib.dump(model, model_file, compress=3)
+        print('Saving BEST model so far as %s (C=%f, g=%f)' % (model_file, C, gam))
+        _ = joblib.dump(model, model_file, compress=3)
 
 
 print('Done training!')
 print('C: {}'.format(try_C))
 print('gamma: {}'.format(gam))
-print('valid_bacc: {}'.format(valid_bal_acc_list))
-print('train_bacc: {}'.format(train_bal_acc_list))
+print('valid_bacc: {}'.format(train_bal_acc_ray))
+print('train_bacc: {}'.format(train_bal_acc_ray))
 print('Best balanced accuracy is %f' % best_valid_bal_acc)
 print('Best training accuracy is %f' % best_train_bal_acc)
 print('Best C value is %f' % best_C)
@@ -292,17 +289,10 @@ print('Best gamma value is %f' % best_g)
 # Save performance metrics
 print('Saving performance metrics to %s' % metrics_file)
 np.savez(metrics_file,
-         train_sens=train_sens,
-         train_spec=train_spec,
-         train_bal_acc=train_bal_acc,
-         valid_acc=valid_acc,
-         valid_sens=valid_sens,
-         valid_spec=valid_spec,
-         valid_bal_acc=valid_bal_acc,
          try_C=try_C,
          gamma_vals=gamma_vals,
-         valid_bal_acc_ray=valid_bal_acc_list,
-         train_bal_acc_ray=train_bal_acc_list,
+         valid_bal_acc_ray=valid_bal_acc_ray,
+         train_bal_acc_ray=train_bal_acc_ray,
          best_valid_bal_acc=best_valid_bal_acc,
          best_train_bal_acc=best_train_bal_acc,
          best_g=best_g,
