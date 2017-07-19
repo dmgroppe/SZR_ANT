@@ -42,7 +42,7 @@ n_ftr_types=len(ftr_names)
 gam=float(params['gamma'])
 print('Gamma is %f' % gam)
 #try_C=np.logspace(-1,2,2)
-try_C=np.logspace(-1,3,12)
+try_C=np.logspace(0,4,12)
 n_try_C=len(try_C)
 
 # Get key directories
