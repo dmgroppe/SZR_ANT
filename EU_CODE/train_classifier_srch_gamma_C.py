@@ -213,7 +213,7 @@ gamma_vals=10**np.random.uniform(-10,0,n_rand_params)
 train_bal_acc_list=list()
 valid_bal_acc_list=list()
 for g_loop in range(n_rand_params):
-    C = 1
+    C = 10**np.random.uniform(-4,4,1)
     C_direction = 0
     steps_since_best = 0
     best_valid_bacc_this_gam = 0
