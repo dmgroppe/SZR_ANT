@@ -25,8 +25,8 @@ n_ftr_types=len(ftr_names)
 # model_type='logreg'
 # C=1
 model_type='svm'
-C=0.093445
-gam=0.000021
+C=351.119173
+gam=0.000040
 edge_pts=1177 # # of time pts at the start of each file to ignore due to edge effects
 
 # Get key directories
@@ -41,6 +41,7 @@ split_fname=os.path.join(meta_dir,'data_splits_FR_'+sub+'.pkl')
 print('Loading %s' % split_fname)
 split_dict=pickle.load(open(split_fname,'rb'))
 print(split_dict.keys())
+test_files=split_dict['test_files']
 train_files=split_dict['train_files']
 train_szr_files=split_dict['train_szr_files']
 valid_files=split_dict['valid_files']
@@ -193,6 +194,18 @@ print('Sensitivity: %f' % valid_sens)
 print('Specificity: %f' % valid_spec)
 
 
+# Apply model to all test data
+test_bal_acc, test_sens, test_spec, test_acc=ief.apply_model_2_file_list(model, test_files, ftr_names,
+                                                                             ftr_nrm_dicts, sub, n_ftr_dim,
+                                                                         ext_list, edge_pts)
+print('Test data results:')
+print('Raw accuracy: %f' % test_acc)
+print('Balanced accuracy: %f' % test_bal_acc)
+print('Sensitivity: %f' % test_sens)
+print('Specificity: %f' % test_spec)
+
+
+# Apply model to all training data
 tfull_bal_acc, tfull_sens, tfull_spec, tfull_acc=ief.apply_model_2_file_list(model, train_files, ftr_names,
                                                                              ftr_nrm_dicts, sub, n_ftr_dim,
                                                                              ext_list,edge_pts)

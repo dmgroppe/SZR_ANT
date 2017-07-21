@@ -43,13 +43,12 @@ n_rand_params=int(params['n_rand_params'])
 print('# of random gamma parameters to try is %d' % n_rand_params)
 n_patience=int(params['patience'])
 print('C search patience is %d' % n_patience)
-# Define sub & feature
-# sub='1096'
-# ftr_names=['EU_MAG_LAG2']
-#ftr_names=['EU_MAG_LAG0','EU_MAG_LAG2']
-#ftr_names=['EU_MAG_LAG0','EU_MAG_LAG2','EU_MAG_LAG4','EU_MAG_LAG6','EU_MAG_LAG8']
-#ftr_name='EU_MAG_LAG0'
-# model_type='logreg'
+szr_ant=params['szr_ant']=='True'
+if szr_ant:
+    print('In Seizure Anticipation Mode!!!!')
+    print('Data from 4 seconds before to 9 seconds after onset are targets.')
+else:
+    print('All szr timepoints are targets!')
 
 # Get key directories
 dir_dict=ief.get_path_dict()
@@ -106,8 +105,12 @@ for temp_ftr_type in ftr_names:
 n_szr_wind=pickle.load(open('n_szr_wind.pkl','rb'))
 n_train_wind=n_szr_wind*2
 print('# of training data windows: %d' % n_train_wind)
-szr_ids_dict=pickle.load(open('szr_ids_dict.pkl','rb'))
-nonszr_ids_dict=pickle.load(open('nonszr_ids_dict.pkl','rb'))
+if szr_ant:
+    szr_ids_dict = pickle.load(open('szr_ant_ids_dict.pkl', 'rb'))
+    nonszr_ids_dict = pickle.load(open('nonszr_ant_ids_dict.pkl', 'rb'))
+else:
+    szr_ids_dict=pickle.load(open('szr_ids_dict.pkl','rb'))
+    nonszr_ids_dict=pickle.load(open('nonszr_ids_dict.pkl','rb'))
 
 
 #### IMPORT TRAINING DATA
@@ -239,7 +242,7 @@ for g_loop in range(n_rand_params):
         #Accuracy on validation data
         valid_bal_acc, valid_sens, valid_spec, valid_acc=ief.apply_model_2_file_list(model, valid_files, ftr_names,
                                                                                      ftr_nrm_dicts, sub, n_ftr_dim,
-                                                                                     ext_list, edge_pts)
+                                                                                     ext_list, edge_pts,szr_ant)
         print('Validation data results:')
         print('Raw accuracy: %f' % valid_acc)
         print('Balanced accuracy: %f' % valid_bal_acc)
@@ -319,7 +322,7 @@ model = joblib.load(model_file)
 # Apply model to all training data
 tfull_bal_acc, tfull_sens, tfull_spec, tfull_acc=ief.apply_model_2_file_list(model, train_files, ftr_names,
                                                                              ftr_nrm_dicts, sub, n_ftr_dim,
-                                                                             ext_list, edge_pts)
+                                                                             ext_list, edge_pts,szr_ant)
 print('FULL training data results:')
 print('Raw accuracy: %f' % tfull_acc)
 print('Balanced accuracy: %f' % tfull_bal_acc)
@@ -329,7 +332,7 @@ print('Specificity: %f' % tfull_spec)
 # Apply model to all test data
 test_bal_acc, test_sens, test_spec, test_acc=ief.apply_model_2_file_list(model, test_files, ftr_names,
                                                                              ftr_nrm_dicts, sub, n_ftr_dim,
-                                                                         ext_list, edge_pts)
+                                                                         ext_list, edge_pts,szr_ant)
 print('Test data results:')
 print('Raw accuracy: %f' % test_acc)
 print('Balanced accuracy: %f' % test_bal_acc)

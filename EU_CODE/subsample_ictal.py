@@ -13,6 +13,12 @@ from sklearn.externals import joblib
 
 # Define sub & feature
 sub='1096'
+szr_ant=True # If true, only data from 4 sec before to 9 sec are considered targets.
+if szr_ant:
+    print('In Seizure Anticipation Mode!!!!')
+    print('Data from 4 seconds before to 9 seconds after onset are targets.')
+
+# All other szr time points are ignored
 #ftr_names=['EU_MAG_LAG0','EU_MAG_LAG2']
 ftr_names=['EU_MAG_LAG0','EU_MAG_LAG2','EU_MAG_LAG4','EU_MAG_LAG6','EU_MAG_LAG8']
 n_ftr_types=len(ftr_names)
@@ -37,7 +43,10 @@ print('%d training files (%d contain szrs)' % (n_train_file, n_train_szr_file))
 
 
 # Figure out how many training data ictal time points there are to preallocate memory
-class_path=os.path.join(ftrs_root,'EU_SZR_CLASS',sub)
+if szr_ant:
+    class_path = os.path.join(ftrs_root, 'EU_SZR_ANT_CLASS', sub)
+else:
+    class_path=os.path.join(ftrs_root,'EU_SZR_CLASS',sub)
 n_szr_wind=0
 for szr_fname in train_szr_files:
     full_fname=os.path.join(class_path,szr_fname+'_szr_class.npz')
@@ -94,7 +103,12 @@ for fname_ct, ftr_fname in enumerate(train_files):
 # print(len(szr_ids_dict[szr_fname]))
 # print(len(nonszr_ids_dict[ftr_fname]))
 
-pickle.dump(szr_ids_dict,open('szr_ids_dict.pkl','wb'))
-pickle.dump(nonszr_ids_dict,open('nonszr_ids_dict.pkl','wb'))
-pickle.dump(n_szr_wind,open('n_szr_wind.pkl','wb'))
+if szr_ant:
+    pickle.dump(szr_ids_dict, open('szr_ant_ids_dict.pkl', 'wb'))
+    pickle.dump(nonszr_ids_dict, open('nonszr_ant_ids_dict.pkl', 'wb'))
+    pickle.dump(n_szr_wind, open('n_szr_ant_wind.pkl', 'wb'))
+else:
+    pickle.dump(szr_ids_dict,open('szr_ids_dict.pkl','wb'))
+    pickle.dump(nonszr_ids_dict,open('nonszr_ids_dict.pkl','wb'))
+    pickle.dump(n_szr_wind,open('n_szr_wind.pkl','wb'))
 print('Done selecting training IDs')
