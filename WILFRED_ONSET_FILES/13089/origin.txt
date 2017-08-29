@@ -1,9 +1,0 @@
-#	classif.	onset	pattern	vigilance	origin
-1:	CP	eeg: 16.12.'10 14:10:42.10000	low amplitude fast activity (lafa)	awake	HA1D1,HA1d2,HM2d1,HM2d2
-2:	SG	eeg: 16.12.'10 22:58:41.10000	rhythmic alpha waves	awake	HM2D1,HM2d2,HP1d1,HP1d2,TPod1,HA1d1,Am2d1
-3:	CP	eeg: 17.12.'10 17:45:40.10000	rhythmic alpha waves	awake	HA1D1,HA1d2,HM2d2,Am2d1,HM2d1
-4:	CP	eeg: 18.12.'10 04:11:15.10000	low amplitude fast activity (lafa)	unclear	HM2D1,HM2d2,HP1d1,HP1d2,HA1d1,HA1d2,Am2d1,TPod1
-5:	CP	eeg: 24.12.'10 14:39:55.10000	rhythmic alpha waves	awake	HM2D1,HM2d2,HP1d1,HP1d2,HA1d1,HA1d2,TPod4
-6:	UC	eeg: 25.12.'10 18:46:35.10000	rhythmic alpha waves	awake	HM2D1,HM2d2,HP1d1,HP1d2,TOBd3,TOBd4,TOBd5,Am2d1,TPod1,HA1d2
-7:	CP	eeg: 26.12.'10 12:50:36.10000	low amplitude fast activity (lafa)	awake	HM2d1,HM2d2,HP1d1,HP1d2,HA1d1,HA1d2,TOBd1,TOBd2,TPod1,TOBd4,Am2d1
-8:	UC	eeg: 28.12.'10 18:39:58.10000	rhythmic alpha waves	awake	HM2D1,HM2d2,HA1d1,Am2d1

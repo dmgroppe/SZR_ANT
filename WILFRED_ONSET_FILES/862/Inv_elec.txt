@@ -1,1 +1,0 @@
-G (6x8 grid ), IHA (1x4 strip ), IHB (1x4 strip ), IHC (1x4 strip )

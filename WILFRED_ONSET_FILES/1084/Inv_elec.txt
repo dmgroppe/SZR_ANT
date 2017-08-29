@@ -1,1 +1,0 @@
-G (8x8 grid ), M (1x8 strip ), FL (1x4 strip ), IHA (1x4 strip ), IHB (1x4 strip ), IHC (1x4 strip ), IHD (1x4 strip )

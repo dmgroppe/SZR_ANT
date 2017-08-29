@@ -1,1 +1,0 @@
-G (8x8 grid ), FBA (1x4 strip ), FBB (1x4 strip )

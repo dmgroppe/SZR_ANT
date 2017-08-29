@@ -1,1 +1,0 @@
-G (8x8 grid ), FLA (1x6 strip ), FLB (1x6 strip ), FBA (1x4 strip ), FBB (1x4 strip ), IHA (1x6 strip ), IHB (1x4 strip )

@@ -1,1 +1,0 @@
-5 and 6 has early oscillation

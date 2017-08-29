@@ -1,8 +1,0 @@
-#	classif.	onset	pattern	vigilance	origin
-1:	UC	eeg: 20.03.'04 09:45:19.558594	rhythmic sharp waves	awake	HRB2,HRC2
-2:	SP	eeg: 23.03.'04 06:01:29.267578	rhythmic beta waves	sleep stage I	HRB2
-3:	SG	eeg: 24.03.'04 16:55:59.25391	rhythmic sharp waves	awake	HRB2,HRC2
-4:	SG	eeg: 24.03.'04 20:05:01.419922	repetitive spiking	awake	HRB2,HRB3,HRC2
-5:	SG	eeg: 25.03.'04 06:03:53.251953	repetitive spiking	sleep stage II	HRB2,HRC2
-6:	CP	eeg: 25.03.'04 09:26:29.599609	rhythmic sharp waves	awake	HRB2,HRB3,HRC2
-7:	CP	eeg: 26.03.'04 10:47:24.744141	rhythmic sharp waves	awake	HRB2,HRB3,HRC2

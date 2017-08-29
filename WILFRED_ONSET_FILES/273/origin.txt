@@ -1,8 +1,0 @@
-#	classif.	onset	pattern	vigilance	origin
-1:	UC	eeg: 01.05.'04 04:21:26.613281	repetitive spiking	sleep stage II	TBA1,TBB1
-2:	CP	eeg: 01.05.'04 15:41:54.601563	repetitive spiking	sleep stage II	TBA1,TBB1
-3:	CP	eeg: 01.05.'04 20:16:56.148438	low amplitude fast activity (lafa)	awake	TBA1,TBA2,TBA3,TBA4,TBB1,TBB2
-4:	CP	eeg: 03.05.'04 13:27:37.726563	low amplitude fast activity (lafa)	sleep stage II	GA7,TBA1,TBB1,TBB2
-5:	CP	eeg: 04.05.'04 04:12:17.332031	repetitive spiking	sleep stage II	TBA1,TBB1
-6:	UC	eeg: 04.05.'04 06:31:23.632813	repetitive spiking	sleep stage I	TBA1,TBB1
-7:	UC	eeg: 04.05.'04 21:13:50.785156	repetitive spiking	sleep stage II	TBA1,TBA2,TBA3,TBA4,TBB1,TBB2

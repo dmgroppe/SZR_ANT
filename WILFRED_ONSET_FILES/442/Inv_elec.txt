@@ -1,1 +1,0 @@
-TRA (1x8 strip ), TRB (1x16 strip ), FRA (1x6 strip ), FRB (1x6 strip ), TBA (1x4 strip ), TBB (1x4 strip ), TBC (1x6 strip ), HRA (1x10 depth ), HRB (1x10 depth )

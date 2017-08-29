@@ -1,1 +1,0 @@
-G (4x8 grid ), TBLA (1x4 strip ), TBLB (1x4 strip ), TBLC (1x6 strip ), TBRA (1x4 strip ), TBRB (1x4 strip ), TBRC (1x6 strip ), TLRA (1x4 strip ), TLRB (1x4 strip ), TLRC (1x6 strip ), HL (1x10 depth )

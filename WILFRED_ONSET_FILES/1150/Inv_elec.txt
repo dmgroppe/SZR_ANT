@@ -1,1 +1,0 @@
-RFA (1x14 depth ), RFB (1x16 depth ), RBA (1x12 depth ), RBB (1x12 depth ), RBC (1x10 depth ), RA (1x5 depth ), RHA (1x5 depth ), RHB (1x5 depth ), LFA (1x14 depth ), LFB (1x16 depth ), LA (1x5 depth ), LHA (1x5 depth ), LHB (1x5 depth )
