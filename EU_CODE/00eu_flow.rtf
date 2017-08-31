@@ -1,11 +1,11 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
 {\fonttbl\f0\fnil\fcharset0 Monaco;\f1\fnil\fcharset0 Menlo-Regular;\f2\fnil\fcharset0 HelveticaNeue;
-\f3\fmodern\fcharset0 Courier;}
+\f3\fmodern\fcharset0 Courier;\f4\fswiss\fcharset0 Helvetica;}
 {\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;\red28\green0\blue207;
 \red0\green0\blue0;}
 {\*\expandedcolortbl;;\csgenericrgb\c0\c0\c0;\csgenericrgb\c100000\c100000\c100000\c85000;\csgenericrgb\c11000\c0\c81000;
 \cssrgb\c0\c0\c0;}
-\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\margl1440\margr1440\vieww10800\viewh12280\viewkind0
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 
 \f0\fs20 \cf2 \cb3 \CocoaLigature0 **** Download szr times as html file \
@@ -15,6 +15,7 @@ http://epilepsiae.uniklinik-freiburg.de/patients/FR_1073/seizures\
 \
 Then save the html file, rename it all_szrs_FR_*.html (where *=patient code #), and move the file to: \
 /Users/davidgroppe/GIT/OCSVM_EDMSE/matlab/EU/metadata\
+\
 \
 ***** Look at data to see if there are any bad time periods that should be ignored by running the script: plot_all_data_strat_plot.py\
 \
@@ -99,11 +100,13 @@ Lists of filenames are stored in
 train_files, valid_files, test_files=list of train, valid, & test files respectively\
  \
 train_szr_files, valid_szr_files, test_szr_files=list of train, valid, & test files that contain seizures respectively\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 
 \f0\fs20 \cf2 \cb3 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
 \
 ***** Compute data features\
+compute_hilbert_mag_lag_ftrs_EU.py: Band-limited magnitude\
+compute_szr_anticipate_class_EU.py: Class labels focusing on peri-onset\
+\
 \
 ***** Compute normalization factors from training interictal data\
 Do something like this\
@@ -113,6 +116,19 @@ Trimmed mean and SD of training data non-ictal time windows are stored in the fi
  /Users/davidgroppe/PycharmProjects/SZR_ANT/FTRS/EU_MAG_LAG0/1096/ftr_nrms.npz\
 \
 The npz also contains the feature labels and the list of files used to compute the trimmed mn and sd\
+\
+\
+***** Search gamma and C parameters:\
+train_classifier_src_gamma_C.py 
+\f4\fs24 \cf0 \cb1 \CocoaLigature1 srch_gamma_C_marr.json
+\f0\fs20 \cf2 \cb3 \CocoaLigature0 \
+\
+\
+***** Train a model on one pair of gamma and C parameters:\
+train_classifier.py\
+\
+\
+***** Try various thresholds for consecutive detecions \
 \
 \
 ***** \

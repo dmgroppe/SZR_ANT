@@ -22,11 +22,12 @@ sub='1096'
 ftr_names=['EU_MAG_LAG0','EU_MAG_LAG2','EU_MAG_LAG4','EU_MAG_LAG6','EU_MAG_LAG8']
 #ftr_name='EU_MAG_LAG0'
 n_ftr_types=len(ftr_names)
-# model_type='logreg'
-# C=1
-model_type='svm'
-C=351.119173
-gam=0.000040
+model_type='logreg'
+C=1
+# model_type='svm'
+# C=351.119173
+# gam=0.000040
+szr_ant=True
 edge_pts=1177 # # of time pts at the start of each file to ignore due to edge effects
 
 # Get key directories
@@ -185,7 +186,7 @@ _ = joblib.dump(model, model_file, compress=3)
 
 valid_bal_acc, valid_sens, valid_spec, valid_acc=ief.apply_model_2_file_list(model, valid_files, ftr_names,
                                                                              ftr_nrm_dicts, sub, n_ftr_dim,
-                                                                             ext_list,edge_pts)
+                                                                             ext_list,edge_pts,szr_ant)
 
 print('Validation data results:')
 print('Raw accuracy: %f' % valid_acc)
@@ -197,7 +198,7 @@ print('Specificity: %f' % valid_spec)
 # Apply model to all test data
 test_bal_acc, test_sens, test_spec, test_acc=ief.apply_model_2_file_list(model, test_files, ftr_names,
                                                                              ftr_nrm_dicts, sub, n_ftr_dim,
-                                                                         ext_list, edge_pts)
+                                                                         ext_list, edge_pts,szr_ant)
 print('Test data results:')
 print('Raw accuracy: %f' % test_acc)
 print('Balanced accuracy: %f' % test_bal_acc)
@@ -208,7 +209,7 @@ print('Specificity: %f' % test_spec)
 # Apply model to all training data
 tfull_bal_acc, tfull_sens, tfull_spec, tfull_acc=ief.apply_model_2_file_list(model, train_files, ftr_names,
                                                                              ftr_nrm_dicts, sub, n_ftr_dim,
-                                                                             ext_list,edge_pts)
+                                                                             ext_list,edge_pts,szr_ant)
 
 print('FULL training data results:')
 print('Raw accuracy: %f' % tfull_acc)
