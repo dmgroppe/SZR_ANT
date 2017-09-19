@@ -5,6 +5,10 @@ if ismac,
 else
    ieeg_dir='/media/dgroppe/ValianteLabEuData/EU/inv/pat_FR_1096/adm_1096102/rec_109600102/'; 
 end
+
+sub_id=1084;
+ieeg_dir='/media/dgroppe/ValianteLabEuData/EU/inv/pat_FR_1084/adm_1084102/rec_108400102';
+
 cli_szr_info=get_szr_fnames(sub_id,ieeg_dir);
 n_szrs=length(cli_szr_info);
 
