@@ -1,16 +1,20 @@
 %% Identify files that have seizures in them
 sub_id=1096;
-cli_szr_info=get_szr_fnames(sub_id);
+if ismac,
+   ieeg_dir='/Volumes/ValianteLabEuData/EU/inv/pat_FR_1096/adm_1096102/rec_109600102';
+else
+   ieeg_dir='/media/dgroppe/ValianteLabEuData/EU/inv/pat_FR_1096/adm_1096102/rec_109600102/'; 
+end
+cli_szr_info=get_szr_fnames(sub_id,ieeg_dir);
 n_szrs=length(cli_szr_info);
-
 
 %%
 bipolar_labels=derive_bipolar_pairs(sub_id);
 n_chan=size(bipolar_labels,1);
 
 %%
-%for sloop=1:n_szrs,
-for sloop=1:1,
+for sloop=1:n_szrs,
+%for sloop=1:1,
     %ieeg_fname='/Volumes/ValianteLabEuData/EU/inv/pat_FR_1096/adm_1096102/rec_109600102/109600102_0000.data';
     %     data_fname='109600102_0000.data';
     %     ieeg_fname=fullfile('/Volumes/ValianteLabEuData/EU/inv/pat_FR_1096/adm_1096102/rec_109600102/',data_fname);
@@ -74,20 +78,20 @@ for sloop=1:1,
     %% Strat plot
     voffset=1000;
     ieeg_tpt=size(ieeg,2);
-    figure(2); clf;
-    onset_chans={'TBA1','TBA2'};
+    figure(sloop); clf;
+    %onset_chans={'TBA1','TBA2'};
+    onset_chans=cli_szr_info(sloop).clinical_soz_chans;
     time_sec=[1:ieeg_tpt]/Fs;
     for cloop=1:n_chan,
         indiv_chans=strsplit(ieeg_labels{cloop},'-');
-        onset_chan=1;
+        onset_chan=0;
         for biloop=1:2,
-            if isempty(findStrInCell(indiv_chans{biloop},onset_chans)),
-                onset_chan=0;
+            if ~isempty(findStrInCell(indiv_chans{biloop},onset_chans)),
+                onset_chan=1;
             end
         end
         if onset_chan,
             h=plot(time_sec,ieeg(cloop,:)+(cloop-1)*voffset,'m-');
-            disp(cloop)
         else
             h=plot(time_sec,ieeg(cloop,:)+(cloop-1)*voffset,'k-');
         end
@@ -104,13 +108,22 @@ for sloop=1:1,
     %plot(1:ieeg_tpt,clip_szr_class*1000000,'r-','linewidth',4);
     % set(gca,'xlim',[0 Fs*20]);
     xlabel('Sec');
+    ht=title(sprintf('FR_%d: Clin Szr %d',sub_id,sloop));
+    set(ht,'interpreter','none')
     axis tight;
 
-    fprintf('Done with szr %d\n',cloop);
-    
+    fprintf('Done with szr %d/%d\n',sloop,n_szrs);
+
+    %% Save figure
+    fig_path=fullfile('SZR_FIGS',num2str(sub_id));
+    if ~exist(fig_path,'dir')
+        mkdir(fig_path);
+    end
+    fig_fname=fullfile(fig_path,sprintf('strat_szr%d.fig',sloop));
+    savefig(sloop,fig_fname,'compact');
     
     %% Butterfly plot
-%     figure(1); clf;
+%     figure(2); clf;
 %     plot(1:ieeg_tpt,ieeg'); hold on;
 %     xlim=get(gca,'xlim');
 %     ylim=get(gca,'ylim');
@@ -123,5 +136,5 @@ for sloop=1:1,
 end
 
 
-
+disp('Done!!');
 

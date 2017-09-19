@@ -1,5 +1,8 @@
-function cli_szr_info=get_szr_fnames(sub_id)
-%function cli_szr_info=get_szr_fnames(sub_id)
+function cli_szr_info=get_szr_fnames(sub_id,file_dir)
+%function cli_szr_info=get_szr_fnames(sub_id,file_dir)
+% 
+% sub_id - subject id (e.g., 1096)
+% file_dir-path to where the ieeg data are stored
 %
 % Output:
 % cli_szr_info =  struct array with fields:
@@ -11,14 +14,18 @@ function cli_szr_info=get_szr_fnames(sub_id)
 
 %% Load szr onset and offset times
 %'/home/dgroppe/GIT/SZR_ANT/
-git_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
-szr_times_csv=fullfile(git_root,'EU_METADATA',['szr_on_off_FR_' num2str(sub_id) '.csv']);
+if ismac,
+    git_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
+else
+    git_root='/home/dgroppe/GIT/SZR_ANT/';
+end
+szr_times_csv=fullfile(git_root,'EU_METADATA','SZR_TIMES',['szr_on_off_FR_' num2str(sub_id) '.csv']);
 szr_times=csv2Cell(szr_times_csv,',',1);
 n_szrs=size(szr_times,1);
 
 clinical_ids=[];
 for a=1:n_szrs,
-    if strcmpi(szr_times{a,6},'Clinical'),
+    if strcmpi(szr_times{a,7},'Clinical'),
         clinical_ids=[clinical_ids a];
     end
 end
@@ -31,11 +38,17 @@ clinical_offset_sec=zeros(n_clinical,1);
 clinical_onset_sec=zeros(n_clinical,1);
 clinical_offset_sec=zeros(n_clinical,1);
 clinical_szr_num=zeros(n_clinical,1);
-
+clinical_soz_chans=cell(n_clinical,1);
 for a=1:n_clinical,
+    temp_str=szr_times{clinical_ids(a),2};
+    % Remove nuisance characters
+    temp_str=strrep(temp_str,'''','');
+    temp_str=strrep(temp_str,'[','');
+    temp_str=strrep(temp_str,']','');
+    clinical_soz_chans{a}=strsplit(temp_str,' ');
     clinical_szr_num(a)=str2num(szr_times{clinical_ids(a),1});
-    clinical_offset_sec(a)=str2num(szr_times{clinical_ids(a),2});
-    clinical_onset_sec(a)=str2num(szr_times{clinical_ids(a),4});
+    clinical_offset_sec(a)=str2num(szr_times{clinical_ids(a),3});
+    clinical_onset_sec(a)=str2num(szr_times{clinical_ids(a),5});
 end
 
 
@@ -58,9 +71,7 @@ for a=1:n_files,
 end
 
 
-%% For each clinical szr import the data plus 3 minutes before and after szr
-warning('This function only works for 1096. Need to update it for others');
-file_dir='/Volumes/ValianteLabEuData/EU/inv/pat_FR_1096/adm_1096102/rec_109600102';
+%% For each clinical szr import the data plus ?? minutes before and after szr
 clinical_fname=cell(1,n_clinical);
 clear cli_szr_info
 for a=1:n_clinical,
@@ -86,6 +97,7 @@ for a=1:n_clinical,
         cli_szr_info(a).clinical_onset_sec=clinical_onset_sec(a)-file_onset_sec(file_id);
         cli_szr_info(a).clinical_offset_sec=clinical_offset_sec(a)-file_onset_sec(file_id);
         cli_szr_info(a).clinical_szr_num=clinical_szr_num(a);
+        cli_szr_info(a).clinical_soz_chans=clinical_soz_chans{a};
         %         clinical_fname{a}=fullfile(file_dir,data_fname);
         %         clinical_onset_sec(a)=clinical_onset_sec(a)-file_onset_sec(file_id);
         %         clinical_offset_sec(a)=clinical_offset_sec(a)-file_onset_sec(file_id);
