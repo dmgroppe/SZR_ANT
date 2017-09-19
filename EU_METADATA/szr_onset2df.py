@@ -22,7 +22,8 @@ if len(sys.argv)!=2:
 
 sub=sys.argv[1]
 #metadata_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA'
-metadata_dir='/Users/davidgroppe/GIT/OCSVM_EDMSE/matlab/EU/metadata'
+#metadata_dir='/Users/davidgroppe/GIT/OCSVM_EDMSE/matlab/EU/metadata'
+metadata_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/ALL_SZR_HTML/'
 html_fname=os.path.join(metadata_dir,'all_szrs_FR_'+sub+'.html')
 print('Attempting to read %s' % html_fname)
 htable=pd.read_html(html_fname)
@@ -49,7 +50,18 @@ szr_offset_sec=list()
 szr_onset_str=list()
 szr_offset_str=list()
 szr_type=list()
+szr_soz_chans=list()
 
+# print(htable[0].iloc[0,6])
+# tmp_str1=htable[0].iloc[0,6].split('early:')[0]
+# print(tmp_str1)
+# tmp_str2=tmp_str1.split('origin:')[1]
+# print(tmp_str2)
+# raw_soz_chans=tmp_str2.split(',')
+# soz_chans=list()
+# for chan in raw_soz_chans:
+#     soz_chans.append(chan.strip())
+# print(soz_chans)
 
 #milestone=datetime(1970,1,1) # This is 5 hours (I think) after time=0 for python
 milestone=datetime(2000,1,1) # Arbirary date via which to convert times into seconds
@@ -57,8 +69,19 @@ milestone=datetime(2000,1,1) # Arbirary date via which to convert times into sec
 
 for a in range(n_clinical_szr):
     szr_type.append('Clinical')
-    
     print()
+
+    # Get SOZ channels
+    tmp_str1 = htable[0].iloc[a, 6].split('early:')[0]
+    tmp_str2 = tmp_str1.split('origin:')[1]
+    raw_soz_chans = tmp_str2.split(',')
+    soz_chans = list()
+    for chan in raw_soz_chans:
+        soz_chans.append(chan.strip())
+    soz_chans=np.unique(soz_chans)
+    print('Szr {} SOZ channels are {}'.format(a,soz_chans)) # Get rid of redundant offsets
+    szr_soz_chans.append(soz_chans)
+
     # Convert onset to seconds since milestone
     if not isinstance(htable[0].iloc[a, 2], str):
         szr_onset_sec.append(np.nan)
@@ -93,7 +116,7 @@ for a in range(n_clinical_szr):
     mnts=np.floor(df/60)
     scs=df-mnts*60
     print('Duration: %d minute(s) %f sec' % (mnts,scs))
-    
+
 
 # THIRD TABLE IS SUBCLINICAL SZRS
 # Convert SUBclinical onset/offsets to datetime
@@ -103,8 +126,11 @@ print('************** %d subclinical szrs' % n_subclinical_szr)
 
 for a in range(n_subclinical_szr):
     szr_type.append('Subclinical')
-        
     print()
+
+    # Fill in empty soz chans (They are no reported for subclinical szrs)
+    szr_soz_chans.append(list())
+
     # Convert onset to seconds since milestone
     if not isinstance(htable[2].iloc[a, 1], str):
         szr_onset_sec.append(np.nan)
@@ -144,18 +170,23 @@ for a in range(n_subclinical_szr):
         print('Duration: %d minute(s) %f sec' % (mnts,scs))
 
 
+print(len(szr_type))
+print(len(szr_soz_chans))
+
 # Create DataFrame
 szr_on_off_df=pd.DataFrame({'SzrType': szr_type,
                            'SzrOnsetSec': szr_onset_sec,
                            'SzrOffsetSec': szr_offset_sec,
                            'SzrOnsetStr': szr_onset_str,
-                           'SzrOffsetStr': szr_offset_str})
+                           'SzrOffsetStr': szr_offset_str,
+                            'SozChans': szr_soz_chans})
 
 
 # Sort dataframe from first to last szr
 szr_on_off_df.sort_values('SzrOnsetSec',inplace=True)
 
-out_path='/Users/davidgroppe/Dropbox/TWH_INFO/EU_METADATA'
+#out_path='/Users/davidgroppe/Dropbox/TWH_INFO/EU_METADATA'
+out_path='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/SZR_TIMES/'
 # Output to csv
 out_fname=os.path.join(out_path,'szr_on_off_FR_'+str(sub)+'.csv')
 print('Saving file to:')
