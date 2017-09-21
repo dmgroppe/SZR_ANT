@@ -53,7 +53,7 @@ end
 
 
 %% Load list of file start and stop times
-file_times_csv=fullfile(git_root,'EU_METADATA',['data_on_off_FR_' num2str(sub_id) '.csv']);
+file_times_csv=fullfile(git_root,'EU_METADATA','IEEG_ON_OFF',['data_on_off_FR_' num2str(sub_id) '.csv']);
 file_times=csv2Cell(file_times_csv,',',1);
 n_files=size(file_times,1);
 fprintf('%d data files\n',n_files);
@@ -93,6 +93,7 @@ for a=1:n_clinical,
         hdr_stem=hdr_fname(1:(find(hdr_fname=='.')-1));
         data_fname=[hdr_stem '.data'];
         fprintf('Szr is in file %s\n',data_fname);
+        % PICK UP HERE TODO
         cli_szr_info(a).clinical_fname=fullfile(file_dir,data_fname);
         cli_szr_info(a).clinical_onset_sec=clinical_onset_sec(a)-file_onset_sec(file_id);
         cli_szr_info(a).clinical_offset_sec=clinical_offset_sec(a)-file_onset_sec(file_id);

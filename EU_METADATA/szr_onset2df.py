@@ -79,7 +79,7 @@ for a in range(n_clinical_szr):
     for chan in raw_soz_chans:
         soz_chans.append(chan.strip())
     soz_chans=np.unique(soz_chans)
-    print('Szr {} SOZ channels are {}'.format(a,soz_chans)) # Get rid of redundant offsets
+    print('Clinical Szr {} SOZ channels are {}'.format(a,soz_chans)) # Get rid of redundant offsets
     szr_soz_chans.append(soz_chans)
 
     # Convert onset to seconds since milestone
@@ -128,6 +128,8 @@ for a in range(n_subclinical_szr):
     szr_type.append('Subclinical')
     print()
 
+    print('Sublinical Szr {}'.format(a))
+
     # Fill in empty soz chans (They are no reported for subclinical szrs)
     szr_soz_chans.append(list())
 
@@ -167,7 +169,8 @@ for a in range(n_subclinical_szr):
         df=szr_offset_sec[a]-szr_onset_sec[a]
         mnts=np.floor(df/60)
         scs=df-mnts*60
-        print('Duration: %d minute(s) %f sec' % (mnts,scs))
+        #print('Duration: %d minute(s) %f sec' % (mnts,scs))
+        print('Duration: {} minute(s) {} sec'.format(mnts, scs))
 
 
 print(len(szr_type))

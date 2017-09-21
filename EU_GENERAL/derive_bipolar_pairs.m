@@ -8,9 +8,9 @@ function bipolar_labels=derive_bipolar_pairs(patient_number)
 
 %% Load electrode csv file
 if ismac,
-metadata_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA';
+    metadata_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/ELEC_LISTS/';
 else
-   metadata_dir='/home/dgroppe/GIT/SZR_ANT/EU_METADATA'; 
+    metadata_dir='/home/dgroppe/GIT/SZR_ANT/EU_METADATA/ELEC_LISTS/';
 end
 elec_csv_fname=fullfile(metadata_dir, ...
     sprintf('elec_list_%d.csv',patient_number));
