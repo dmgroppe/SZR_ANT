@@ -216,7 +216,9 @@ for cloop=1:size(soz_chans_bi,1),
             % Compute raw feature without any smoothing
             for bloop=1:n_bands,
                 % Apply causal butterworth filter
-                bp_ieeg=butterfiltMK(ieeg,256,[bands(bloop,1) bands(bloop,2)],0,4);
+                %bp_ieeg=butterfiltMK(ieeg,256,[bands(bloop,1) bands(bloop,2)],0,4);
+                bp_ieeg=butterfilt4_causalEU(ieeg,256,[bands(bloop,1) bands(bloop,2)],0);
+                %data=butterfilt4_causal(data,srate,flt,n_pad)
                 
                 % Compute moving window hilbert transform
                 [se_ftrs(bloop,:), hilb_ifreq]=bp_hilb_mag(bp_ieeg,n_ftr_wind,wind_len,wind_step);

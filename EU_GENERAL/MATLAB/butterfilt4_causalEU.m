@@ -3,7 +3,7 @@ function data=butterfilt4_causal(data,srate,flt,n_pad)
 %                or band-stop 4th order Butterworth filter.  
 %
 % Usage:
-%  >> data=butterfiltMK(data,srate,flt,n_pad);
+%  >> data=butterfilt4_causal(data,srate,flt,n_pad);
 %
 % Required Inputs:
 %   data      - 2 dimensional (channel x time point) matrix of EEG data
@@ -68,7 +68,7 @@ function data=butterfilt4_causal(data,srate,flt,n_pad)
 %-add verblevel?
 
 if nargin<2,
-    error('butterfiltMK.m requires at least two inputs.');
+    error('butterfilt4_causal.m requires at least two inputs.');
 end
 
 [n_chans n_pnts]=size(data);
@@ -112,10 +112,10 @@ else
     [B, A]=butter(4,flt*2/srate);
     fprintf('bandpass from %.2f to %.2f Hz\n',flt(1),flt(2));
 end
-print('A: ')
-disp(A);
-print('B: ');
-disp(B);
+% fprintf('A: ')
+% disp(A);
+% fprintf('B: ');
+% disp(B);
 
 %preallocate memory
 total_pad=n_pad*2;
