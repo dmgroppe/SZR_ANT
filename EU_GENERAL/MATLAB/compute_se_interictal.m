@@ -83,7 +83,8 @@ for cloop=1:n_chan,
         
         % Read header
         full_data_fname=get_data_fullfname(sub_id,file_info(floop).fname);
-        
+        fprintf('Channel %d/%d\n',cloop,n_chan);
+        fprintf('Loading file %d/%d %s\n',floop,n_files,file_info(floop).fname);
         pat=bin_file(full_data_fname);
         Fs=pat.a_samp_freq;
         if isempty(Fs),
@@ -185,7 +186,8 @@ for cloop=1:n_chan,
         % Compute raw feature without any smoothing
         for bloop=1:n_bands,
             % Apply causal butterworth filter
-            bp_ieeg=butterfiltMK(ieeg,256,[bands(bloop,1) bands(bloop,2)],0,4);
+            %bp_ieeg=butterfiltMK(ieeg,256,[bands(bloop,1) bands(bloop,2)],0,4);
+            bp_ieeg=butterfilt4_causalEU(ieeg,256,[bands(bloop,1) bands(bloop,2)],0);
             
             % Compute moving window hilbert transform
             [se_ftrs(bloop,:), hilb_ifreq]=bp_hilb_mag(bp_ieeg,n_ftr_wind,wind_len,wind_step);
