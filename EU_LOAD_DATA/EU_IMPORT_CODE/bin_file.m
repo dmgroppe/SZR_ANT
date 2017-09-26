@@ -169,9 +169,11 @@ classdef bin_file < handle
                 self.a_nts_name = fullfile(str_pathstr, [str_name '.nts']);
                 if ~exist(self.a_nts_name, 'file')
                     self.a_nts_name = [self.a_file_name '.nts'];
-                    if ~exist(self.a_nts_name, 'file')
-                        display('[bin_file] - Warning: NTS file does not exist!')
-                    end
+                    % DG commented this out. It does not appear to be a
+                    % problem
+%                     if ~exist(self.a_nts_name, 'file')
+%                         display('[bin_file] - Warning: NTS file does not exist!')
+%                     end
                 end
             end
             
