@@ -241,11 +241,7 @@ for floop=1:1,
         chan_ptrs(cloop)=chan_ptrs(cloop)+n_nonszr_obs(cloop);
     end
     
-    % Save results to disk
-    outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE');
-    if ~exist(outdir,'dir'),
-        mkdir(outdir);
-    end
+disp('here');
 %     outfname=fullfile(outdir,sprintf('%d_%s_%s_non',sub_id, ...
 %         soz_chans_bi{cloop,1},soz_chans_bi{cloop,2}));
 %     fprintf('Saving szr features to %s\n',outfname);
@@ -254,7 +250,11 @@ for floop=1:1,
 end
 
 
-
+    % Save results to disk
+    outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE');
+    if ~exist(outdir,'dir'),
+        mkdir(outdir);
+    end
 
 
 
