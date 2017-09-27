@@ -70,22 +70,26 @@ n_files=length(file_info);
 total_n_nonszr_winds=0; % total # of observations in feature matrix for this patient
 chan_ptrs=zeros(n_chan,1); % index of each channel in feature matrix
 n_nonszr_obs=zeros(n_chan,1); % # of many non-szr samples to draw from each file (for each channel)
+chan_labels=cell(n_chan,1);
 for cloop=1:n_chan,
     if cloop>1
         chan_ptrs(cloop)=total_n_nonszr_winds+1;
     end
     n_nonszr_obs(cloop)=ceil(n_tpt_ct(cloop)/n_files);
     total_n_nonszr_winds=total_n_nonszr_winds+n_files*n_nonszr_obs(cloop);
+    chan_labels{cloop}=sprintf('%s-%s\n',soz_chans_bi{cloop,1}, ...
+        soz_chans_bi{cloop,2});
 end
 ftr_chan_map=zeros(1,total_n_nonszr_winds); % identifies which channel goes
 ftr_file_map=zeros(1,total_n_nonszr_winds);
 % to which time window
 
+
 %% Loop over SOZ electrodes
 nonszr_se_ftrs=[]; % The subsampled features that we'll save to disk
 % Loop over files
-for floop=1:1,
-    %for floop=1:n_files, TODO use this!!! ??
+%for floop=1:1,
+for floop=1:n_files,
     full_data_fname=get_data_fullfname(sub_id,file_info(floop).fname);
     fprintf('Loading file %d/%d %s\n',floop,n_files,file_info(floop).fname);
     
@@ -246,15 +250,22 @@ for floop=1:1,
 end
 
 
-% Save results to disk
-outfname=fullfile(outdir,sprintf('%d_non',sub_id));
-fprintf('Saving szr features to %s\n',outfname);
-save(outfname,'nonszr_se_ftrs','nonszr_se_ftrs_time_sec','ftr_chan_map','source_fnames', ...
-    'ftr_labels','ftr_file_map');
+%% Save results to disk
 outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE');
 if ~exist(outdir,'dir'),
     mkdir(outdir);
 end
-
+outfname=fullfile(outdir,sprintf('%d_non',sub_id));
+fprintf('Saving szr features to %s\n',outfname);
+save(outfname,'nonszr_se_ftrs','nonszr_se_ftrs_time_sec','ftr_chan_map','source_fnames', ...
+    'ftr_labels','ftr_file_map','chan_labels');
 disp('Done!!');
 
+%% Save electrode labels to disk
+outfname=fullfile(outdir,sprintf('%d_soz_elecs.txt',sub_id));
+fprintf('Saving SOZ electrode labels to %s\n',outfname);
+fid=fopen(outfname,'w');
+for cloop=1:n_chan,
+    fprintf(fid,'%d, %s\n',cloop,chan_labels{cloop});
+end
+fclose(fid);
