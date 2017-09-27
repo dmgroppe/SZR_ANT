@@ -78,6 +78,7 @@ for cloop=1:n_chan,
     total_n_nonszr_winds=total_n_nonszr_winds+n_files*n_nonszr_obs(cloop);
 end
 ftr_chan_map=zeros(1,total_n_nonszr_winds); % identifies which channel goes
+ftr_file_map=zeros(1,total_n_nonszr_winds);
 % to which time window
 
 %% Loop over SOZ electrodes
@@ -236,27 +237,24 @@ for floop=1:1,
         nonszr_se_ftrs(:,[1:n_nonszr_obs(cloop)]+chan_ptrs(cloop))=se_ftrs(:,use_non_szr_ids);
         nonszr_se_ftrs_time_sec([1:n_nonszr_obs(cloop)]+chan_ptrs(cloop))=se_time_sec(use_non_szr_ids);
         ftr_chan_map([1:n_nonszr_obs(cloop)]+chan_ptrs(cloop))=cloop;
+        ftr_file_map([1:n_nonszr_obs(cloop)]+chan_ptrs(cloop))=floop;
         source_fnames{floop}=full_data_fname;
         
         chan_ptrs(cloop)=chan_ptrs(cloop)+n_nonszr_obs(cloop);
     end
-    
-disp('here');
-%     outfname=fullfile(outdir,sprintf('%d_%s_%s_non',sub_id, ...
-%         soz_chans_bi{cloop,1},soz_chans_bi{cloop,2}));
-%     fprintf('Saving szr features to %s\n',outfname);
-%     save(outfname,'nonszr_se_ftrs','nonszr_se_ftrs_time_sec','source_fnames', ...
-%         'ftr_labels');
+
 end
 
 
-    % Save results to disk
-    outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE');
-    if ~exist(outdir,'dir'),
-        mkdir(outdir);
-    end
-
-
+% Save results to disk
+outfname=fullfile(outdir,sprintf('%d_non',sub_id));
+fprintf('Saving szr features to %s\n',outfname);
+save(outfname,'nonszr_se_ftrs','nonszr_se_ftrs_time_sec','ftr_chan_map','source_fnames', ...
+    'ftr_labels','ftr_file_map');
+outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE');
+if ~exist(outdir,'dir'),
+    mkdir(outdir);
+end
 
 disp('Done!!');
 
