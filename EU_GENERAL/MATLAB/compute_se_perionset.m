@@ -1,5 +1,5 @@
-%sub_id=1096; %DONE
- sub_id=620;
+sub_id=1096; %DONE
+% sub_id=620;
 %sub_id=264;
 % sub_id=590;
 %sub_id=253;
@@ -186,6 +186,11 @@ for cloop=1:size(soz_chans_bi,1),
             end
             clear ieeg_time_sec_pre_decimate;
             
+            % Clip raw szr data
+            targ_raw_ieeg_tpts=(targ_win_dec>0);
+            targ_raw_ieeg=ieeg(targ_raw_ieeg_tpts);
+            targ_raw_ieeg_sec=time_dec(targ_raw_ieeg_tpts);
+            clear targ_raw_ieeg_tpts;
             
             % Figure out how many feature time points there are
             wind_len=256*wind_len_sec; 
@@ -290,7 +295,7 @@ for cloop=1:size(soz_chans_bi,1),
             szr_fname=cli_szr_info(sloop).clinical_fname;
             fprintf('Saving szr features to %s\n',outfname);
             save(outfname,'se_ftrs','se_time_sec','se_szr_class', ...
-                'ftr_labels','szr_fname');
+                'ftr_labels','szr_fname','targ_raw_ieeg','targ_raw_ieeg_sec');
             disp('there');
         end
         
