@@ -11,19 +11,45 @@ plot(se_ftrs([1:6]+6*4,1:60)','b-o');
 
 
 
-%%
-for decay_fact=[2:2:10],
-    temp=zeros(10000,1);
-    temp(1)=1;
-    now_wt=1/(2^decay_fact);
-    for a=2:length(temp),
-        temp(a)=temp(a)*now_wt+(1-now_wt)*temp(a-1);
+%% Load non szr data compute mean and sd for each channel of data
+load('/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/1096_non.mat');
+[n_ftr, n_tpt]=size(nonszr_se_ftrs);
+n_chan=length(chan_labels);
+chan_mns=zeros(n_ftr,n_chan);
+chan_sds=zeros(n_ftr,n_chan);
+for a=1:n_chan,
+    chan_ids=find(ftr_chan_map==a);
+    for b=1:n_ftr,
+        chan_mns(b,a)=mean(nonszr_se_ftrs(b,chan_ids));
+        chan_sds(b,a)=std(nonszr_se_ftrs(b,chan_ids));
     end
-    min_id=min(find(temp<.01));
-    fprintf('Decay fact %d, it takes %d tpts (%f sec) to get below .01 threshold\n',decay_fact,min_id,min_id/10);
+end
+chan_id=8+1;
+ftr_id=29+1;
+disp(chan_mns(ftr_id,chan_id));
+disp(chan_sds(ftr_id,chan_id));
+
+% Normalize non-ictal data
+for cloop=1:n_chan,
+    chan_ids=find(ftr_chan_map==cloop);
+    for floop=1:n_ftr,
+        nonszr_se_ftrs(floop,chan_ids)=(nonszr_se_ftrs(floop,chan_ids)-chan_mns(floop,cloop))/ ...
+            chan_sds(floop,cloop);
+%         chan_mns(b,a)=mean(nonszr_se_ftrs(b,chan_ids));
+%         chan_sds(b,a)=std(nonszr_se_ftrs(b,chan_ids));
+    end
 end
 
+%%
+figure(1);
+clf();
+plot(nonszr_se_ftrs');
+axis tight;
 
+%%
+figure(2);
+%plot(chan_mns','-o');
+plot(chan_sds','-o');
 
 %% Plot features & classes
 se_ftrs_z=zscore(se_ftrs')'; %z-score
