@@ -39,9 +39,18 @@ fprintf('%d clinical+subclinical szrs\n',n_szrs);
 szr_onsets=zeros(n_szrs,1);
 szr_offsets=zeros(n_szrs,1);
 for sloop=1:n_szrs,
-   szr_onsets(sloop)=str2num(szr_times{sloop,5});
-   szr_offsets(sloop)=str2num(szr_times{sloop,3});
+    if isempty(szr_times{sloop,5}),
+        szr_onsets(sloop)=NaN;
+    else
+        szr_onsets(sloop)=str2num(szr_times{sloop,5});
+    end
+    if isempty(szr_times{sloop,3}),
+        szr_offsets(sloop)=NaN;
+    else
+        szr_offsets(sloop)=str2num(szr_times{sloop,3});
+    end
 end
+
 
 %% Load list of file start and stop times
 file_times_csv=fullfile(git_root,'EU_METADATA','IEEG_ON_OFF',['data_on_off_FR_' num2str(sub_id) '.csv']);
@@ -80,13 +89,15 @@ for floop=1:n_files,
                 sonsets_this_file=[sonsets_this_file szr_onsets(sloop)-f_onsets(floop)];
                 soffsets_this_file=[soffsets_this_file szr_offsets(sloop)-f_onsets(floop)];
             else
-                % TODO fix this
-                error('Szr onset is in this file but NOT the offset. I am not programmed to deal with this yet.');
+                warning('Szr onset is in this file but NOT the offset. I will call all time points after onset "szr".');
+                sonsets_this_file=[sonsets_this_file szr_onsets(sloop)-f_onsets(floop)];
+                soffsets_this_file=[soffsets_this_file f_offsets(floop)-f_onsets(floop)];
             end
         elseif (szr_offsets(sloop)>=f_onsets(floop)) && (szr_offsets(sloop)<=f_offsets(floop))
             % Szr offset is in this file but NOT the onset
-            % TODO fix this
-            error('Szr offset is in this file but NOT the onset. I am not programmed to deal with this yet.');
+            warning('Szr offset is in this file but NOT the onset. I will call all time points before onset "szr".');
+            sonsets_this_file=[sonsets_this_file 0];
+            soffsets_this_file=[soffsets_this_file szr_offsets(sloop)-f_onsets(floop)];
         end
     end
     file_info(floop).szr_onsets_sec=sonsets_this_file;

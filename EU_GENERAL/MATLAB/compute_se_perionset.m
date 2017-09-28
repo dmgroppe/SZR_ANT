@@ -1,5 +1,5 @@
-sub_id=1096;
-% sub_id=620;
+%sub_id=1096; %DONE
+ sub_id=620;
 %sub_id=264;
 % sub_id=590;
 %sub_id=253;
@@ -279,7 +279,8 @@ for cloop=1:size(soz_chans_bi,1),
             % examples
             
             %% Save just target window time points
-            outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE');
+            outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE', ...
+                num2str(sub_id));
             if ~exist(outdir,'dir'),
                mkdir(outdir); 
             end
