@@ -1,5 +1,5 @@
-sub_id=1096; %DONE
-% sub_id=620;
+%sub_id=1096; %DONE
+ sub_id=620;
 %sub_id=264;
 % sub_id=590;
 %sub_id=253;
@@ -92,6 +92,18 @@ end
 fprintf('Bipolar SOZ chans are:\n');
 disp(soz_chans_bi);
 
+%% SGRAM Params
+sgramCfg=[];
+sgramCfg.Fs=256;
+sgramCfg.T=2; %1 second window
+sgramCfg.K=3; % # of tapers
+sgramCfg.fpass=[0 .4*sgramCfg.Fs];
+W=(sgramCfg.K+1)/(2*sgramCfg.T);
+sgramCfg.tapers=[W*sgramCfg.T sgramCfg.K]; %[TW K]
+sgramCfg.rm_mean=0;
+sgramCfg.trialave=0;
+sgramCfg.movingwin=[sgramCfg.T .2];
+    
 
 %% Loop over bipolar soz chans
 n_tpt_ct=zeros(size(soz_chans_bi,1),1);
@@ -184,12 +196,28 @@ for cloop=1:size(soz_chans_bi,1),
                 targ_win_dec=targ_window;
                 szr_class_dec=szr_class;
             end
+            n_ieeg_dec_tpts=length(ieeg);
             clear ieeg_time_sec_pre_decimate;
             
             % Clip raw szr data
             targ_raw_ieeg_tpts=(targ_win_dec>0);
             targ_raw_ieeg=ieeg(targ_raw_ieeg_tpts);
             targ_raw_ieeg_sec=time_dec(targ_raw_ieeg_tpts);
+            
+            % Compute spectrogram of target window
+            % Extend target window forward and backward a bit to capture
+            % full time window
+            start_targ_id=min(find(targ_raw_ieeg_tpts))-sgramCfg.T*sgramCfg.Fs;
+            stop_targ_id=max(find(targ_raw_ieeg_tpts))+sgramCfg.T*sgramCfg.Fs;
+            if start_targ_id<1,
+                start_targ_id=1;
+            end
+            if stop_targ_id>n_ieeg_dec_tpts,
+                stop_targ_id=n_ieeg_dec_tpts;
+            end
+            sgramCfg.start_time=time_dec(start_targ_id);
+            [sgram_S,sgram_t,sgram_f]=mtspecgramcDG(targ_raw_ieeg,sgramCfg.movingwin,sgramCfg);
+            sgram_S=10*log10(sgram_S);
             clear targ_raw_ieeg_tpts;
             
             % Figure out how many feature time points there are
@@ -295,12 +323,14 @@ for cloop=1:size(soz_chans_bi,1),
             szr_fname=cli_szr_info(sloop).clinical_fname;
             fprintf('Saving szr features to %s\n',outfname);
             save(outfname,'se_ftrs','se_time_sec','se_szr_class', ...
-                'ftr_labels','szr_fname','targ_raw_ieeg','targ_raw_ieeg_sec');
+                'ftr_labels','szr_fname','targ_raw_ieeg','targ_raw_ieeg_sec', ...
+                'sgram_S','sgram_t','sgram_f');
             disp('there');
         end
         
     end
 end
+
 
 %%  Save sample size of each electrode
 ftr_fs=1/median(diff(se_time_sec));
