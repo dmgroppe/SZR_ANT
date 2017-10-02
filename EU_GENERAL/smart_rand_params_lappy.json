@@ -1,0 +1,6 @@
+{"model_type": "logreg",
+"model_name": "gen_sbox_se",
+"n_rand_params": 2,
+"patience": 1,
+"use_ftrs": ["SE"]}
+
