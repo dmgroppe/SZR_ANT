@@ -1,6 +1,6 @@
 {"model_type": "svm",
-"model_name": "gen_sbox_svm_se",
+"model_name": "gen_marr_svm_se",
 "n_rand_params": 3,
-"patience": 1,
+"patience": 0,
 "use_ftrs": ["SE"]}
 

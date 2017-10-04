@@ -102,6 +102,52 @@ def data_size_and_fnames(sub_list, ftr_root, ftr):
     return ftr_info_dict
 
 
+def import_data(szr_fnames, non_fnames, szr_subs, non_subs, n_szr_wind, n_non_wind, ftr_dim):
+    # ftr_path=os.path.join(ftr_root,str(sub))
+
+    # Preallocate memory
+    ftrs = np.zeros((ftr_dim, n_szr_wind + n_non_wind))
+    targ_labels = np.zeros(n_szr_wind + n_non_wind)
+    sub_ids=np.zeros(n_szr_wind + n_non_wind)
+
+    # Import non-szr data
+    ptr = 0
+    mns_dict = dict()
+    sds_dict = dict()
+    for f_ct, f in enumerate(non_fnames):
+        chan_label = chan_labels_from_fname(f)
+
+        temp_ftrs = sio.loadmat(f)
+        temp_n_wind = temp_ftrs['nonszr_se_ftrs'].shape[1]
+        raw_ftrs = temp_ftrs['nonszr_se_ftrs']
+        # Z-score features
+        temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0, zero_nans=False, verbose=False)
+        mns_dict[chan_label] = temp_mns
+        sds_dict[chan_label] = temp_sds
+
+        ftrs[:, ptr:ptr + temp_n_wind] = raw_ftrs
+        targ_labels[ptr:ptr + temp_n_wind] = 0
+        sub_ids[ptr:ptr + temp_n_wind] = non_subs[f_ct]
+        ptr += temp_n_wind
+
+    # Import szr data
+    for f_ct, f in enumerate(szr_fnames):
+        chan_label = chan_labels_from_fname(f)
+
+        temp_ftrs = sio.loadmat(f)
+        temp_n_wind = temp_ftrs['se_ftrs'].shape[1]
+        raw_ftrs = temp_ftrs['se_ftrs']
+        # Z-score based on non-ictal means, SDs
+        dg.applyNormalize(raw_ftrs, mns_dict[chan_label], sds_dict[chan_label])
+
+        ftrs[:, ptr:ptr + temp_n_wind] = raw_ftrs
+        targ_labels[ptr:ptr + temp_n_wind] = 1
+        sub_ids[ptr:ptr + temp_n_wind] = szr_subs[f_ct]
+        ptr += temp_n_wind
+
+    return ftrs.T, targ_labels, sub_ids
+
+
 ## Start of main function
 if len(sys.argv)==1:
     print('Usage: train_smart_srch_multi_patient.py srch_params.json')
@@ -126,6 +172,7 @@ print('Features being used: {}'.format(ftr_types))
 #     small_ictal_wind=False
 # else:
 #     raise Exception('ictal_wind needs to be "small" or "max"')
+use_ftrs=['SE'] #TODO import this from json file
 n_rand_params=int(params['n_rand_params'])
 print('# of random initial hyperparameters to try %d' % n_rand_params)
 patience=int(params['patience'])
@@ -140,7 +187,7 @@ if os.path.exists(model_path)==False:
 #use_subs_df=pd.read_csv(os.path.join(path_dict['szr_ant_root'],'use_subs.txt'),header=None,na_filter=False)
 use_subs_df=pd.read_csv('train_subs.txt',header=None,na_filter=False)
 #test_sub_list=['NA']
-test_sub_list=['NA','SV','CC','CT']
+test_sub_list=['1096']
 train_subs_list=[]
 for sub in use_subs_df.iloc[:,0]:
     if not sub in test_sub_list:
@@ -152,124 +199,32 @@ print('Training subs: {}'.format(train_subs_list))
 # ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/'
 ftr_root=path_dict['eu_gen_ftrs']
 ftr='SE'
-temp_ftr_info_dict=data_size_and_fnames(train_subs_list, ftr_root, ftr)
+ftr_info_dict=data_size_and_fnames(train_subs_list, ftr_root, ftr)
 #ftrs_tr, targ_labels_tr=import_data(szr_fnames_tr, non_fnames_tr, n_szr_wind_tr, n_non_wind_tr, ftr_dim)
 
-exit()
-
-# Find out how much data exists to preallocate memory
-n_ftr_types=len(ftr_types)
-n_dim=0
-n_wind=0
-sub_stem_dict=dict()
-for type_ct, ftr_type in enumerate(ftr_types):
-    print('Checking dimensions of feature type %s' % ftr_type)
-    # Figure out how much data there is to preallocate mem
-    ftr_type_dir=os.path.join(path_dict['ftrs_root'],ftr_type)
-
-    if type_ct==0:
-        # count time windows and create fname_stem_list
-        for sub in train_subs_list:
-            temp_stem_list = []
-            ftr_path=os.path.join(ftr_type_dir,sub)
-            for f in os.listdir(ftr_path):
-                #get file stem
-                f_parts = f.split('_')
-                f_stem = f_parts[0]+'_'+f_parts[1]+'_'+f_parts[2]
-                #fname_stem_list.append(f_stem)
-                temp_stem_list.append(f_stem)
-                ftr_dict=np.load(os.path.join(ftr_path,f))
-                if small_ictal_wind:
-                    n_wind+=np.sum(ftr_dict['peri_ictal']>=0)
-                else:
-                    n_wind += len(ftr_dict['peri_ictal'])
-            sub_stem_dict[sub]=temp_stem_list
-    else:
-        temp_n_wind=0
-        f_ct=0
-        # Load file extension
-        ext_fname = os.path.join(ftr_type_dir, 'ext.txt')
-        with open(ext_fname, 'r') as f_ext:
-            ext = f_ext.readline()[:-1]
-        print(ext_fname)
-        print(ext)
-        for sub in train_subs_list:
-            ftr_path=os.path.join(ftr_type_dir,sub)
-            for temp_stem in sub_stem_dict[sub]:
-                targ_file=os.path.join(ftr_path,temp_stem+ext)
-                # if os.path.isfile(targ_file)==False:
-                #     print('File not found: %s' % targ_file)
-                #     raise ValueError('File stems do not match across features')
-                print('Loading file %s' % targ_file)
-                ftr_dict=np.load(targ_file)
-                if small_ictal_wind:
-                    temp_n_wind+=np.sum(ftr_dict['peri_ictal']>=0)
-                else:
-                    temp_n_wind += len(ftr_dict['peri_ictal'])
-                f_ct+=1
-        if temp_n_wind!=n_wind:
-            raise ValueError('# of time windows do not match across features')
-    n_dim += ftr_dict['ftrs'].shape[0]
-
+n_dim=ftr_info_dict['ftr_dim']
+n_non_wind=ftr_info_dict['grand_n_non_wind']
+n_szr_wind=ftr_info_dict['grand_n_szr_wind']
+n_wind=n_non_wind+n_szr_wind
 print('Total # of dimensions: %d ' % n_dim)
+print('Total # of szr time windows: %d ' % n_szr_wind)
+print('Total # of non-szr time windows: %d ' % n_non_wind)
 print('Total # of time windows: %d ' % n_wind)
-print('Total # of files: %d' % f_ct)
+# print('Total # of files: %d' % f_ct)
 
-
-# Load all training data into a giant matrix
-ftrs=np.zeros((n_wind,n_dim))
-szr_class=np.zeros(n_wind)
-sub_id=np.zeros(n_wind)
-wind_ct=0
-sub_ct=0
-file_ct=0
-for sub_ct, sub in enumerate(train_subs_list):
-    print('Loading data for sub %s' % sub)
-
-    temp_stem_list=sub_stem_dict[sub]
-    for f_stem in temp_stem_list:
-        dim_ct = 0
-        file_ct+=1
-        for ftr_type in ftr_types:
-            ftr_path = os.path.join(path_dict['ftrs_root'], ftr_type, sub)
-            file_found=False
-            for f in os.listdir(ftr_path):
-                # get file stem
-                f_parts = f.split('_')
-                temp_f_stem = f_parts[0] + '_' + f_parts[1] + '_' + f_parts[2]
-                if temp_f_stem==f_stem:
-                    # load file
-                    #print('Loading %s' % os.path.join(ftr_path, f))
-                    ftr_dict = np.load(os.path.join(ftr_path, f))
-                    file_found=True
-                    # break out of for loop
-                    break
-            # Catch if new file was not loaded
-            if not file_found:
-                print('Trying to find %s for %s' % (f_stem,ftr_type))
-                raise ValueError('File stem not found')
-            # Add ftr to collection
-            if small_ictal_wind:
-                temp_class=ftr_dict['peri_ictal']
-            else:
-                temp_class = ftr_dict['peri_ictal'] != 0
-            temp_use_ids = temp_class >= 0
-            temp_n_dim = ftr_dict['ftrs'].shape[0]
-            temp_n_wind=np.sum(temp_use_ids)
-            ftrs[wind_ct:wind_ct + temp_n_wind, dim_ct:dim_ct + temp_n_dim] = ftr_dict['ftrs'][:,temp_use_ids].T
-            dim_ct+=temp_n_dim
-        szr_class[wind_ct:wind_ct + temp_n_wind] = temp_class[temp_use_ids]
-        sub_id[wind_ct:wind_ct+temp_n_wind]=np.ones(temp_n_wind)*sub_ct
-        wind_ct+=temp_n_wind
+# Load training/validation data into a single matrix
+ftrs, szr_class, sub_id=import_data(ftr_info_dict['grand_szr_fnames'], ftr_info_dict['grand_non_fnames'],
+                                       ftr_info_dict['szr_file_subs'],ftr_info_dict['non_file_subs'],
+                                       n_szr_wind, n_non_wind, n_dim)
 
 # Set sample weights to weight each subject (and preictal/ictal equally:
-n_train_subs = len(train_subs_list)
-# n_train_subs=2 # TODO remove this!!! ??
+uni_subs=np.unique(sub_id)
+n_train_subs = len(uni_subs)
 samp_wts = np.ones(n_wind)
-for sub_ct in range(n_train_subs):
-    subset_id = (sub_id == sub_ct)
+for sub_loop in uni_subs:
+    subset_id = (sub_id == sub_loop)
     n_obs = np.sum(subset_id)
-    print('Sub #%d has %d observations' % (sub_ct, int(n_obs)))
+    print('Sub #%d has %d observations' % (sub_loop, int(n_obs)))
     samp_wts[subset_id] = samp_wts[subset_id] / n_obs
 print('Sum samp wts=%f' % np.sum(samp_wts))
 print('# of subs=%d' % n_train_subs)
@@ -307,6 +262,13 @@ best_models=None
 best_C=None
 best_gam=None
 best_valid_bal_acc_by_sub=None
+
+# Variables to keep track of the mean LOOCV accuracy of all gamma and C values tried
+tried_C=list()
+tried_gamma=list()
+tried_train_acc=list()
+tried_valid_acc=list()
+
 for rand_ct in range(n_rand_params):
     C=C_vals[rand_ct]  # Start with C=1 and then change it according to train-testing error dif
     C_direction=0
@@ -320,14 +282,15 @@ for rand_ct in range(n_rand_params):
         print('Using C value of %f' % C)
         temp_models=dict()
 
+        # Use LOOCV to estimate accuracy for this value of C and gamma
         temp_train_sens = np.zeros(n_train_subs)
         temp_train_spec = np.zeros(n_train_subs)
         temp_train_bacc = np.zeros(n_train_subs)
         temp_valid_sens = np.zeros(n_train_subs)
         temp_valid_spec = np.zeros(n_train_subs)
         temp_valid_bacc = np.zeros(n_train_subs)
-        for left_out_id in range(n_train_subs):
-            print('Left out sub %d of %d' % (left_out_id+1,n_train_subs))
+        for left_out_ct, left_out_id in enumerate(uni_subs):
+            print('Left out sub %d of %d' % (left_out_ct+1,n_train_subs))
             #rbf_svc = svm.SVC(kernel='rbf', gamma=0.7, C=C).fit(ftrs.T, szr_class)
             if 'model' in locals():
                 del model # clear model just in case
@@ -349,7 +312,7 @@ for rand_ct in range(n_rand_params):
             # >>> clf.fit(X, y)
 
             # Save model from this left out sub
-            temp_models[left_out_id]=model
+            temp_models[left_out_ct]=model
 
             # make predictions from training and validation data
             training_class_hat = model.predict(ftrs)
@@ -361,19 +324,26 @@ for rand_ct in range(n_rand_params):
             preictal_bool=szr_class==0
 
             use_ids = np.multiply(train_bool, ictal_bool)
-            temp_train_sens[left_out_id ]= np.mean(jive[use_ids])
+            temp_train_sens[left_out_ct ]= np.mean(jive[use_ids==True])
             use_ids=np.multiply(train_bool,preictal_bool)
-            temp_train_spec[left_out_id ]=np.mean(jive[use_ids])
-            temp_train_bacc[left_out_id ]=(temp_train_spec[left_out_id] + temp_train_sens[left_out_id]) / 2
+            temp_train_spec[left_out_ct ]=np.mean(jive[use_ids])
+            temp_train_bacc[left_out_ct ]=(temp_train_spec[left_out_ct] + temp_train_sens[left_out_ct]) / 2
 
             use_ids=np.multiply(valid_bool,ictal_bool)
-            temp_valid_sens[left_out_id]=np.mean(jive[use_ids])
+            temp_valid_sens[left_out_ct]=np.mean(jive[use_ids])
             use_ids=np.multiply(valid_bool,preictal_bool)
-            temp_valid_spec[left_out_id] =np.mean(jive[use_ids])
-            temp_valid_bacc[left_out_id] = (temp_valid_spec[left_out_id] + temp_valid_sens[left_out_id]) / 2
+            temp_valid_spec[left_out_ct] =np.mean(jive[use_ids])
+            temp_valid_bacc[left_out_ct] = (temp_valid_spec[left_out_ct] + temp_valid_sens[left_out_ct]) / 2
 
         mn_temp_valid_bacc=np.mean(temp_valid_bacc)
         mn_temp_train_bacc = np.mean(temp_train_bacc)
+
+        # Keep track of results for this value of C and gamma
+        tried_C.append(C)
+        tried_gamma.append(gam)
+        tried_train_acc.append(mn_temp_train_bacc)
+        tried_valid_acc.append(mn_temp_valid_bacc)
+
         if mn_temp_valid_bacc>best_vbal_acc_this_gam:
             best_vbal_acc_this_gam=mn_temp_valid_bacc
             best_models_this_gam=temp_models.copy()
@@ -388,23 +358,23 @@ for rand_ct in range(n_rand_params):
             print('Best valid acc so far: %.2f for current gamma value' % best_vbal_acc_this_gam)
             # Training Data Results
             # train_acc[:,rand_ct]=np.mean(jive[train_bool]) #TODO remove!
-            #print('Training accuracy: %f' % train_acc[left_out_id,rand_ct])
+            #print('Training accuracy: %f' % train_acc[left_out_ct,rand_ct])
             train_sens[:,rand_ct]=temp_train_sens
-            #print('Training sensitivity: %f' % train_sens[left_out_id,rand_ct])
+            #print('Training sensitivity: %f' % train_sens[left_out_ct,rand_ct])
             train_spec[:,rand_ct]=temp_train_spec
-            #print('Training specificity: %f' % train_spec[left_out_id,rand_ct])
+            #print('Training specificity: %f' % train_spec[left_out_ct,rand_ct])
             train_bal_acc[:,rand_ct]=temp_train_bacc
-            # print('Training balanced accuracy: %f' % train_bal_acc[left_out_id,rand_ct])
+            # print('Training balanced accuracy: %f' % train_bal_acc[left_out_ct,rand_ct])
 
             # Validation Data Results
-            # valid_acc[left_out_id,rand_ct]=np.mean(jive[valid_bool]) #TODO remove!
-            #print('Validation accuracy: %f' % valid_acc[left_out_id,rand_ct])
+            # valid_acc[left_out_ct,rand_ct]=np.mean(jive[valid_bool]) #TODO remove!
+            #print('Validation accuracy: %f' % valid_acc[left_out_ct,rand_ct])
             valid_sens[:,rand_ct]=temp_valid_sens
-            #print('Validation sensitivity: %f' % valid_sens[left_out_id,rand_ct])
+            #print('Validation sensitivity: %f' % valid_sens[left_out_ct,rand_ct])
             valid_spec[:,rand_ct]=temp_valid_spec
-            #print('Validation specificity: %f' % valid_spec[left_out_id,rand_ct])
+            #print('Validation specificity: %f' % valid_spec[left_out_ct,rand_ct])
             valid_bal_acc[:,rand_ct] = temp_valid_bacc
-            #print('Validation balanced accuracy: %f' % valid_bal_acc[left_out_id,rand_ct])
+            #print('Validation balanced accuracy: %f' % valid_bal_acc[left_out_ct,rand_ct])
 
             steps_since_best=0
         else:
@@ -493,6 +463,10 @@ for rand_ct in range(n_rand_params):
          rand_ct=rand_ct,
          C_vals=C_vals,
          gamma_vals=gamma_vals,
+         tried_C=tried_C,
+         tried_gamma=tried_gamma,
+         tried_train_acc=tried_train_acc,
+         tried_valid_acc=tried_valid_acc,
          best_valid_bal_acc=best_valid_bal_acc,
          best_C = best_C,
          best_gam=best_gam,
@@ -509,3 +483,4 @@ print('Best accuracy: %f' % best_valid_bal_acc)
 print('Using C=%.2E and gam=%.2E' % (best_C,best_gam))
 print('Model name: {}'.format(model_name))
 print('Features used: {}'.format(use_ftrs))
+print('Metrics save to: %s' % out_metrics_fname)
