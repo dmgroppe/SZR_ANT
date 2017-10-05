@@ -178,24 +178,12 @@ print('# of random initial hyperparameters to try %d' % n_rand_params)
 patience=int(params['patience'])
 print('# of steps to wait when performance no longer increases %d' % patience)
 
-# Find if there any existing models of this name
-# If so, grab the number of model an increment that number by 1 to get new model name
-path_dict=ief.get_path_dict()
-model_root=model_path=os.path.join(path_dict['szr_ant_root'],'MODELS')
-model_num=1
-for f in os.listdir(model_root):
-    if os.path.isdir(os.path.join(model_root,f)):
-        spltf=f.split('_')
-        if spltf[0]==model_name:
-           temp_model_num=int(spltf[1])
-           if temp_model_num>=model_num:
-               model_num=temp_model_num+1
-model_path=os.path.join(model_root,model_name+'_'+str(model_num))
-print('Model will be stored to %s' % model_path)
-if os.path.exists(model_path)==False:
-    os.mkdir(model_path)
 
 # Import list of subjects to use
+path_dict=ief.get_path_dict()
+model_path=os.path.join(path_dict['szr_ant_root'],'MODELS',model_name)
+if os.path.exists(model_path)==False:
+    os.mkdir(model_path)
 #use_subs_df=pd.read_csv(os.path.join(path_dict['szr_ant_root'],'use_subs.txt'),header=None,na_filter=False)
 use_subs_df=pd.read_csv('train_subs.txt',header=None,na_filter=False)
 #test_sub_list=['NA']
@@ -290,7 +278,7 @@ for rand_ct in range(n_rand_params):
 
     best_vbal_acc_this_gam=0 # best balanced accuracy for this value of gamma
     steps_since_best = 0
-    for C_loop in range(10): # Note max # of C values to try is 10
+    for C_loop in range(10):
         print('Using C value of %f' % C)
         temp_models=dict()
 
@@ -302,7 +290,7 @@ for rand_ct in range(n_rand_params):
         temp_valid_spec = np.zeros(n_train_subs)
         temp_valid_bacc = np.zeros(n_train_subs)
         for left_out_ct, left_out_id in enumerate(uni_subs):
-            print('Left out sub %d (FR_%d) of %d' % (left_out_ct+1,left_out_id,n_train_subs))
+            print('Left out sub %d of %d' % (left_out_ct+1,n_train_subs))
             #rbf_svc = svm.SVC(kernel='rbf', gamma=0.7, C=C).fit(ftrs.T, szr_class)
             if 'model' in locals():
                 del model # clear model just in case
@@ -315,53 +303,37 @@ for rand_ct in range(n_rand_params):
                 model = svm.SVC(class_weight='balanced', kernel='linear', C=C, gamma=gam)
             else:
                 from sklearn import linear_model
-                #model = linear_model.LogisticRegression(class_weight='balanced', C=C, penalty='l1')
-                model = linear_model.LogisticRegression(class_weight='balanced', C=C)
+                model = linear_model.LogisticRegression(class_weight='balanced', C=C, penalty='l1')
 
-            train_bool = sub_id != left_out_id
-            #model.fit(ftrs[train_bool, :], szr_class[train_bool ], sample_weight=samp_wts[subset_id])
-            model.fit(ftrs[train_bool , :], szr_class[train_bool]) # CORRECT
-            #model.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code
+            subset_id = sub_id != left_out_id
+            model.fit(ftrs[subset_id, :], szr_class[subset_id], sample_weight=samp_wts[subset_id])
+            #model.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code ?? TODO remove this
+            #clf = svm.SVC()
+            # >>> clf.fit(X, y)
 
             # Save model from this left out sub
             temp_models[left_out_ct]=model
 
             # make predictions from training and validation data
-            class_hat = model.predict(ftrs)
-            #jive=training_class_hat==szr_class
+            training_class_hat = model.predict(ftrs)
+            jive=training_class_hat==szr_class
 
-            #bal_acc_dg, sens_dg, spec_dg = ief.perf_msrs(szr_class, training_class_hat)
-            #bal_acc_dg, sens_dg, spec_dg = ief.perf_msrs(szr_class[train_bool], training_class_hat[train_bool])
-            #class_phat = model.predict_proba(ftrs)[:, 1]
-            #bal_acc_dg, sens_dg, spec_dg = ief.perf_msrs(szr_class[train_bool], class_phat[train_bool]>=0.5)
-            #print('bal_acc_dg %f' % bal_acc_dg)
-            # TODO use ief.perf_msrs below
+            train_bool=sub_id!=left_out_id
+            valid_bool=sub_id==left_out_id
+            ictal_bool=szr_class==1
+            preictal_bool=szr_class==0
 
-            temp_train_bacc[left_out_ct], temp_train_sens[left_out_ct ], temp_train_spec[left_out_ct ] = ief.perf_msrs(
-                szr_class[train_bool],
-                class_hat[train_bool])
-            temp_valid_bacc[left_out_ct], temp_valid_sens[left_out_ct], temp_valid_spec[left_out_ct] = ief.perf_msrs(
-                szr_class[train_bool==False],
-                class_hat[train_bool==False])
+            use_ids = np.multiply(train_bool, ictal_bool)
+            temp_train_sens[left_out_ct ]= np.mean(jive[use_ids==True])
+            use_ids=np.multiply(train_bool,preictal_bool)
+            temp_train_spec[left_out_ct ]=np.mean(jive[use_ids])
+            temp_train_bacc[left_out_ct ]=(temp_train_spec[left_out_ct] + temp_train_sens[left_out_ct]) / 2
 
-            # valid_bool=sub_id==left_out_id
-            # ictal_bool=szr_class==1
-            # preictal_bool=szr_class==0
-            #
-            # use_ids = np.multiply(train_bool, ictal_bool)
-            # temp_train_sens[left_out_ct ]= np.mean(jive[use_ids==True])
-            # use_ids=np.multiply(train_bool,preictal_bool)
-            # temp_train_spec[left_out_ct ]=np.mean(jive[use_ids])
-            # temp_train_bacc[left_out_ct ]=(temp_train_spec[left_out_ct] + temp_train_sens[left_out_ct]) / 2
-            #
-            # use_ids=np.multiply(valid_bool,ictal_bool)
-            # temp_valid_sens[left_out_ct]=np.mean(jive[use_ids])
-            # use_ids=np.multiply(valid_bool,preictal_bool)
-            # temp_valid_spec[left_out_ct] =np.mean(jive[use_ids])
-            # temp_valid_bacc[left_out_ct] = (temp_valid_spec[left_out_ct] + temp_valid_sens[left_out_ct]) / 2
-
-            # print('Bal Acc (Train/Valid): %.3f/%3f ' % (temp_train_bacc[left_out_ct ],temp_valid_bacc[left_out_ct]))
-            # exit()
+            use_ids=np.multiply(valid_bool,ictal_bool)
+            temp_valid_sens[left_out_ct]=np.mean(jive[use_ids])
+            use_ids=np.multiply(valid_bool,preictal_bool)
+            temp_valid_spec[left_out_ct] =np.mean(jive[use_ids])
+            temp_valid_bacc[left_out_ct] = (temp_valid_spec[left_out_ct] + temp_valid_sens[left_out_ct]) / 2
 
         mn_temp_valid_bacc=np.mean(temp_valid_bacc)
         mn_temp_train_bacc = np.mean(temp_train_bacc)
