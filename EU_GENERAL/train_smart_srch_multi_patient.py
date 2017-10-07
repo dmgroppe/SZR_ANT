@@ -114,14 +114,17 @@ def import_data(szr_fnames, non_fnames, szr_subs, non_subs, n_szr_wind, n_non_wi
     ptr = 0
     mns_dict = dict()
     sds_dict = dict()
+    chan_list=list()
     for f_ct, f in enumerate(non_fnames):
-        chan_label = chan_labels_from_fname(f)
+        chan_label = str(non_subs[f_ct])+'_'+chan_labels_from_fname(f)
+        print(chan_label)
+        chan_list.append(chan_label)
 
         temp_ftrs = sio.loadmat(f)
         temp_n_wind = temp_ftrs['nonszr_se_ftrs'].shape[1]
         raw_ftrs = temp_ftrs['nonszr_se_ftrs']
         # Z-score features
-        temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0, zero_nans=False, verbose=False)
+        temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0, zero_nans=False, verbose=False) #normalization is done in place
         mns_dict[chan_label] = temp_mns
         sds_dict[chan_label] = temp_sds
 
@@ -132,7 +135,8 @@ def import_data(szr_fnames, non_fnames, szr_subs, non_subs, n_szr_wind, n_non_wi
 
     # Import szr data
     for f_ct, f in enumerate(szr_fnames):
-        chan_label = chan_labels_from_fname(f)
+        #chan_label = chan_labels_from_fname(f)
+        chan_label = str(szr_subs[f_ct]) + '_' + chan_labels_from_fname(f)
 
         temp_ftrs = sio.loadmat(f)
         temp_n_wind = temp_ftrs['se_ftrs'].shape[1]
@@ -267,9 +271,10 @@ n_train_steps=np.zeros(n_rand_params)
 #gamma_vals=np.random.exponential(1,n_rand_params)
 C_vals=np.ones(n_rand_params)
 # C = SVM regularization parameter, the smaller it is, the stronger the regularization
-gamma_vals=10**np.random.uniform(-10,0,n_rand_params)
+gamma_vals=10**np.random.uniform(-3,0,n_rand_params)
 #gamma defines how much influence a single training example has. The larger gamma is, the closer other examples must be to be affected.
 best_valid_bal_acc=0
+best_train_bal_acc=0
 best_models=None
 best_C=None
 best_gam=None
@@ -328,38 +333,12 @@ for rand_ct in range(n_rand_params):
 
             # make predictions from training and validation data
             class_hat = model.predict(ftrs)
-            #jive=training_class_hat==szr_class
-
-            #bal_acc_dg, sens_dg, spec_dg = ief.perf_msrs(szr_class, training_class_hat)
-            #bal_acc_dg, sens_dg, spec_dg = ief.perf_msrs(szr_class[train_bool], training_class_hat[train_bool])
-            #class_phat = model.predict_proba(ftrs)[:, 1]
-            #bal_acc_dg, sens_dg, spec_dg = ief.perf_msrs(szr_class[train_bool], class_phat[train_bool]>=0.5)
-            #print('bal_acc_dg %f' % bal_acc_dg)
-            # TODO use ief.perf_msrs below
-
             temp_train_bacc[left_out_ct], temp_train_sens[left_out_ct ], temp_train_spec[left_out_ct ] = ief.perf_msrs(
                 szr_class[train_bool],
                 class_hat[train_bool])
             temp_valid_bacc[left_out_ct], temp_valid_sens[left_out_ct], temp_valid_spec[left_out_ct] = ief.perf_msrs(
                 szr_class[train_bool==False],
                 class_hat[train_bool==False])
-
-            # valid_bool=sub_id==left_out_id
-            # ictal_bool=szr_class==1
-            # preictal_bool=szr_class==0
-            #
-            # use_ids = np.multiply(train_bool, ictal_bool)
-            # temp_train_sens[left_out_ct ]= np.mean(jive[use_ids==True])
-            # use_ids=np.multiply(train_bool,preictal_bool)
-            # temp_train_spec[left_out_ct ]=np.mean(jive[use_ids])
-            # temp_train_bacc[left_out_ct ]=(temp_train_spec[left_out_ct] + temp_train_sens[left_out_ct]) / 2
-            #
-            # use_ids=np.multiply(valid_bool,ictal_bool)
-            # temp_valid_sens[left_out_ct]=np.mean(jive[use_ids])
-            # use_ids=np.multiply(valid_bool,preictal_bool)
-            # temp_valid_spec[left_out_ct] =np.mean(jive[use_ids])
-            # temp_valid_bacc[left_out_ct] = (temp_valid_spec[left_out_ct] + temp_valid_sens[left_out_ct]) / 2
-
             # print('Bal Acc (Train/Valid): %.3f/%3f ' % (temp_train_bacc[left_out_ct ],temp_valid_bacc[left_out_ct]))
             # exit()
 
@@ -466,6 +445,7 @@ for rand_ct in range(n_rand_params):
         best_C=C_vals[rand_ct]
         best_gam=gam
         best_valid_bal_acc = temp_mn_acc
+        best_train_bal_acc = np.mean(train_bal_acc[:, rand_ct],axis=0)
         print('NEW best accuracy so far: %f' % best_valid_bal_acc)
         print('Using C=%.2E and gam=%.2E' % (best_C,best_gam))
     else:
@@ -496,15 +476,12 @@ for rand_ct in range(n_rand_params):
          tried_train_acc=tried_train_acc,
          tried_valid_acc=tried_valid_acc,
          best_valid_bal_acc=best_valid_bal_acc,
+         best_train_bal_acc=best_train_bal_acc,
          best_C = best_C,
          best_gam=best_gam,
          best_models=best_models,
          ftr_types=ftr_types,
          left_out_id=left_out_id)
-    # out_model_fname=os.path.join(model_path,'classify_models_srch.pkl')
-    # pickle.dump(best_models,open(out_model_fname,'wb'))
-    # print('TEMP DONE!!!!') #TODO REMOVE ??
-    # exit()
 
 print('Done!')
 print('Best accuracy: %f' % best_valid_bal_acc)
