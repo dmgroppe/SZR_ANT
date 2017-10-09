@@ -2,7 +2,7 @@
 # Various parameters of C are tried
 # Features are power in 6 frequency bands and 5 voltage domain features in a one second window
 # Same as train_rand_smart_scrch.py but all patients are weighted equally (before patients with more data had more
-# influence on the results
+# influence on the results TODO update these comments
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
