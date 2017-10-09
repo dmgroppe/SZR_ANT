@@ -1,5 +1,3 @@
-error('This file needs to be updated to work with bipolar data. It is a script for original monopolar code.');
-
 %/Users/dgroppe/Desktop/25300102_0000.data 
 %ts_data=pat.get_bin_signals();
 %disp(size(ts_data));

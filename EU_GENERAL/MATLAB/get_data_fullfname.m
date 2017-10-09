@@ -40,8 +40,13 @@ else
         sub_id);
 end
 
-ieeg_root_dir=fullfile(external_root,'ValianteLabEuData','EU',inv_dir, ...
-    sprintf('pat_FR_%d',sub_id),sprintf('adm_%d102',sub_id));
+if ismac,
+    ieeg_root_dir=fullfile(external_root,'SgateOSExJnld','EU_TEMP',inv_dir, ...
+        sprintf('pat_FR_%d',sub_id),sprintf('adm_%d102',sub_id));
+else
+    ieeg_root_dir=fullfile(external_root,'ValianteLabEuData','EU',inv_dir, ...
+        sprintf('pat_FR_%d',sub_id),sprintf('adm_%d102',sub_id));
+end
 ieeg_dirs=get_eu_data_dirs(ieeg_root_dir);
 n_ieeg_dirs=length(ieeg_dirs);
 %        /Volumes/ValianteLabEuData/EU/inv/pat_FR_1096/adm_1096102/rec_109600102/109600102_0072.data

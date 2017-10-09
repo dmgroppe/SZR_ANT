@@ -35,7 +35,6 @@ bands=[0 4; 4 8; 8 13; 13 30; 30 50; 70 100];
 band_labels={'DeltaMag','ThetaMag','AlphaMag','BetaMag','GammaMag','HGammaMag'};
 n_bands=length(bands);
 
-
 %% Derive feature labels
 n_ftrs=n_bands*n_lags;
 ftr_labels=cell(n_ftrs,1);
@@ -62,20 +61,6 @@ for a=1:n_chan,
     fprintf('%s-%s # of obs: %d\n',soz_chans_bi{a,1},soz_chans_bi{a,2},n_tpt_ct(a));
 end
 
-
-%% Load list of bad channels and throw out any rejects
-bad_chans_fname=fullfile(root_dir,'EU_METADATA','BAD_CHANS',['bad_chans_' num2str(sub_id) '.txt']);
-bad_chans=csv2Cell(bad_chans_fname);
-n_bad_chans=length(bad_chans);
-good_chan_ids=[];
-for cloop=1:n_chan,
-    if isempty(findStrInCell([soz_chans_bi{cloop,1} '-' soz_chans_bi{cloop,2}],bad_chans))
-        good_chan_ids=[good_chan_ids cloop];
-    end
-end
-soz_chans_bi=soz_chans_bi(good_chan_ids,:);
-n_chan=size(soz_chans_bi,1);
-fprintf('# of USEABLE Channels: %d\n',n_chan);
 
 %% Get list of all files and the timing of all szrs (clinical and subclinical)
 file_info=get_fnames_and_szr_times(sub_id);
@@ -231,8 +216,8 @@ for cloop=1:n_chan,
         % Remove initial time points polluted by edge effects
         se_ftrs=se_ftrs(:,edge_pts:end);
         se_time_sec=se_time_sec(edge_pts:end);
-        se_class=se_class(edge_pts:end); % Whether or not time window is in my target time window for stimulation (extends a bit before clinician onset)
-        se_szr_class=se_szr_class(edge_pts:end); % Whether or not time window is within clinician defined onset-offset
+        se_class=se_class(edge_pts:end);
+        se_szr_class=se_szr_class(edge_pts:end);
         
         % Get non-szr time window ids
         %         non_szr_ids=find(se_class<0.5);
@@ -256,12 +241,17 @@ for cloop=1:n_chan,
             soz_chans_bi{cloop,1},soz_chans_bi{cloop,2},fname_stem));
         fprintf('Saving szr features to %s\n',outfname);
         save(outfname,'se_szr_class','se_time_sec','se_ftrs', ...
-            'ftr_labels','se_class','ieeg','time_dec');
+            'ftr_labels');
         
     end
     
 
 end
+
+
+
+
+
 
 disp('Done!!');
 
