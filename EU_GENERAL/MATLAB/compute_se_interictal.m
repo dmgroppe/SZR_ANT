@@ -1,10 +1,13 @@
-%sub_id=1096; % DONE
-sub_id=620;
-%sub_id=264;
-% sub_id=590;
-%sub_id=253;
-% sub_id=862;
-% sub_id=565;
+sub_id=1096; % DONE
+%sub_id=620; % DONE
+%sub_id=264; % DONE
+% sub_id=590; % DONE
+% sub_id=862;% DONE
+% sub_id=565; % DONE
+%sub_id=253; % DONE
+%sub_id=273; % DONE
+%sub_id=1125; % DONE
+%sub_id=1077; %DONE
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
@@ -214,31 +217,40 @@ for cloop=1:n_chan,
         se_class=se_class(edge_pts:end);
         se_szr_class=se_szr_class(edge_pts:end);
         
-        % Get non-szr time window ids
-        non_szr_ids=find(se_class<0.5);
-        % Randomly select subset of non-szr features
-        use_non_szr_ids=non_szr_ids(randi(length(non_szr_ids),1,n_nonszr_obs));
-        
         if isempty(nonszr_se_ftrs),
-            %preallocate mem
+            %preallocate mem, first time adding data
             nonszr_se_ftrs=zeros(n_ftrs,n_nonszr_obs*n_files);
             nonszr_se_ftrs_time_sec=zeros(1,n_nonszr_obs*n_files);
             source_fnames=cell(1,n_files);
         end
-        nonszr_se_ftrs(:,[1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=se_ftrs(:,use_non_szr_ids);
-        nonszr_se_ftrs_time_sec([1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=se_time_sec(use_non_szr_ids);
-        source_fnames{floop}=full_data_fname;
+        
+        % Get non-szr time window ids
+        non_szr_ids=find(se_class<0.5);
+        % Randomly select subset of non-szr features
+        if length(non_szr_ids)==0,
+            nonszr_se_ftrs(:,[1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=NaN;
+            nonszr_se_ftrs_time_sec([1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=NaN;
+        else
+            use_non_szr_ids=non_szr_ids(randi(length(non_szr_ids),1,n_nonszr_obs));
+            nonszr_se_ftrs(:,[1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=se_ftrs(:,use_non_szr_ids);
+            nonszr_se_ftrs_time_sec([1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=se_time_sec(use_non_szr_ids);
+            source_fnames{floop}=full_data_fname;
+        end
+
         
     end
     
     % Save results to disk
-    outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE');
+    outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE',num2str(sub_id));
     if ~exist(outdir,'dir'),
         mkdir(outdir);
     end
     outfname=fullfile(outdir,sprintf('%d_%s_%s_non',sub_id, ...
         soz_chans_bi{cloop,1},soz_chans_bi{cloop,2}));
     fprintf('Saving szr features to %s\n',outfname);
+    non_nan_ids=find(~isnan(nonszr_se_ftrs_time_sec));
+    nonszr_se_ftrs_time_sec=nonszr_se_ftrs_time_sec(non_nan_ids);
+    nonszr_se_ftrs=nonszr_se_ftrs(:,non_nan_ids);
     save(outfname,'nonszr_se_ftrs','nonszr_se_ftrs_time_sec','source_fnames', ...
         'ftr_labels');
 end

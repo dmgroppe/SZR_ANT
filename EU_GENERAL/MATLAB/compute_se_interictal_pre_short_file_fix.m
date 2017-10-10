@@ -1,5 +1,5 @@
-sub_id=1096; 
-%sub_id=620;
+%sub_id=1096; % DONE
+sub_id=620;
 %sub_id=264;
 % sub_id=590;
 %sub_id=253;
@@ -66,11 +66,6 @@ end
 file_info=get_fnames_and_szr_times(sub_id);
 n_files=length(file_info);
 
-outdir=fullfile('/Volumes/SgateOSExJnld/EU_TEMP/',[num2str(sub_id) '_all']);
-% outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE');
-if ~exist(outdir,'dir'),
-    mkdir(outdir);
-end
 
 %% Loop over SOZ electrodes
 for cloop=1:n_chan,
@@ -220,32 +215,32 @@ for cloop=1:n_chan,
         se_szr_class=se_szr_class(edge_pts:end);
         
         % Get non-szr time window ids
-        %         non_szr_ids=find(se_class<0.5);
-        %         % Randomly select subset of non-szr features
-        %         use_non_szr_ids=non_szr_ids(randi(length(non_szr_ids),1,n_nonszr_obs));
-        %
-        %         if isempty(nonszr_se_ftrs),
-        %             %preallocate mem
-        %             nonszr_se_ftrs=zeros(n_ftrs,n_nonszr_obs*n_files);
-        %             nonszr_se_ftrs_time_sec=zeros(1,n_nonszr_obs*n_files);
-        %             source_fnames=cell(1,n_files);
-        %         end
-        %         nonszr_se_ftrs(:,[1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=se_ftrs(:,use_non_szr_ids);
-        %         nonszr_se_ftrs_time_sec([1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=se_time_sec(use_non_szr_ids);
-        %         source_fnames{floop}=full_data_fname;
+        non_szr_ids=find(se_class<0.5);
+        % Randomly select subset of non-szr features
+        use_non_szr_ids=non_szr_ids(randi(length(non_szr_ids),1,n_nonszr_obs));
         
-        % Save results to disk
-        temp_id=find(file_info(floop).fname=='.');
-        fname_stem=file_info(floop).fname(1:temp_id-1);
-        outfname=fullfile(outdir,sprintf('%d_%s_%s_%s',sub_id, ...
-            soz_chans_bi{cloop,1},soz_chans_bi{cloop,2},fname_stem));
-        fprintf('Saving szr features to %s\n',outfname);
-        save(outfname,'se_szr_class','se_time_sec','se_ftrs', ...
-            'ftr_labels');
+        if isempty(nonszr_se_ftrs),
+            %preallocate mem
+            nonszr_se_ftrs=zeros(n_ftrs,n_nonszr_obs*n_files);
+            nonszr_se_ftrs_time_sec=zeros(1,n_nonszr_obs*n_files);
+            source_fnames=cell(1,n_files);
+        end
+        nonszr_se_ftrs(:,[1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=se_ftrs(:,use_non_szr_ids);
+        nonszr_se_ftrs_time_sec([1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=se_time_sec(use_non_szr_ids);
+        source_fnames{floop}=full_data_fname;
         
     end
     
-
+    % Save results to disk
+    outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE');
+    if ~exist(outdir,'dir'),
+        mkdir(outdir);
+    end
+    outfname=fullfile(outdir,sprintf('%d_%s_%s_non',sub_id, ...
+        soz_chans_bi{cloop,1},soz_chans_bi{cloop,2}));
+    fprintf('Saving szr features to %s\n',outfname);
+    save(outfname,'nonszr_se_ftrs','nonszr_se_ftrs_time_sec','source_fnames', ...
+        'ftr_labels');
 end
 
 
