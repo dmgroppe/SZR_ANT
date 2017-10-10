@@ -154,7 +154,7 @@ for floop=1:n_rand_files,
         
     end
     % Save results to disk
-    outdir=fullfile(root_dir,'EU_METADATA','PSD');
+    outdir=fullfile(root_dir,'EU_GENERAL','EU_METADATA','PSD');
     if ~exist(outdir,'dir'),
         mkdir(outdir);
     end
@@ -164,12 +164,6 @@ for floop=1:n_rand_files,
         'file_info','rand_files_used');
     
 end
-
-
-
-
-
-
 
 
 disp('Done!!');
