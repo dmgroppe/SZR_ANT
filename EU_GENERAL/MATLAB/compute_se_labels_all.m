@@ -8,8 +8,10 @@ sub_id=1096;
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
+    outdir=fullfile('/Volumes/SgateOSExJnld/EU_TEMP/',[num2str(sub_id) '_all_labels']);
 else
     root_dir='/home/dgroppe/GIT/SZR_ANT/';
+    outdir=fullfile('/home/dgroppe/EU_Y/',[num2str(sub_id) '_all_labels']);
 end
 
 
@@ -17,7 +19,7 @@ end
 file_info=get_fnames_and_szr_times2(sub_id);
 n_files=length(file_info);
 
-outdir=fullfile('/Volumes/SgateOSExJnld/EU_TEMP/',[num2str(sub_id) '_all_labels']);
+
 % outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE');
 if ~exist(outdir,'dir'),
     mkdir(outdir);
