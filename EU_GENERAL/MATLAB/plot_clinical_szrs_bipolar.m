@@ -8,7 +8,11 @@
 % sub_id=590;
 %sub_id=253;
 %sub_id=862;
-sub_id=565;
+%sub_id=565;
+%sub_id=273;
+%sub_id=1125;
+%sub_id=1077;
+sub_id=818;
 cli_szr_info=get_szr_fnames(sub_id);
 %cli_szr_info=get_szr_fnames(sub_id,ieeg_dir);
 n_szrs=length(cli_szr_info);
@@ -158,7 +162,11 @@ for sloop=1:n_szrs,
     fprintf('Done with szr %d/%d\n',sloop,n_szrs);
 
     %% Save figure
-    fig_path=fullfile('/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/SZR_FIGS',num2str(sub_id));
+    if ismac,
+        fig_path=fullfile('/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/SZR_FIGS',num2str(sub_id));
+    else
+        fig_path=fullfile('/home/dgroppe/GIT/SZR_ANT/EU_METADATA/SZR_FIGS',num2str(sub_id));
+    end
     if ~exist(fig_path,'dir')
         mkdir(fig_path);
     end

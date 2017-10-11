@@ -1,13 +1,12 @@
+function compute_se_perionset_func(sub_id)
+
 %sub_id=1096; %DONE (need sgrams)
 % sub_id=620; %DONE (need sgrams)
 %sub_id=264; % DONE
-% sub_id=590; % DONE
-%sub_id=253; % DONE
-% sub_id=862; % DONE
-% sub_id=565; %DONE
-% sub_id=273; % DONE
-% sub_id=1125; % DONE
- sub_id=1077; %DONE
+% sub_id=590;
+%sub_id=253;
+% sub_id=862;
+% sub_id=565;
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
 else

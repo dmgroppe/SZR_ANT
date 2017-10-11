@@ -1,6 +1,6 @@
-sub_id=1096; 
+%sub_id=1096; 
 %sub_id=620;
-%sub_id=264;
+sub_id=264; %pickup file 58
 % sub_id=590;
 %sub_id=253;
 % sub_id=862;
@@ -97,8 +97,8 @@ for cloop=1:n_chan,
     
     nonszr_se_ftrs=[];
     % Loop over files
-    %for floop=1:1, PICKUP ?? start at n_files=25
-    for floop=1:n_files,
+    for floop=58:n_files,
+    %for floop=1:n_files,
         % Compute features
         
         % Read header
