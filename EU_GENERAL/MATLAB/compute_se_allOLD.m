@@ -1,11 +1,10 @@
-%sub_id=1096; % done
+%sub_id=1096; 
 %sub_id=620;
-sub_id=264; % pickup file 58
+sub_id=264; %pickup file 58
 % sub_id=590;
 %sub_id=253;
 % sub_id=862;
 % sub_id=565;
-%sub_id=1125; % done
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
@@ -82,8 +81,7 @@ fprintf('# of USEABLE Channels: %d\n',n_chan);
 file_info=get_fnames_and_szr_times(sub_id);
 n_files=length(file_info);
 
-outdir=fullfile('/home/dgroppe/EU_SE_FTRS/',[num2str(sub_id) '_all']);
-%outdir=fullfile('/Volumes/SgateOSExJnld/EU_TEMP/',[num2str(sub_id) '_all']);
+outdir=fullfile('/Volumes/SgateOSExJnld/EU_TEMP/',[num2str(sub_id) '_all']);
 % outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE');
 if ~exist(outdir,'dir'),
     mkdir(outdir);
@@ -126,6 +124,9 @@ for cloop=1:n_chan,
         ieeg=ieeg_temp1-ieeg_temp2;
         ieeg_time_sec_pre_decimate=[0:(length(ieeg)-1)]/Fs; % time relative to start of file
         clear ieeg_temp1 ieeg_temp2;
+        
+        % TODO ?? modify code below to descriminate between clinical and
+        % subclinical szrs
         
         % Compute ictal-class
         szr_class=zeros(1,length(ieeg));
