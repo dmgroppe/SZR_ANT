@@ -30,7 +30,7 @@ plot([0, 0],ylim,'r:','linewidth',3);
 % title(ftr_fname);
 ht=ylabel('Voltage');
 set(ht,'fontsize',16);
-set(gca,'ytick',[]);
+set(gca,'ytick',[],'yaxislocation','right');
 h=xlabel('Seconds');
 
 % ax2=subplot(312); 
@@ -41,7 +41,12 @@ ax2_pos=[0.1300 0.43  0.7750  0.533];
 % ax2=subplot(212);
 ax2=axes('position',ax2_pos);
 ftr_tpts=find(se_time_sec<=targ_raw_ieeg_sec(show_tpts(end)));
+mx_ftr=max(max(se_ftrs(:,ftr_tpts)));
+fprintf('Max ftr value shown: %f z\n',mx_ftr);
+min_ftr=min(min(se_ftrs(:,ftr_tpts)));
+fprintf('Min ftr value shown: %f z\n',min_ftr);
 imagesc(se_ftrs(:,ftr_tpts));
+
 %xtick=get(gca,'xtick');
 rel_se_stim_sec=se_time_sec-onset_sec;
 % xtick=[];
@@ -57,9 +62,36 @@ set(gca,'xtick',[],'ytick',[]);
 % end
 % axis tight
 
-% linkaxes([ax1 ax2 ax3],'x');
+% Add colorbar
+pos=[.91 .43 .02 .533];
+limits=[-1, 1];
+cmapName='parula';
+units='';
+nTick=0;
+fontSize=12;
+unitLocation='top';
+hCbar = cbarDGplus(pos,limits,cmapName,nTick,units,unitLocation,fontSize);
+
 
 %%
 set(gcf,'paperpositionmode','auto');
 print(1,'-depsc','edm_example');
 print(1,'-djpeg','edm_example');
+
+
+%% Plot colorbar
+figure(2);
+clf();
+% cbarDG('vert');
+pos=[.1 .1 .1 .7];
+limits=[-1, 1];
+cmapName='parula';
+units='';
+nTick=0;
+fontSize=12;
+unitLocation='top';
+hCbar = cbarDGplus(pos,limits,cmapName,nTick,units,unitLocation,fontSize);
+set(hCbar,'xticklabel',[]);
+set(gcf,'paperpositionmode','auto');
+print(1,'-depsc','pstr_cbar');
+print(1,'-djpeg','pstr_cbar');
