@@ -1,3 +1,5 @@
+% Script for plotting pwr spectrum density produced by compute_psd_interictal.m
+
 %%
 mn_psd=squeeze(mean(psd_samps,1));
 [n_samp, n_freq, n_chan]=size(psd_samps);

@@ -1,7 +1,10 @@
-function file_info=get_fnames_and_szr_times(sub_id)
-%function file_info=get_fnames_and_szr_times(sub_id)
+function file_info=get_fnames_and_szr_times2(sub_id)
+%function file_info=get_fnames_and_szr_times2(sub_id)
 % 
 % Extracts information about each szr (clinical & subclinical) for a particular patient.
+%
+% This differs from get_fnames_and_szr_time in that it discriminates
+% between clinical and subclinical szrs
 %
 % sub_id - subject id (e.g., 1096)
 % file_dir-path to where the ieeg data are stored
@@ -35,9 +38,10 @@ n_szrs=size(szr_times,1);
 fprintf('%d clinical+subclinical szrs\n',n_szrs);
 
 
-%% Convert szr times to numeric variables
+%% Convert szr times to numeric variables, NaN if not given
 szr_onsets=zeros(n_szrs,1);
 szr_offsets=zeros(n_szrs,1);
+clin_szr=zeros(n_szrs,1);
 for sloop=1:n_szrs,
     if isempty(szr_times{sloop,5}),
         szr_onsets(sloop)=NaN;
@@ -48,6 +52,11 @@ for sloop=1:n_szrs,
         szr_offsets(sloop)=NaN;
     else
         szr_offsets(sloop)=str2num(szr_times{sloop,3});
+    end
+    if strcmpi(szr_times{sloop,7},'Clinical'),
+        clin_szr(sloop)=1;
+    elseif ~strcmpi(szr_times{sloop,7},'Subclinical'),
+        error('Unknown szr type: %s\n',szr_times{sloop,7}); 
     end
 end
 
@@ -79,28 +88,47 @@ file_info=struct('fname',file_times(:,3),'file_onset_sec',f_onsets, ...
     'file_offset_sec',f_offsets,'file_onset_hrs',file_times(:,5),'file_dur_sec', ...
     file_dur);
 for floop=1:n_files,
-    sonsets_this_file=[];
-    soffsets_this_file=[];
+    clin_sonsets_this_file=[];
+    clin_soffsets_this_file=[];
+    sub_sonsets_this_file=[];
+    sub_soffsets_this_file=[];
     for sloop=1:n_szrs,
         if (szr_onsets(sloop)>=f_onsets(floop)) && (szr_onsets(sloop)<=f_offsets(floop))
             % Szr onset is in this file
             if (szr_offsets(sloop)>=f_onsets(floop)) && (szr_offsets(sloop)<=f_offsets(floop))
                 % Szr offset is also in this file
-                sonsets_this_file=[sonsets_this_file szr_onsets(sloop)-f_onsets(floop)];
-                soffsets_this_file=[soffsets_this_file szr_offsets(sloop)-f_onsets(floop)];
+                if clin_szr(sloop),
+                    clin_sonsets_this_file=[clin_sonsets_this_file szr_onsets(sloop)-f_onsets(floop)];
+                    clin_soffsets_this_file=[clin_soffsets_this_file szr_offsets(sloop)-f_onsets(floop)];
+                else
+                    sub_sonsets_this_file=[sub_sonsets_this_file szr_onsets(sloop)-f_onsets(floop)];
+                    sub_soffsets_this_file=[sub_soffsets_this_file szr_offsets(sloop)-f_onsets(floop)];
+                end
             else
                 warning('Szr onset is in this file but NOT the offset. I will call all time points after onset "szr".');
-                sonsets_this_file=[sonsets_this_file szr_onsets(sloop)-f_onsets(floop)];
-                soffsets_this_file=[soffsets_this_file f_offsets(floop)-f_onsets(floop)];
+                if clin_szr(sloop),
+                    clin_sonsets_this_file=[clin_sonsets_this_file szr_onsets(sloop)-f_onsets(floop)];
+                    clin_soffsets_this_file=[clin_soffsets_this_file f_offsets(floop)-f_onsets(floop)];
+                else
+                    sub_sonsets_this_file=[sub_sonsets_this_file szr_onsets(sloop)-f_onsets(floop)];
+                    sub_soffsets_this_file=[sub_soffsets_this_file f_offsets(floop)-f_onsets(floop)];
+                end
             end
         elseif (szr_offsets(sloop)>=f_onsets(floop)) && (szr_offsets(sloop)<=f_offsets(floop))
             % Szr offset is in this file but NOT the onset
             warning('Szr offset is in this file but NOT the onset. I will call all time points before onset "szr".');
-            sonsets_this_file=[sonsets_this_file 0];
-            soffsets_this_file=[soffsets_this_file szr_offsets(sloop)-f_onsets(floop)];
+            if clin_szr(sloop),
+                clin_sonsets_this_file=[clin_sonsets_this_file 0];
+                clin_soffsets_this_file=[clin_soffsets_this_file szr_offsets(sloop)-f_onsets(floop)];
+            else
+                sub_sonsets_this_file=[sub_sonsets_this_file 0];
+                sub_soffsets_this_file=[sub_soffsets_this_file szr_offsets(sloop)-f_onsets(floop)];
+            end
         end
     end
-    file_info(floop).szr_onsets_sec=sonsets_this_file;
-    file_info(floop).szr_offsets_sec=soffsets_this_file;
+    file_info(floop).clin_szr_onsets_sec=clin_sonsets_this_file;
+    file_info(floop).clin_szr_offsets_sec=clin_soffsets_this_file;
+    file_info(floop).sub_szr_onsets_sec=sub_sonsets_this_file;
+    file_info(floop).sub_szr_offsets_sec=sub_soffsets_this_file;
 end
 

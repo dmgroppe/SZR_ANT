@@ -125,6 +125,9 @@ for cloop=1:n_chan,
         ieeg_time_sec_pre_decimate=[0:(length(ieeg)-1)]/Fs; % time relative to start of file
         clear ieeg_temp1 ieeg_temp2;
         
+        % TODO ?? modify code below to descriminate between clinical and
+        % subclinical szrs
+        
         % Compute ictal-class
         szr_class=zeros(1,length(ieeg));
         targ_window=zeros(1,length(ieeg)); % Same as szr class but extended 10 seconds before and after to
