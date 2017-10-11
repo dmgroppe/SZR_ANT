@@ -1,5 +1,9 @@
 %% Load data
+if ismac,
 ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/';
+else
+   ftr_root='/home/dgroppe/GIT/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/'; 
+end
 sub='1096';
 ftr_fname='1096_HL3_HL4_szr6.mat';
 load(fullfile(ftr_root,sub,ftr_fname));
@@ -80,18 +84,18 @@ print(1,'-djpeg','edm_example');
 
 
 %% Plot colorbar
-figure(2);
-clf();
-% cbarDG('vert');
-pos=[.1 .1 .1 .7];
-limits=[-1, 1];
-cmapName='parula';
-units='';
-nTick=0;
-fontSize=12;
-unitLocation='top';
-hCbar = cbarDGplus(pos,limits,cmapName,nTick,units,unitLocation,fontSize);
-set(hCbar,'xticklabel',[]);
-set(gcf,'paperpositionmode','auto');
-print(1,'-depsc','pstr_cbar');
-print(1,'-djpeg','pstr_cbar');
+% figure(2);
+% clf();
+% % cbarDG('vert');
+% pos=[.1 .1 .1 .7];
+% limits=[-1, 1];
+% cmapName='parula';
+% units='';
+% nTick=0;
+% fontSize=12;
+% unitLocation='top';
+% hCbar = cbarDGplus(pos,limits,cmapName,nTick,units,unitLocation,fontSize);
+% set(hCbar,'xticklabel',[]);
+% set(gcf,'paperpositionmode','auto');
+% print(1,'-depsc','pstr_cbar');
+% print(1,'-djpeg','pstr_cbar');

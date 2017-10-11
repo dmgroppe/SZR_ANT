@@ -182,6 +182,8 @@ use_ftrs=['SE'] #TODO import this from json file
 n_rand_params=1
 gamma_vals=params['gam']
 print('Gamma value: %f' % gamma_vals)
+ini_C=params['C']
+print('Initial C value: %f' % ini_C)
 patience=int(params['patience'])
 print('# of steps to wait when performance no longer increases %d' % patience)
 
@@ -272,7 +274,7 @@ mn_stim_latency = np.zeros((n_train_subs,n_rand_params))
 n_train_steps=np.zeros(n_rand_params)
 #C_vals=np.random.exponential(1,n_rand_params)
 #gamma_vals=np.random.exponential(1,n_rand_params)
-C_vals=np.ones(n_rand_params)*0.1 # Start at log10(-1)
+C_vals=np.ones(n_rand_params)*ini_C # Start at ini_C from json file
 # C = SVM regularization parameter, the smaller it is, the stronger the regularization
 #gamma_vals=10**np.random.uniform(-3,0,n_rand_params)
 #gamma defines how much influence a single training example has. The larger gamma is, the closer other examples must be to be affected.
