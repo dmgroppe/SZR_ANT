@@ -1,12 +1,14 @@
 %% Load data
 ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/';
 sub='1096';
-ftr_fname='1096_HL1_HL2_szr6.mat';
+ftr_fname='1096_HL3_HL4_szr6.mat';
 load(fullfile(ftr_root,sub,ftr_fname));
 
 
-%%
-load('/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/1096_HL1_HL2_phat_szr6.mat')
+%% Load yhat
+%load('/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/1096_HL1_HL2_phat_szr6.mat')
+yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/'
+load(fullfile(yhat_root,'1096_HL3_HL4_phat_szr6.mat'))
 
 
 %%

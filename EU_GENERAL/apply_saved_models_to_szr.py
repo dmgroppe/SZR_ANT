@@ -79,7 +79,7 @@ ftr_root = os.path.join(path_dict['eu_gen_ftrs'],'SE') # TODO make able to deal 
 # Get list of electrodes
 soz_elec_names, szr_fname_dict = sub_soz_elec_names(sub, ftr_root)
 ftr_path = os.path.join(ftr_root, str(sub))
-for elec in soz_elec_names[:1]:
+for elec in soz_elec_names:
     # load non szr file
     uni_chans = elec.split('-')
     nonszr_fname = str(sub) + '_' + uni_chans[0] + '_' + uni_chans[1] + '_non.mat'
