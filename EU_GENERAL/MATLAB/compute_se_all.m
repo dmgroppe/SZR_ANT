@@ -90,6 +90,14 @@ if ~exist(outdir,'dir'),
 end
 
 %% Loop over SOZ electrodes
+clear soz_chans
+if sub_id==1096,
+    soz_chans{1,1}='HL3';
+    soz_chans{1,2}='HL4';
+else
+    soz_chans{1,1}='HR11';
+    soz_chans{1,2}='HR12';
+end
 for cloop=1:n_chan,
     fprintf('Working on chan %s-%s\n',soz_chans_bi{cloop,1},soz_chans_bi{cloop,1});
     

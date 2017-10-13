@@ -7,12 +7,13 @@ load(fullfile(ftr_root,sub,ftr_fname));
 
 %% Load yhat
 %load('/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/1096_HL1_HL2_phat_szr6.mat')
-yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/'
+yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/';
 load(fullfile(yhat_root,'1096_HL3_HL4_phat_szr6.mat'))
 
 
 %%
 figure(1); clf();
+set(gcf,'position',[85   170   844   512]);
 ax1=subplot(311);
 plot(targ_raw_ieeg_sec,targ_raw_ieeg,'b-');
 axis tight;
@@ -31,3 +32,5 @@ end
 axis tight
 
 linkaxes([ax1 ax2 ax3],'x');
+
+print(1,'-djpeg','
