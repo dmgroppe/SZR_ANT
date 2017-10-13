@@ -74,7 +74,9 @@ n_models=len(models)
 print('# of models= %d' % n_models)
 
 # TODO get this from pathdir
-yhat_dir = os.path.join(path_dict['szr_ant_root'],'MODELS/', model_stem + '_yhat')
+yhat_dir = os.path.join(path_dict['szr_ant_root'],'MODELS/', model_name + '_yhat')
+if os.path.exists(yhat_dir)==False:
+    os.mkdir(yhat_dir)
 ftr_root = os.path.join(path_dict['eu_gen_ftrs'],'SE') # TODO make able to deal with multiple features
 # Get list of electrodes
 soz_elec_names, szr_fname_dict = sub_soz_elec_names(sub, ftr_root)
@@ -86,7 +88,20 @@ for elec in soz_elec_names:
     # print('Loading %s' % nonszr_fname)
     temp_ftrs = sio.loadmat(os.path.join(ftr_path, nonszr_fname))
     # Z-score features
-    temp_mns, temp_sds = dg.trimmed_normalize(temp_ftrs['nonszr_se_ftrs'], 0, zero_nans=False, verbose=False)
+    raw_ftrs=temp_ftrs['nonszr_se_ftrs']
+    temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0, zero_nans=False, verbose=False)
+
+    # Apply classifier to non-szr data
+    for model_ct in range(n_models):
+        tmp_yhat_va = models[model_ct].predict_proba(raw_ftrs.T)[:, 1]
+        if model_ct == 0:
+            yhat = np.zeros(tmp_yhat_va.shape)
+        yhat += tmp_yhat_va / n_models
+    out_fname = str(sub) + '_' + uni_chans[0] + '_' + uni_chans[1] + '_phat_non.mat'
+    print('Saving file as %s' % out_fname)
+    sio.savemat(os.path.join(yhat_dir, out_fname), mdict={'yhat': yhat,
+                                                          'model_name': model_name,
+                                                          'ftr_fname': nonszr_fname})
 
     # get list of szr files
     for szr_f in szr_fname_dict[elec]:

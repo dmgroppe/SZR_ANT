@@ -6,7 +6,13 @@ import pickle
 import sys
 import ieeg_funcs as ief
 import dgFuncs as dg
+import matplotlib.pyplot as plt
 
+def replace_periods(word):
+    for letter in word:
+        if letter == ".":
+            word = word.replace(letter,"-")
+    return word
 
 ## Start of main function
 if len(sys.argv)==1:
@@ -22,16 +28,16 @@ model_name=sys.argv[3]
 
 Fs = 9.84615384615  # sampling rate of moving spectral energy window
 # Set stim refractory period
-refract_min=5
+refract_min=0.5
 refract_tpt=np.round(Fs*refract_min*60)
 
 
 # Get list of yhat files
 # TODO get these paths from get_path_dict()
-# path_dict=ief.get_path_dict()
+path_dict=ief.get_path_dict()
 if sys.platform=='linux':
     yhat_path = os.path.join('/home/dgroppe/EU_YHAT/',str(sub)+'_'+model_name)
-    label_path =os.path.join('/Volumes/SgateOSExJnld/EU_TEMP/',str(sub)+'_all_labels') #TODO figure this out
+    label_path =os.path.join('/home/dgroppe/EU_Y/',str(sub)+'_all_labels') #TODO figure this out
 else:
     yhat_path = os.path.join('/Users/davidgroppe/ONGOING/EU_YHAT/',str(sub)+'_'+model_name)
     label_path =os.path.join('/Volumes/SgateOSExJnld/EU_TEMP/',str(sub)+'_all_labels')
@@ -45,15 +51,18 @@ stim_latency_sec = list()
 
 
 # Loop over yhat files
+#temp_files=['109600102_0000_yhat.npz','109600102_0001_yhat.npz','109600102_0002_yhat.npz','109600102_0072_yhat.npz']
+#for f in temp_files:
 for f in os.listdir(yhat_path):
     if f.endswith('.npz'):
+        print('Analyzing file %s' % f)
         yhat_npz = np.load(os.path.join(yhat_path, f))
         n_wind = len(yhat_npz['max_yhat'])
 
         # Compute # of seconds in file
         file_dur_hr = n_wind / (Fs * 3600)
         total_hrs += file_dur_hr
-        print('total_hrs=%f' % total_hrs)
+        #print('total_hrs=%f' % total_hrs)
 
         # Load clinician labels
         splt_f = f.split('_')
@@ -76,7 +85,7 @@ for f in os.listdir(yhat_path):
         # Compute false positives
         se_szr_class = np.squeeze(label_mat['se_szr_class'])
         nonszr_bool = se_szr_class == 0
-        print('false+ %d' % np.sum(stim[nonszr_bool]))
+        #print('false+ %d' % np.sum(stim[nonszr_bool]))
         n_false_pos += np.sum(stim[nonszr_bool])
 
         # Compute sensitivity and latency to clinical szr onset (if any clinical szrs in the file)
@@ -101,8 +110,7 @@ for f in os.listdir(yhat_path):
                 # szr lasts until end of file
                 offset_id_list.append(tloop - 1)
             if len(onset_id_list) != len(offset_id_list):
-                print('Error: len(onset_id_list)!=len(offset_id_list) in %s!!!!' % f)
-                break
+                raise Exception('Error: len(onset_id_list)!=len(offset_id_list) in %s!!!!')
 
             # Loop over clinical szrs (may be more than one in the clip)
             for temp_ct, onset_id in enumerate(onset_id_list):
@@ -125,5 +133,29 @@ else:
     sd_latency_sec = np.std(stim_latency_sec)
     print('Mean(SD) latency of stim relative to clinician onset: %.1f (%.1f) seconds' % (mn_latency_sec, sd_latency_sec))
 
-# TODO save info to disk
-# need to make thresh a part of model name
+
+outpath=os.path.join(path_dict['szr_ant_root'],'MODELS',model_name)
+outfname=str(sub)+'_thresh_'+replace_periods(str(stim_thresh))+'_refract_'+replace_periods(str(refract_min))+'_stim_results'
+print('Saving results to %s' % os.path.join(outpath,outfname))
+np.savez(os.path.join(outpath,outfname),
+         stim_latency_sec=stim_latency_sec,
+         sens=sens,
+         n_clin_szr=n_clin_szr,
+         n_true_pos=n_true_pos,
+         total_hrs=total_hrs,
+         n_false_pos=n_false_pos,
+         fp_per_hour=fp_per_hour,
+         stim_thresh=stim_thresh,
+         refract_min=refract_min)
+
+plt.figure(1)
+plt.clf()
+plt.boxplot(stim_latency_sec)
+plt.plot(np.ones(len(stim_latency_sec)),stim_latency_sec,'b.')
+plt.ylabel('Seconds')
+plt.xticks([])
+plt.title('Stim Latency relative to Szr Onset')
+xlim=[.85, 1.15]
+plt.xlim(xlim)
+plt.plot(xlim,[0, 0],'k:')
+plt.show()

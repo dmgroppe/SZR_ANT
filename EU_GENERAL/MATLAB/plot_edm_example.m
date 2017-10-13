@@ -1,7 +1,11 @@
 % Script used to plot examples of feature extraction in CLAE poster
 
 %% Load data
+if ismac,
 ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/';
+else
+   ftr_root='/home/dgroppe/GIT/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/'; 
+end
 sub='1096';
 ftr_fname='1096_HL3_HL4_szr6.mat';
 load(fullfile(ftr_root,sub,ftr_fname));

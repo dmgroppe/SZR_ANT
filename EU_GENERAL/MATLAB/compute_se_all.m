@@ -107,7 +107,7 @@ for cloop=1:n_chan,
     
     nonszr_se_ftrs=[];
     % Loop over files
-    for floop=58:n_files,
+    for floop=66:n_files,
     %for floop=1:n_files,
         % Compute features
         
