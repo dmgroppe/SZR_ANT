@@ -1,5 +1,7 @@
 # This script applies a saved ensemble of models to all of a subject's szr files and outputs the
-# mean predictions to a mat file in the model's directory
+# mean predictions to a mat file in the model's directory. This is useful for figuring out how well the
+# model is at detecting ictal activity.
+
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd

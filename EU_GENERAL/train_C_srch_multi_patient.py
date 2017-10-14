@@ -1,8 +1,13 @@
-# This script does LOOCV using 8/9 patients (9th is reserved for testing)
-# Various parameters of C are tried
-# Features are power in 6 frequency bands and 5 voltage domain features in a one second window
-# Same as train_rand_smart_scrch.py but all patients are weighted equally (before patients with more data had more
-# influence on the results
+# Performs LOOCV on train_subs.txt using a grid search of gamma values and hand set initial C value. You need to
+# set these yourself in the code (it is not in the json parameter file).
+# Some parameters are fed in via a json file like this:
+# {"model_type": "svm",
+# "model_name": "gen_marr_svm_se",
+# "gam": 0.01,
+# "patience": 0,
+# "use_ftrs": ["SE"]}
+#
+# TODO: currently code only works with one feature. Need to add others.
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
