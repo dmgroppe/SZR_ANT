@@ -1,13 +1,22 @@
+% This script computes the power spectral density from interictal data in
+% 20 randomly sampled files. It is used for identifying bad channels and
+% normalizing spectrograms.
+%
+% Output is saved to SZR_ANT/EU_METADATA/PSD
+
 %sub_id=1096; % DONE
-%sub_id=620; % DONE
-sub_id=264; % DONE
-% sub_id=590; % DONE
-% sub_id=862;% DONE
-% sub_id=565; % DONE
-%sub_id=253; % DONE
-%sub_id=273; % DONE
+%sub_id=620; %
+%sub_id=264; % DONE
+% sub_id=590; % 
+% sub_id=862;% 
+% sub_id=565; % 
+%sub_id=253; % 
+%sub_id=273; % 
 %sub_id=1125; % DONE
-%sub_id=1077; %DONE
+%sub_id=1077; %
+do_subs=[620, 590, 862, 565, 253, 273, 1077];
+
+for sub_id=do_subs,
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
@@ -164,7 +173,7 @@ for floop=1:n_rand_files,
         'file_info','rand_files_used');
     
 end
-
+end
 
 disp('Done!!');
 
