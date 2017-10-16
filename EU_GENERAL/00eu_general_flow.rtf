@@ -1,74 +1,57 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
-{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Monaco;\f2\fnil\fcharset0 Menlo-Regular;
-\f3\fnil\fcharset0 Menlo-Italic;\f4\fnil\fcharset0 Menlo-Bold;}
+{\fonttbl\f0\fnil\fcharset0 Monaco;\f1\fswiss\fcharset0 Helvetica;}
 {\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue254;
-\red109\green109\blue109;\red254\green220\blue255;\red221\green220\blue255;\red15\green112\blue3;}
+\red109\green109\blue109;\red221\green220\blue255;\red109\green109\blue109;}
 {\*\expandedcolortbl;;\csgenericrgb\c0\c0\c0;\csgenericrgb\c100000\c100000\c100000\c85000;\csgenericrgb\c0\c0\c99608;
-\csgenericrgb\c42745\c42745\c42745;\csgenericrgb\c99608\c86275\c100000;\csgenericrgb\c86667\c86275\c100000;\csgenericrgb\c5882\c43922\c1176;}
-\margl1440\margr1440\vieww10800\viewh9420\viewkind0
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
-
-\f0\fs24 \cf0 0. Run 00eu_metadata_flow\
-\
+\csgenericrgb\c42745\c42745\c42745;\csgenericrgb\c86667\c86275\c100000;\csgenericrgb\c42745\c42745\c42745;}
+\margl1440\margr1440\vieww10800\viewh12580\viewkind0
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 
-\f1\fs20 \cf2 \cb3 \CocoaLigature0 ***** Compute features from raw data for good SOZ channels\
-1. Compute features for peri-onset time windows and save to disk\
-2. Grab an equal number of random inter-ictal time points and save to disk\
-?? Instead of random, use kmeans?\
+\f0\fs20 \cf2 \cb3 \CocoaLigature0 ***** Process Metadata for each Patient\cf0 \cb1 \CocoaLigature1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 0. Run 00eu_metadata_flow\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 \cb3 \CocoaLigature0 ***** Check files for bad channels\
+>>find_EU_bad_chans_bipolar.m or compute_psd_interictal.m?<-double check this\cf0 \cb1 \CocoaLigature1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 \cb3 \CocoaLigature0 ***** Compute features from raw data for good SOZ channels\
+Note you can\'92t access iEEG binary files with multiple processes as the same time. Consequently, you can\'92t parallize this.\
 \
 EDM lags are 0,2,4,6,8\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
-
-\f2\fs24 \cf0 \cb1 \CocoaLigature1 Feature sampling rate is 25.6 Hz\
+\cf0 \cb1 \CocoaLigature1 Feature sampling rate is ~10 Hz\
 window length was 1 second (I should increase this to two)\
-edge_pts=\cf4 1177 
-\f3\i \cf5 # # of time pts at the start of each file to ignore due to edge effects\
+edge_pts=\cf4 1177 \cf5 # # of time pts at the start of each file to ignore due to edge effects\cf2 \cb3 \CocoaLigature0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
-
-\f1\i0\fs20 \cf2 \cb3 \CocoaLigature0 \
-Consequently ignore the first ?? tpts of each file\
-\
+\cf2 \cb3 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \cb6 \CocoaLigature1 bands\cb1 .append((\cf4 0\cf0 ,\cf4 4\cf0 )) \cf5 # Delta\uc0\u8232 \cf0 \cb6 bands\cb1 .append((\cf4 4\cf0 ,\cf4 8\cf0 )) \cf5 # Theta\uc0\u8232 \cf0 \cb6 bands\cb1 .append((\cf4 8\cf0 ,\cf4 13\cf0 )) \cf5 # Alpha\uc0\u8232 \cf0 \cb6 bands\cb1 .append((\cf4 13\cf0 ,\cf4 30\cf0 )) \cf5 # Beta\uc0\u8232 \cf0 \cb6 bands\cb1 .append((\cf4 30\cf0 ,\cf4 50\cf0 )) \cf5 # Gamma\uc0\u8232 \cf0 \cb6 bands\cb1 .append((\cf4 70\cf0 ,\cf4 100\cf0 )) \cf5 # High Gamma\cf2 \cb3 \CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 \cb3 \
+1. Compute features for peri-onset time windows and save to disk\
 For spectral energy (SE) use:\
-??\
+>>compute_se_perionset.m\
 \
+2. Grab an equal number of random inter-ictal time points and save to disk\
+For spectral energy (SE) use:\
+>>compute_se_interictal.m\
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
-
-\f2\fs24 \cf0 \cb6 \CocoaLigature1 bands\cb1 =list()\uc0\u8232 \cb7 bands\cb1 .append((\cf4 0\cf0 ,\cf4 4\cf0 )) 
-\f3\i \cf5 # Delta\uc0\u8232 
-\f2\i0 \cf0 \cb7 bands\cb1 .append((\cf4 4\cf0 ,\cf4 8\cf0 )) 
-\f3\i \cf5 # Theta\uc0\u8232 
-\f2\i0 \cf0 \cb7 bands\cb1 .append((\cf4 8\cf0 ,\cf4 13\cf0 )) 
-\f3\i \cf5 # Alpha\uc0\u8232 
-\f2\i0 \cf0 \cb7 bands\cb1 .append((\cf4 13\cf0 ,\cf4 30\cf0 )) 
-\f3\i \cf5 # Beta\uc0\u8232 
-\f2\i0 \cf0 \cb7 bands\cb1 .append((\cf4 30\cf0 ,\cf4 50\cf0 )) 
-\f3\i \cf5 # Gamma\uc0\u8232 
-\f2\i0 \cf0 \cb7 bands\cb1 .append((\cf4 70\cf0 ,\cf4 100\cf0 )) 
-\f3\i \cf5 # High Gamma\uc0\u8232 
-\f2\i0 \cf0 band_labels=[
-\f4\b \cf8 'DeltaMag'
-\f2\b0 \cf0 ,
-\f4\b \cf8 'ThetaMag'
-\f2\b0 \cf0 ,
-\f4\b \cf8 'AlphaMag'
-\f2\b0 \cf0 ,
-\f4\b \cf8 'BetaMag'
-\f2\b0 \cf0 ,
-\f4\b \cf8 'GammaMag'
-\f2\b0 \cf0 ,
-\f4\b \cf8 'HGammaMag'
-\f2\b0 \cf0 ]\uc0\u8232 ftr_list=[]\u8232 n_band=len(\cb7 bands\cb1 )\
+\cf2 \cb3 3. Get szr/non-szr clinician labels for all data files:\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
-
-\f1\fs20 \cf2 \cb3 \CocoaLigature0 \
+\cf2 \cb3 >>compute_se_labels_all.m\
 \
-For PLV use:\
-??\
-\
-\
-***** Compute mean and SD of features from interictal data for normalization\
+4. Compute SE features for all files:\
+>>compute_se_all.m\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf2 \cb3 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 \cb3 For PLV use:\
 ??\
 \
 \
@@ -78,8 +61,33 @@ For PLV use:\
 \
 \
 ***** Use LOOCV to search hyperparameters (and create ensemble?)\
-??\
+1) To try random gamma values use:\
+$python train_smart_srch_multi_patient.py smart_rand_params_lappy.json \
+\
+2) Visualize the hyperparameter space results with:\
+plot_hyper_srch_lap.ipynb or plot_hyper_srch_marr.ipynb\
+\
+3) After you\'92ve found a useful regions of hyperparameter space, use the following to do a more fine grained search:\
+$python train_C_srch_multi_patient.py C_srch_params_marr.json\
+\
+4) Again visualize results to find best hyperparameters:\
+plot_hyper_srch_lap.ipynb or plot_hyper_srch_marr.ipynb\
 \
 \
-***** Apply full model to test data\
-??}
+***** Apply ensemble of LOOCV models to test data\
+1) \cf2 \cb1 \CocoaLigature1 Applies saved ensemble of models to all of a subject's szr and subsampled non-szrr files and outputs the mean predictions to a mat file in the model's directory. This is useful for figuring out how well the model is at detecting ictal activity and for computing accuracy on test data:\cf7 \
+\cf2 \cb3 \CocoaLigature0 python apply_saved_models_to_szr.py 1096 genLogregSe_1\cf7 \cb1 \CocoaLigature1 \
+\cf2 \cb3 \CocoaLigature0 \
+2) Applies saved ensemble of models to continuous files:\
+python apply_saved_model_to_all_clips.py 1096 genLogregSe_1\
+\
+\
+How do I get mean accuracy on test data?\
+\
+3) Compute stim latency, accuracy, and false positive rate:\
+>python compute_acc_with_refractory.py 1096 0.5 genLogregSe_3 <-todo finalize this??
+\f1\fs24 \cf0 \cb1 \CocoaLigature1 \
+
+\f0\fs20 \cf2 \cb3 \CocoaLigature0 \
+\
+}

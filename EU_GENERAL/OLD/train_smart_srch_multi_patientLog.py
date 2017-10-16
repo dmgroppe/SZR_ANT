@@ -1,14 +1,5 @@
-# Performs LOOCV on test_subs.txt using logreg or rbf SVM. Gamma values are initially random.
-# C starts at 1 and then is adjusted depending on the gap between training and validatin accuracy.
-# Parameters are fed in via a json file like this:
-# {"model_type": "logreg",
-# "model_name": "genLogregSeLog10",
-# "n_rand_params": 1,
-# "patience": 0,
-# "use_ftrs": ["SE"]}
-#
-# TODO: currently code only works with one feature. Need to add others.
-
+# Same as train_smart_srch_multi_patient.py but features are log transformed (which apparently NURIP can't do).
+# This appears to improve accuracy by about 1%
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -128,7 +119,7 @@ def import_data(szr_fnames, non_fnames, szr_subs, non_subs, n_szr_wind, n_non_wi
 
         temp_ftrs = sio.loadmat(f)
         temp_n_wind = temp_ftrs['nonszr_se_ftrs'].shape[1]
-        raw_ftrs = temp_ftrs['nonszr_se_ftrs']
+        raw_ftrs = np.log10(1+temp_ftrs['nonszr_se_ftrs'])
         # Z-score features
         temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0, zero_nans=False, verbose=False) #normalization is done in place
         mns_dict[chan_label] = temp_mns
@@ -146,7 +137,7 @@ def import_data(szr_fnames, non_fnames, szr_subs, non_subs, n_szr_wind, n_non_wi
 
         temp_ftrs = sio.loadmat(f)
         temp_n_wind = temp_ftrs['se_ftrs'].shape[1]
-        raw_ftrs = temp_ftrs['se_ftrs']
+        raw_ftrs = np.log10(1+temp_ftrs['se_ftrs'])
         # Z-score based on non-ictal means, SDs
         dg.applyNormalize(raw_ftrs, mns_dict[chan_label], sds_dict[chan_label])
 
@@ -490,7 +481,8 @@ for rand_ct in range(n_rand_params):
          left_out_id=left_out_id)
 
 print('Done!')
-print('Best accuracy: %f' % best_valid_bal_acc)
+print('Best valid accuracy: %f' % best_valid_bal_acc)
+print('Best train accuracy: %f' % best_train_bal_acc)
 print('Using C=%.2E and gam=%.2E' % (best_C,best_gam))
 print('Model name: {}'.format(model_name))
 print('Features used: {}'.format(use_ftrs))
