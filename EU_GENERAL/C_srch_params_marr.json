@@ -1,6 +1,7 @@
 {"model_type": "svm",
-"model_name": "gen_marr_svm_se",
-"gam": 0.01,
+"model_name": "genSvmSe",
+"gam": 0.079550,
+"C": 0.053477,
 "patience": 0,
 "use_ftrs": ["SE"]}
 
