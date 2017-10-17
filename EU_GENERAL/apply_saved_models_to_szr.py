@@ -100,9 +100,11 @@ for elec in soz_elec_names:
             yhat = np.zeros(tmp_yhat_va.shape)
         yhat += tmp_yhat_va / n_models
     out_fname = str(sub) + '_' + uni_chans[0] + '_' + uni_chans[1] + '_phat_non.mat'
-    print('Saving file as %s' % out_fname)
+    print('Saving file as %s' % os.path.join(yhat_dir, out_fname))
     sio.savemat(os.path.join(yhat_dir, out_fname), mdict={'yhat': yhat,
                                                           'model_name': model_name,
+                                                          'ftrs_z': raw_ftrs,
+                                                          'ftr_labels': temp_ftrs['ftr_labels'],
                                                           'ftr_fname': nonszr_fname})
 
     # get list of szr files
@@ -121,9 +123,11 @@ for elec in soz_elec_names:
                 yhat = np.zeros(tmp_yhat_va.shape)
             yhat += tmp_yhat_va / n_models
         out_fname = str(sub) + '_' + uni_chans[0] + '_' + uni_chans[1] + '_phat_' + szr_f.split('_')[-1]
-        print('Saving file as %s' % out_fname)
+        print('Saving file as %s' % os.path.join(yhat_dir, out_fname))
         sio.savemat(os.path.join(yhat_dir, out_fname), mdict={'yhat': yhat,
                                                               'model_name': model_name,
+                                                              'ftrs_z': raw_ftrs,
+                                                              'ftr_labels': temp_ftrs['ftr_labels'],
                                                               'ftr_fname': szr_f})
 
 print('Done!')

@@ -84,8 +84,13 @@ ylabel('Log Pwr');
 
 %% Output bad channels to text file
 out_fname=sprintf('/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/BAD_CHANS/bad_chans_%d.txt',sub);
+fprintf('Saving bad chans to %s\n',out_fname)
 fid=fopen(out_fname,'w');
-for a=bad_chan_ids,
-   fprintf(fid,'%s\n',chan_labels_str{a}); 
+if length(bad_chan_ids)>0
+    for a=bad_chan_ids,
+        fprintf(fid,'%s\n',chan_labels_str{a});
+    end
+else
+    fprintf(fid,'None\n');
 end
 fclose(fid);

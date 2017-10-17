@@ -75,19 +75,13 @@ plot(targ_raw_ieeg_sec,targ_raw_ieeg,'b-');
 axis tight;
 ht=title(ftr_fname);
 set(ht,'interpreter','none');
-ylabel('Volatge');
+ylabel('
 
-% True Szr class and estimated szr class (note szrs start wit 5 sec before
-% clinician onset
-ax2=subplot(512); hold on;
-area(se_time_sec,yhat);
-plot(se_time_sec,se_szr_class,'r-','linewidth',2);
-%plot(se_time_sec,yhat,'b--');
+ax2=subplot(512); 
+plot(se_time_sec,se_szr_class,'r-'); hold on;
+plot(se_time_sec,yhat,'b--');
 axis tight;
-ylabel('P(Szr)');
-% set(gca,'ylim',[0 1],'ytick',[0, 1]);
 
-% Z-scored ftrs
 ax3=subplot(513); 
 h=plot(se_time_sec,ftrs_z); hold on;
 for floop=1:length(h),
@@ -106,9 +100,7 @@ clickText(h,'Gamma');
 h=plot(se_time_sec,ftrs_z(6,:),'m-','linewidth',2); % High Gamma
 clickText(h,'HGamma');
 axis tight
-ylabel('Z');
 
-% Spectrogram of Szr with freq bands marked with white lines
 ax4=subplot(514); 
 h=imagesc(sgram_S');
 hold on;
@@ -133,7 +125,6 @@ for bloop=1:size(bands,1),
     plot(xlim,[1 1]*hz_id,'w-');
 end
 
-% t-scored Spectrogram of Szr with freq bands marked with white lines
 ax5=subplot(515); 
 sgram_tscore=sgram_S-repmat(mn_psd(:,chan_id)',length(sgram_t),1);
 sgram_tscore=sgram_tscore./repmat(se_psd(:,chan_id)',length(sgram_t),1);
