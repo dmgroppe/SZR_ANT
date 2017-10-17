@@ -5,10 +5,15 @@
 
 %% Load data
 ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/';
-sub=1096;
-chan='HL2-HL3';
-szr_num=6;
+% sub=1096;
+% chan='HL2-HL3';
 %chan='HL3-HL4';
+% szr_num=6;
+
+sub=565;
+chan='HL4-HL5';
+szr_num=6;
+
 dash_id=find(chan=='-');
 chan1=chan(1:dash_id-1);
 chan2=chan(dash_id+1:end);
@@ -20,7 +25,7 @@ load(fullfile(ftr_root,num2str(sub),ftr_fname));
 % Remove _ from feature labels
 for a=1:size(ftr_labels,1),
     use_ids=find(ftr_labels{a}~='_');
-   ftr_labels{a}=ftr_labels{a}(use_ids); 
+    ftr_labels{a}=ftr_labels{a}(use_ids);
 end
 
 % Scale all features from 0 to 1
@@ -31,7 +36,7 @@ end
 
 %% Load yhat
 %load('/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/1096_HL1_HL2_phat_szr6.mat')
-yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/';
+yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_3_yhat/';
 %load(fullfile(yhat_root,'1096_HL3_HL4_phat_szr6.mat'))
 load(fullfile(yhat_root,sprintf('%d_%s_%s_phat_szr%d.mat',sub,chan1,chan2,szr_num)));
 
@@ -40,27 +45,35 @@ load(fullfile(yhat_root,sprintf('%d_%s_%s_phat_szr%d.mat',sub,chan1,chan2,szr_nu
 % /Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/PSD/1096_non_szr_psd.mat
 psd_fname=sprintf( ...
     '/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/PSD/%d_non_szr_psd.mat',sub);
-load(psd_fname);
-chan_id=NaN;
-for a=1:size(bipolar_labels,1),
-   if strcmpi(bipolar_labels{a,1},chan1) && strcmpi(bipolar_labels{a,2},chan2),
-       chan_id=a;
-   end
+if exist(psd_fname,'file'),
+    psd_exists=1;
+    load(psd_fname);
+    chan_id=NaN;
+    for a=1:size(bipolar_labels,1),
+        if strcmpi(bipolar_labels{a,1},chan1) && strcmpi(bipolar_labels{a,2},chan2),
+            chan_id=a;
+        end
+    end
+    if isnan(chan_id),
+        error('Could not find index to channel %s-%s in PSD data',chan1,chan2);
+    end
+    good_psd_ids=find(psd_samps(:,1,chan_id));
+    mn_psd=squeeze(mean(psd_samps(good_psd_ids,:,:),1));
+    se_psd=squeeze(std(psd_samps(good_psd_ids,:,:),1,1))/sqrt(size(psd_samps,1));
+else
+    psd_exists=0;
+    mn_psd=zeros(length(sgram_f),1);
+    se_psd=ones(length(sgram_f),1);
 end
-if isnan(chan_id),
-   error('Could not find index to channel %s-%s in PSD data',chan1,chan2);
-end
-good_psd_ids=find(psd_samps(:,1,chan_id));
-mn_psd=squeeze(mean(psd_samps(good_psd_ids,:,:),1));
-se_psd=squeeze(std(psd_samps(good_psd_ids,:,:),1,1))/sqrt(size(psd_samps,1));
-
 
 %% Plot Mean PSD
-figure(2); clf; hold on;
-%plot(sgram_f,mn_psd(:,chan_id),'k-','linewidth',2);
-h=shadedErrorBar(sgram_f,mn_psd(:,chan_id),se_psd(:,chan_id),[]);
-plot(sgram_f,squeeze(psd_samps(:,:,chan_id)));
-hold on;
+if psd_exists,
+    figure(2); clf; hold on;
+    %plot(sgram_f,mn_psd(:,chan_id),'k-','linewidth',2);
+    h=shadedErrorBar(sgram_f,mn_psd(:,chan_id),se_psd(:,chan_id),[]);
+    plot(sgram_f,squeeze(psd_samps(:,:,chan_id)));
+    hold on;
+end
 
 %% Bands
 bands=[0 4; 4 8; 8 13; 13 30; 30 50; 70 100];
@@ -88,7 +101,7 @@ ylabel('P(Szr)');
 % set(gca,'ylim',[0 1],'ytick',[0, 1]);
 
 % Z-scored ftrs
-ax3=subplot(513); 
+ax3=subplot(513);
 h=plot(se_time_sec,ftrs_z); hold on;
 for floop=1:length(h),
     clickText(h(floop),ftr_labels{floop});
@@ -109,18 +122,18 @@ axis tight
 ylabel('Z');
 
 % Spectrogram of Szr with freq bands marked with white lines
-ax4=subplot(514); 
+ax4=subplot(514);
 h=imagesc(sgram_S');
 hold on;
 ytick=get(gca,'ytick');
 yticklabels=cell(length(ytick),1);
 for a=1:length(ytick),
-   yticklabels{a}=num2str(sgram_f(ytick(a))); 
+    yticklabels{a}=num2str(sgram_f(ytick(a)));
 end
 xtick=get(gca,'xtick');
 xticklabels=cell(length(xtick),1);
 for a=1:length(xtick),
-   xticklabels{a}=num2str(round(sgram_t(xtick(a)))); 
+    xticklabels{a}=num2str(round(sgram_t(xtick(a))));
 end
 set(gca,'ydir','normal','xticklabel',xticklabels,'yticklabel',yticklabels);
 ylabel('Hz');
@@ -133,33 +146,34 @@ for bloop=1:size(bands,1),
     plot(xlim,[1 1]*hz_id,'w-');
 end
 
-% t-scored Spectrogram of Szr with freq bands marked with white lines
-ax5=subplot(515); 
-sgram_tscore=sgram_S-repmat(mn_psd(:,chan_id)',length(sgram_t),1);
-sgram_tscore=sgram_tscore./repmat(se_psd(:,chan_id)',length(sgram_t),1);
-h=imagesc(sgram_tscore'); hold on;
-ytick=get(gca,'ytick');
-yticklabels=cell(length(ytick),1);
-for a=1:length(ytick),
-   yticklabels{a}=num2str(sgram_f(ytick(a))); 
+if psd_exists,
+    % t-scored Spectrogram of Szr with freq bands marked with white lines
+    ax5=subplot(515);
+    sgram_tscore=sgram_S-repmat(mn_psd(:,chan_id)',length(sgram_t),1);
+    sgram_tscore=sgram_tscore./repmat(se_psd(:,chan_id)',length(sgram_t),1);
+    h=imagesc(sgram_tscore'); hold on;
+    ytick=get(gca,'ytick');
+    yticklabels=cell(length(ytick),1);
+    for a=1:length(ytick),
+        yticklabels{a}=num2str(sgram_f(ytick(a)));
+    end
+    xtick=get(gca,'xtick');
+    xticklabels=cell(length(xtick),1);
+    for a=1:length(xtick),
+        xticklabels{a}=num2str(round(sgram_t(xtick(a))));
+    end
+    set(gca,'ydir','normal','xticklabel',xticklabels,'yticklabel',yticklabels);
+    ylabel('Hz');
+    xlabel('Sec');
+    axis tight
+    % Indicate borders between frequency bands with white lines
+    xlim=get(gca,'xlim');
+    for bloop=1:size(bands,1),
+        hz_id=findTpt(bands(bloop,2),sgram_f);
+        disp(hz_id);
+        plot(xlim,[1 1]*hz_id,'w-');
+    end
 end
-xtick=get(gca,'xtick');
-xticklabels=cell(length(xtick),1);
-for a=1:length(xtick),
-   xticklabels{a}=num2str(round(sgram_t(xtick(a)))); 
-end
-set(gca,'ydir','normal','xticklabel',xticklabels,'yticklabel',yticklabels);
-ylabel('Hz');
-xlabel('Sec');
-axis tight
-% Indicate borders between frequency bands with white lines
-xlim=get(gca,'xlim');
-for bloop=1:size(bands,1),
-    hz_id=findTpt(bands(bloop,2),sgram_f);
-    disp(hz_id);
-    plot(xlim,[1 1]*hz_id,'w-');
-end
-
 linkaxes([ax1 ax2 ax3],'x');
 
 % print(1,'-djpeg','

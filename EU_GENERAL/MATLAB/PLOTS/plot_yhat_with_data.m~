@@ -5,10 +5,15 @@
 
 %% Load data
 ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/';
-sub=1096;
-chan='HL2-HL3';
-szr_num=6;
+% sub=1096;
+% chan='HL2-HL3';
 %chan='HL3-HL4';
+% szr_num=6;
+
+sub=565;
+chan='HL4-HL5';
+szr_num=6;
+
 dash_id=find(chan=='-');
 chan1=chan(1:dash_id-1);
 chan2=chan(dash_id+1:end);
@@ -31,7 +36,7 @@ end
 
 %% Load yhat
 %load('/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/1096_HL1_HL2_phat_szr6.mat')
-yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/';
+yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_3_yhat/';
 %load(fullfile(yhat_root,'1096_HL3_HL4_phat_szr6.mat'))
 load(fullfile(yhat_root,sprintf('%d_%s_%s_phat_szr%d.mat',sub,chan1,chan2,szr_num)));
 
@@ -40,20 +45,23 @@ load(fullfile(yhat_root,sprintf('%d_%s_%s_phat_szr%d.mat',sub,chan1,chan2,szr_nu
 % /Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/PSD/1096_non_szr_psd.mat
 psd_fname=sprintf( ...
     '/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/PSD/%d_non_szr_psd.mat',sub);
-load(psd_fname);
-chan_id=NaN;
-for a=1:size(bipolar_labels,1),
-   if strcmpi(bipolar_labels{a,1},chan1) && strcmpi(bipolar_labels{a,2},chan2),
-       chan_id=a;
-   end
+if exist(psd_fname,'file'),
+    load(psd_fname);
+    chan_id=NaN;
+    for a=1:size(bipolar_labels,1),
+        if strcmpi(bipolar_labels{a,1},chan1) && strcmpi(bipolar_labels{a,2},chan2),
+            chan_id=a;
+        end
+    end
+    if isnan(chan_id),
+        error('Could not find index to channel %s-%s in PSD data',chan1,chan2);
+    end
+    good_psd_ids=find(psd_samps(:,1,chan_id));
+    mn_psd=squeeze(mean(psd_samps(good_psd_ids,:,:),1));
+    se_psd=squeeze(std(psd_samps(good_psd_ids,:,:),1,1))/sqrt(size(psd_samps,1));
 end
-if isnan(chan_id),
-   error('Could not find index to channel %s-%s in PSD data',chan1,chan2);
-end
-good_psd_ids=find(psd_samps(:,1,chan_id));
-mn_psd=squeeze(mean(psd_samps(good_psd_ids,:,:),1));
-se_psd=squeeze(std(psd_samps(good_psd_ids,:,:),1,1))/sqrt(size(psd_samps,1));
-
+    mn_psd=zeros(
+else
 
 %% Plot Mean PSD
 figure(2); clf; hold on;
@@ -75,13 +83,19 @@ plot(targ_raw_ieeg_sec,targ_raw_ieeg,'b-');
 axis tight;
 ht=title(ftr_fname);
 set(ht,'interpreter','none');
-ylabel('
+ylabel('Volatge');
 
-ax2=subplot(512); 
-plot(se_time_sec,se_szr_class,'r-'); hold on;
-plot(se_time_sec,yhat,'b--');
+% True Szr class and estimated szr class (note szrs start wit 5 sec before
+% clinician onset
+ax2=subplot(512); hold on;
+area(se_time_sec,yhat);
+plot(se_time_sec,se_szr_class,'r-','linewidth',2);
+%plot(se_time_sec,yhat,'b--');
 axis tight;
+ylabel('P(Szr)');
+% set(gca,'ylim',[0 1],'ytick',[0, 1]);
 
+% Z-scored ftrs
 ax3=subplot(513); 
 h=plot(se_time_sec,ftrs_z); hold on;
 for floop=1:length(h),
@@ -100,7 +114,9 @@ clickText(h,'Gamma');
 h=plot(se_time_sec,ftrs_z(6,:),'m-','linewidth',2); % High Gamma
 clickText(h,'HGamma');
 axis tight
+ylabel('Z');
 
+% Spectrogram of Szr with freq bands marked with white lines
 ax4=subplot(514); 
 h=imagesc(sgram_S');
 hold on;
@@ -125,6 +141,7 @@ for bloop=1:size(bands,1),
     plot(xlim,[1 1]*hz_id,'w-');
 end
 
+% t-scored Spectrogram of Szr with freq bands marked with white lines
 ax5=subplot(515); 
 sgram_tscore=sgram_S-repmat(mn_psd(:,chan_id)',length(sgram_t),1);
 sgram_tscore=sgram_tscore./repmat(se_psd(:,chan_id)',length(sgram_t),1);

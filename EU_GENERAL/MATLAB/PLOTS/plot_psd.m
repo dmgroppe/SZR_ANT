@@ -1,9 +1,20 @@
 % Script for plotting pwr spectrum density produced by compute_psd_interictal.m
 
-%%
-mn_psd=squeeze(mean(psd_samps,1));
+sub=1096; %0.12=proportion of desired files actually sampled.
+sub=1125; %0.12=proportion of desired files actually sampled.
+sub=264; %0.14=proportion of desired files actually sampled.
+
+clear psd_samps
+in_fname=sprintf('/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/PSD/%d_non_szr_psd.mat',sub);
+load(in_fname);
 [n_samp, n_freq, n_chan]=size(psd_samps);
-se_psd=squeeze(std(psd_samps,0,1))/sqrt(n_samp);
+good_psd_ids=find(psd_samps(:,1,1)); % # of files that were acutally computed
+%(sometimes I quite PSD computation early
+
+fprintf('%.2f=proportion of desired files actually sampled.\n',length(good_psd_ids)/n_samp);
+
+mn_psd=squeeze(mean(psd_samps(good_psd_ids,:,:),1));
+se_psd=squeeze(std(psd_samps(good_psd_ids,:,:),0,1))/sqrt(n_samp);
 
 figure(1); clf();
 subplot(1,2,1);
