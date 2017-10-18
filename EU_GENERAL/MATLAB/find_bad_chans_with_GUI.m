@@ -7,9 +7,9 @@
 
 %% Load PSD data
 %sub=264; %20 (0.14)=# (proportion) of total files actually sampled.
-% sub=565; %1 (0.00)=# (proportion) of total files actually sampled.
+sub=565; %20 (0.09)=# (proportion) of total files actually sampled.
 %sub=590; %11 (0.04)=# (proportion) of total files actually sampled.
-sub=620; %3 (0.01)=# (proportion) of total files actually sampled.
+%sub=620; %3 (0.01)=# (proportion) of total files actually sampled.
 % sub=1096; % 20 (0.12)=# (proportion) of total files actually sampled.
 %sub=1125; %20 (0.12)=# (proportion) of total files actually sampled.
 

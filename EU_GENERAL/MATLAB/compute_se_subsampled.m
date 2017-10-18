@@ -49,6 +49,8 @@ for lag_loop=1:n_lags,
     end
 end
 
+%% TODO load bad chans and ignore them
+%??
 
 %% Load list of SOZ channels and the number of samples for each
 indir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS');
