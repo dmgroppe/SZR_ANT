@@ -49,7 +49,7 @@ for lag_loop=1:n_lags,
     end
 end
 
-%% TODO load bad chans and ignore them
+%% Load bad chans and ignore them
 badchan_fname=fullfile(root_dir,'EU_METADATA','BAD_CHANS',sprintf('bad_chans_%d.txt',sub_id));
 badchans=csv2Cell(badchan_fname);
 if strcmpi(badchans{1},'None'),
@@ -82,6 +82,7 @@ soz_chans_bi=soz_chans_bi(good_chan_ids,:);
 n_chan=size(soz_chans_bi,1);
 fprintf('# of SOZ Channels (just good): %d\n',n_chan);
 clear good_chan_ids
+
 
 %% Get list of all files and the timing of all szrs (clinical and subclinical)
 file_info=get_fnames_and_szr_times(sub_id);

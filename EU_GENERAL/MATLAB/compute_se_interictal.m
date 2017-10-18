@@ -50,6 +50,15 @@ for lag_loop=1:n_lags,
 end
 
 
+%% Load bad chans and ignore them
+badchan_fname=fullfile(root_dir,'EU_METADATA','BAD_CHANS',sprintf('bad_chans_%d.txt',sub_id));
+badchans=csv2Cell(badchan_fname);
+if strcmpi(badchans{1},'None'),
+    badchans=[];
+end
+fprintf('# of bad chans: %d\n',length(badchans));
+
+
 %% Load list of SOZ channels and the number of samples for each
 indir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS');
 infname=fullfile(indir,sprintf('%d_szr_sample_size',sub_id));
@@ -58,11 +67,22 @@ fprintf('Loading counts of # of szr observations/electrode in %s\n',infname);
 load(infname);
 
 n_chan=size(soz_chans_bi,1);
-fprintf('# of Channels: %d\n',n_chan);
+fprintf('# of SOZ Channels (good & bad): %d\n',n_chan);
 fprintf('Feature sampling rate: %f Hz\n',ftr_fs);
+good_chan_ids=[];
 for a=1:n_chan,
-    fprintf('%s-%s # of obs: %d\n',soz_chans_bi{a,1},soz_chans_bi{a,2},n_tpt_ct(a));
+    temp_label=sprintf('%s-%s',soz_chans_bi{a,1},soz_chans_bi{a,2});
+    if findStrInCell(temp_label,badchans),
+        fprintf('SOZ channel %s is bad. Ignoring it.\n',temp_label);
+    else
+        good_chan_ids=[good_chan_ids a];
+        fprintf('%s-%s # of obs: %d\n',soz_chans_bi{a,1},soz_chans_bi{a,2},n_tpt_ct(a));
+    end
 end
+soz_chans_bi=soz_chans_bi(good_chan_ids,:);
+n_chan=size(soz_chans_bi,1);
+fprintf('# of SOZ Channels (just good): %d\n',n_chan);
+clear good_chan_ids
 
 
 %% Get list of all files and the timing of all szrs (clinical and subclinical)

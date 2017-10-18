@@ -43,6 +43,16 @@ edge_pts=1178; % # of initial time points to remove due to edge effect
 % Decay fact 8, it takes 1178 tpts (117.800000 sec) to get below .01 threshold
 % Decay fact 10, it takes 4715 tpts (471.500000 sec) to get below .01 threshold
 
+
+%% Load bad chans and ignore them
+badchan_fname=fullfile(root_dir,'EU_METADATA','BAD_CHANS',sprintf('bad_chans_%d.txt',sub_id));
+badchans=csv2Cell(badchan_fname);
+if strcmpi(badchans{1},'None'),
+    badchans=[];
+end
+fprintf('# of bad chans: %d\n',length(badchans));
+
+
 %% Get channel labels
 bipolar_labels=derive_bipolar_pairs(sub_id);
 n_chan=size(bipolar_labels,1);
@@ -53,10 +63,12 @@ edm_lags=0:2:8;
 n_lags=length(edm_lags);
 wind_len_sec=1; % moving window length in seconds
 
+
 %% Define frequency bands
 bands=[0 4; 4 8; 8 13; 13 30; 30 50; 70 100];
 band_labels={'DeltaMag','ThetaMag','AlphaMag','BetaMag','GammaMag','HGammaMag'};
 n_bands=length(bands);
+
 
 %% Derive feature labels
 n_ftrs=n_bands*n_lags;
@@ -68,6 +80,7 @@ for lag_loop=1:n_lags,
         ftr_labels{temp_ct}=sprintf('%s_Lag_%d',band_labels{band_loop},edm_lags(lag_loop));
     end
 end
+
 
 %% Get unique SOZ chans
 soz_chans_mono=[];
@@ -92,8 +105,26 @@ for cloop=1:n_chan,
         soz_chans_bi{soz_bi_ct,2}=bipolar_labels{cloop,2};
     end
 end
-fprintf('Bipolar SOZ chans are:\n');
+fprintf('Bipolar SOZ chans (Good & Bad) are:\n');
 disp(soz_chans_bi);
+
+
+n_soz_chan=size(soz_chans_bi,1);
+good_chan_ids=[];
+for a=1:n_soz_chan,
+    temp_label=sprintf('%s-%s',soz_chans_bi{a,1},soz_chans_bi{a,2});
+    if findStrInCell(temp_label,badchans),
+        fprintf('SOZ channel %s is bad. Ignoring it.\n',temp_label);
+    else
+        good_chan_ids=[good_chan_ids a];
+        fprintf('%s-%s # of obs: %d\n',soz_chans_bi{a,1},soz_chans_bi{a,2},n_tpt_ct(a));
+    end
+end
+soz_chans_bi=soz_chans_bi(good_chan_ids,:);
+n_chan=size(soz_chans_bi,1);
+fprintf('# of SOZ Channels (just good): %d\n',n_chan);
+clear good_chan_ids
+
 
 %% SGRAM Params
 sgramCfg=[];
