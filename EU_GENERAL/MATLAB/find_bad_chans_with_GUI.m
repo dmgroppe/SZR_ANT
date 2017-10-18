@@ -6,10 +6,23 @@
 %/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/BAD_CHANS
 
 %% Load PSD data
-%sub=264;
-sub=1125;
+%sub=264; %20 (0.14)=# (proportion) of total files actually sampled.
+% sub=565; %1 (0.00)=# (proportion) of total files actually sampled.
+%sub=590; %11 (0.04)=# (proportion) of total files actually sampled.
+sub=620; %3 (0.01)=# (proportion) of total files actually sampled.
+% sub=1096; % 20 (0.12)=# (proportion) of total files actually sampled.
+%sub=1125; %20 (0.12)=# (proportion) of total files actually sampled.
+
+
 psd_fname=sprintf('/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/PSD/%d_non_szr_psd.mat',sub);
 load(psd_fname);
+good_psd_ids=find(psd_samps(:,1,end)); % # of files that were acutally computed
+%(sometimes I quite PSD computation early
+n_samp=size(psd_samps,1);
+fprintf('Sub %d\n',sub);
+fprintf('%d (%.2f)=# (proportion) of total files actually sampled.\n', ...
+    length(good_psd_ids),length(good_psd_ids)/n_samp);
+
 
 %%
 n_chan=size(bipolar_labels,1);
@@ -21,8 +34,10 @@ end
 
 
 %% Create ecog variable
-mn_psd=squeeze(mean(psd_samps,1));
-se_psd=squeeze(std(psd_samps,0,1))/sqrt(n_files);
+good_file_ids=find(psd_samps(:,1,1)>0);
+fprintf('%d files sampled from\n',length(good_file_ids));
+mn_psd=squeeze(mean(psd_samps(good_file_ids,:,:),1));
+se_psd=squeeze(std(psd_samps(good_file_ids,:,:),0,1))/sqrt(n_files);
 global ecog
 ecog=[];
 ecog.filename=psd_fname;
@@ -48,6 +63,7 @@ clf();
 subplot(1,2,1); hold on;
 hh=plot(f,mn_psd(:,good_chan_ids));
 ct=0;
+
 for a=good_chan_ids,
     ct=ct+1;
     h=shadedErrorBar(f,mn_psd(:,a),se_psd(:,a),[]);
