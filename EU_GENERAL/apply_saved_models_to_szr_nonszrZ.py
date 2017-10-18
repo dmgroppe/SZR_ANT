@@ -86,13 +86,11 @@ ftr_path = os.path.join(ftr_root, str(sub))
 for elec in soz_elec_names:
     # load non szr file
     uni_chans = elec.split('-')
-    #nonszr_fname = str(sub) + '_' + uni_chans[0] + '_' + uni_chans[1] + '_non.mat'
-    nonszr_fname = str(sub) + '_' + uni_chans[0] + '_' + uni_chans[1] + '_subsamp.mat'
+    nonszr_fname = str(sub) + '_' + uni_chans[0] + '_' + uni_chans[1] + '_non.mat'
     # print('Loading %s' % nonszr_fname)
     temp_ftrs = sio.loadmat(os.path.join(ftr_path, nonszr_fname))
     # Z-score features
     raw_ftrs=temp_ftrs['nonszr_se_ftrs']
-    #TODO add trimming!!!!
     temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0, zero_nans=False, verbose=False)
 
     # Apply classifier to non-szr data

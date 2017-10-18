@@ -49,6 +49,14 @@ for lag_loop=1:n_lags,
     end
 end
 
+%% TODO load bad chans and ignore them
+badchan_fname=fullfile(root_dir,'EU_METADATA','BAD_CHANS',sprintf('bad_chans_%d.txt',sub_id));
+badchans=csv2Cell(badchan_fname);
+if strcmpi(badchans{1},'None'),
+    badchans=[];
+end
+fprintf('# of bad chans: %d\n',length(badchans));
+
 
 %% Load list of SOZ channels and the number of samples for each
 indir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS');
@@ -58,12 +66,21 @@ fprintf('Loading counts of # of szr observations/electrode in %s\n',infname);
 load(infname);
 
 n_chan=size(soz_chans_bi,1);
-fprintf('# of Channels: %d\n',n_chan);
+fprintf('# of SOZ Channels (good & bad): %d\n',n_chan);
 fprintf('Feature sampling rate: %f Hz\n',ftr_fs);
+good_chan_ids=[];
 for a=1:n_chan,
-    fprintf('%s-%s # of obs: %d\n',soz_chans_bi{a,1},soz_chans_bi{a,2},n_tpt_ct(a));
+    temp_label=sprintf('%s-%s',soz_chans_bi{a,1},soz_chans_bi{a,2});
+    if findStrInCell(temp_label,badchans),
+        fprintf('SOZ channel %s is bad. Ignoring it.\n',temp_label);
+    else
+        good_chan_ids=[good_chan_ids a];
+        fprintf('%s-%s # of obs: %d\n',soz_chans_bi{a,1},soz_chans_bi{a,2},n_tpt_ct(a));
+    end
 end
-
+soz_chans_bi=soz_chans_bi(good_chan_ids,:);
+n_chan=size(soz_chans_bi,1);
+fprintf('# of SOZ Channels (good): %d\n',n_chan);
 
 %% Get list of all files and the timing of all szrs (clinical and subclinical)
 file_info=get_fnames_and_szr_times(sub_id);
@@ -71,22 +88,26 @@ n_files=length(file_info);
 
 
 %% Loop over SOZ electrodes
-for cloop=1:n_chan,
+for cloop=1:1,
+%    for cloop=1:n_chan,
     fprintf('Working on chan %s-%s\n',soz_chans_bi{cloop,1},soz_chans_bi{cloop,1});
     
     % Figure out how many non-szr samples to draw from each file
-    n_subsamp_obs=ceil(n_tpt_ct(cloop)/n_files);
+    n_subsamp_files=round(n_files/2); % only sample for the first half of files since in
+    % practice we will only have files from beginning of patient stay to
+    % estimate normalization
+    n_subsamp_obs=ceil(n_tpt_ct(cloop)/n_subsamp_files);
     fprintf('Drawing %d random samples (szr and non-szr) from each file.\n',n_subsamp_obs);
     
     subsamp_se_ftrs=[];
     % Loop over first half of files
-    for floop=1:round(n_files/2),
+    for floop=1:n_subsamp_files,
         % Compute features
         
         % Read header
         full_data_fname=get_data_fullfname(sub_id,file_info(floop).fname);
         fprintf('Channel %d/%d\n',cloop,n_chan);
-        fprintf('Loading file %d/%d %s\n',floop,n_files,file_info(floop).fname);
+        fprintf('Loading file %d/%d %s\n',floop,n_subsamp_files,file_info(floop).fname);
         pat=bin_file(full_data_fname);
         Fs=pat.a_samp_freq;
         if isempty(Fs),
@@ -218,9 +239,11 @@ for cloop=1:n_chan,
         
         if isempty(subsamp_se_ftrs),
             %preallocate mem, first time adding data
-            subsamp_se_ftrs=zeros(n_ftrs,n_subsamp_obs*n_files);
-            subsamp_se_ftrs_time_sec=zeros(1,n_subsamp_obs*n_files);
-            source_fnames=cell(1,n_files);
+            subsamp_se_ftrs=zeros(n_ftrs,n_subsamp_obs*n_subsamp_files);
+            subsamp_se_ftrs_time_sec=zeros(1,n_subsamp_obs*n_subsamp_files);
+            source_fnames=cell(1,n_subsamp_files);
+            subsamp_szr_class=zeros(1,n_subsamp_obs*n_subsamp_files);
+            subsamp_targ_class=zeros(1,n_subsamp_obs*n_subsamp_files);
         end
         
         % Get non-szr time window ids
@@ -249,7 +272,7 @@ for cloop=1:n_chan,
 %     subsamp_se_ftrs_time_sec=subsamp_se_ftrs_time_sec(non_nan_ids);
 %     subsamp_se_ftrs=subsamp_se_ftrs(:,non_nan_ids);
     save(outfname,'subsamp_se_ftrs','subsamp_se_ftrs_time_sec','source_fnames', ...
-        'ftr_labels');
+        'ftr_labels','subsamp_szr_class','subsamp_targ_class');
 end
 
 
