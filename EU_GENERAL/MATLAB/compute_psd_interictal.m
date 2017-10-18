@@ -5,7 +5,7 @@
 % Output is saved to SZR_ANT/EU_METADATA/PSD
 
 %sub_id=1096; % PARTIALLY DONE
-%sub_id=620; % Done?
+%sub_id=620; % patially done
 %sub_id=264; % DONE
 % sub_id=590; %
 % sub_id=862;%
@@ -14,8 +14,9 @@
 %sub_id=273; %
 %sub_id=1125; % DONE
 %sub_id=1077; %
-do_subs=[620, 590, 862, 565, 253, 273, 1077];
-du_subs=565;
+%do_subs=[620, 590, 862, 565, 253, 273, 1077];
+%do_subs=565; % DONE
+do_subs=273; %doing!!!!
 
 for sub_id=do_subs,
     
@@ -160,19 +161,18 @@ for sub_id=do_subs,
                 psd_samps=zeros(n_files,length(f),n_chan);
             end
             psd_samps(floop,:,cloop)=mean(10*log10(S(:,use_fft_ids>0)),2);
-            
-            % Save results to disk
-            outdir=fullfile(root_dir,'EU_GENERAL','EU_METADATA','PSD');
-            if ~exist(outdir,'dir'),
-                mkdir(outdir);
-            end
-            outfname=fullfile(outdir,sprintf('%d_non_szr_psd',sub_id));
-            fprintf('Saving non-szr PSD to %s\n',outfname);
-            save(outfname,'psd_samps','f','bipolar_labels', ...
-                'file_info','rand_files_used');
+           
             
         end
-
+        % Save results to disk
+        outdir=fullfile(root_dir,'EU_METADATA','PSD');
+        if ~exist(outdir,'dir'),
+            mkdir(outdir);
+        end
+        outfname=fullfile(outdir,sprintf('%d_non_szr_psd',sub_id));
+        fprintf('Saving non-szr PSD to %s\n',outfname);
+        save(outfname,'psd_samps','f','bipolar_labels', ...
+            'file_info','rand_files_used');
         
     end
 end
