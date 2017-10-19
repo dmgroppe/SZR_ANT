@@ -1,5 +1,5 @@
 {"model_type": "logreg",
-"model_name": "genLogregSeLog10",
+"model_name": "genLogregSe",
 "n_rand_params": 1,
 "patience": 0,
 "use_ftrs": ["SE"]}

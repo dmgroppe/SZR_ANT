@@ -92,7 +92,7 @@ for elec in soz_elec_names:
     temp_ftrs = sio.loadmat(os.path.join(ftr_path, subsamp_fname))
     # Z-score features
     raw_ftrs=temp_ftrs['subsamp_se_ftrs']
-    temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, .25, zero_nans=False, verbose=False)
+    temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0.25, zero_nans=False, verbose=False)
 
 
     # load non szr file
