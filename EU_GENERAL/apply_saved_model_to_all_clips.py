@@ -1,3 +1,10 @@
+# This script applies a saved ensemble of models to all of a subject's continuous iEEG files and outputs the
+# mean predictions to one of these places
+# if sys.platform=='linux':
+#     out_root = '/home/dgroppe/EU_YHAT/'
+# else:
+#     out_root = '/Users/davidgroppe/ONGOING/EU_YHAT/'
+
 # Libraries
 import numpy as np
 import scipy.io as sio
