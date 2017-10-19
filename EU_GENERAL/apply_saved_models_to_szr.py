@@ -28,11 +28,14 @@ def sub_soz_elec_names(sub, ftr_root):
     soz_elec_names = list()
     szr_fname_dict = dict()
     non_elec_names = list()
+    subsamp_elec_names=list()
 
     ftr_path = os.path.join(ftr_root, str(sub))
     for f in os.listdir(ftr_path):
         if f.endswith('non.mat'):
             non_elec_names.append(chan_labels_from_fname(f))
+        elif f.endswith('subsamp.mat'):
+            subsamp_elec_names.append(chan_labels_from_fname(f))
         elif f.endswith('.mat') and f.startswith(str(sub) + '_'):
             temp_label = chan_labels_from_fname(f)
             if temp_label in soz_elec_names:
@@ -68,14 +71,12 @@ path_dict=ief.get_path_dict()
 # Load models
 # model_stem='genLogregSe_3'
 model_stem=model_name.split('_')[0]
-# TODO get this from pathdir
 model_fname=os.path.join(path_dict['szr_ant_root'],'MODELS/',model_name,'classify_models_srch.pkl')
 print('Loading models from %s' % model_fname)
 models=pickle.load(open(model_fname,'rb'))
 n_models=len(models)
 print('# of models= %d' % n_models)
 
-# TODO get this from pathdir
 yhat_dir = os.path.join(path_dict['szr_ant_root'],'MODELS/', model_name + '_yhat')
 if os.path.exists(yhat_dir)==False:
     os.mkdir(yhat_dir)
@@ -84,16 +85,23 @@ ftr_root = os.path.join(path_dict['eu_gen_ftrs'],'SE') # TODO make able to deal 
 soz_elec_names, szr_fname_dict = sub_soz_elec_names(sub, ftr_root)
 ftr_path = os.path.join(ftr_root, str(sub))
 for elec in soz_elec_names:
-    # load non szr file
+    # load subsampled file (random samples that may contain szr and non-szr data)
     uni_chans = elec.split('-')
-    #nonszr_fname = str(sub) + '_' + uni_chans[0] + '_' + uni_chans[1] + '_non.mat'
-    nonszr_fname = str(sub) + '_' + uni_chans[0] + '_' + uni_chans[1] + '_subsamp.mat'
+    subsamp_fname = str(sub) + '_' + uni_chans[0] + '_' + uni_chans[1] + '_subsamp.mat'
+    # print('Loading %s' % nonszr_fname)
+    temp_ftrs = sio.loadmat(os.path.join(ftr_path, subsamp_fname))
+    # Z-score features
+    raw_ftrs=temp_ftrs['subsamp_se_ftrs']
+    temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, .25, zero_nans=False, verbose=False)
+
+
+    # load non szr file
+    nonszr_fname = str(sub) + '_' + uni_chans[0] + '_' + uni_chans[1] + '_non.mat'
     # print('Loading %s' % nonszr_fname)
     temp_ftrs = sio.loadmat(os.path.join(ftr_path, nonszr_fname))
     # Z-score features
     raw_ftrs=temp_ftrs['nonszr_se_ftrs']
-    #TODO add trimming!!!!
-    temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0, zero_nans=False, verbose=False)
+    dg.applyNormalize(raw_ftrs, temp_mns, temp_sds)
 
     # Apply classifier to non-szr data
     for model_ct in range(n_models):

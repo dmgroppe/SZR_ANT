@@ -86,7 +86,8 @@ def continuous_fnames(sub, cont_ftr_root, szr_ftr_root):
 
 
 
-
+# Get list of files
+sub=1096
 ## Start of main function
 if len(sys.argv)==1:
     print('Usage: apply_saved_models_to_all_clips.py sub_id model_name')
@@ -115,7 +116,7 @@ print('# of clips %d' % len(clip_list))
 # model_name='genSvmSe_3'
 # model_name = 'genLogregSe_3'
 # model_type='svm'
-model_type = 'logreg' # TODO make this work for SVMs too
+model_type = 'logreg' # TODO make this work for SVMS too
 # model_fname=os.path.join('/home/dgroppe/GIT/SZR_ANT/MODELS/',model_name,'classify_models_srch.pkl')
 
 # TODO fix path
@@ -145,11 +146,11 @@ mns_dict = dict()
 sds_dict = dict()
 for chan in soz_elec_names:
     mono_chans = chan.split('-')
-    nonszr_fname = str(sub) + '_' + mono_chans[0] + '_' + mono_chans[1] + '_subsamp.mat'
+    nonszr_fname = str(sub) + '_' + mono_chans[0] + '_' + mono_chans[1] + '_non.mat'
     # print('Loading %s' %
     temp_ftrs = sio.loadmat(os.path.join(subsamp_ftr_path, nonszr_fname))
     # Z-score features
-    temp_mns, temp_sds = dg.trimmed_normalize(temp_ftrs['subsamp_se_ftrs'], 0,
+    temp_mns, temp_sds = dg.trimmed_normalize(temp_ftrs['nonszr_se_ftrs'], 0,
                                               zero_nans=False, verbose=False)
     mns_dict[chan] = temp_mns
     sds_dict[chan] = temp_sds
