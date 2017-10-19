@@ -49,6 +49,7 @@ def data_size_and_fnames(sub_list, ftr_root, ftr):
         print('Working on sub %d' % sub)
         non_fnames = list()
         szr_fnames = list()
+        subsamp_fnames = list()
 
         # Get filenames (and full path)
         sub_ftr_path = os.path.join(ftr_path, str(sub))
@@ -57,6 +58,8 @@ def data_size_and_fnames(sub_list, ftr_root, ftr):
                 non_fnames.append(os.path.join(sub_ftr_path, f))
                 non_file_subs.append(sub)
                 non_file_chans.append(chan_labels_from_fname(f))
+            elif f.endswith('subsamp.mat'):
+                subsamp_fnames.append(os.path.join(sub_ftr_path, f))  # This isn't actually needed for anything yet
             elif f.endswith('.mat') and f.startswith(str(sub) + '_'):
                 szr_fnames.append(os.path.join(sub_ftr_path, f))
                 szr_file_subs.append(sub)
@@ -126,14 +129,19 @@ def import_data(szr_fnames, non_fnames, szr_subs, non_subs, n_szr_wind, n_non_wi
         print(chan_label)
         chan_list.append(chan_label)
 
-        temp_ftrs = sio.loadmat(f)
-        temp_n_wind = temp_ftrs['nonszr_se_ftrs'].shape[1]
-        raw_ftrs = temp_ftrs['nonszr_se_ftrs']
+        # Load subsampled data (possibly contains both szr and non-szr data)
+        subsamp_f=f[:-7]+'subsamp.mat'
+        temp_ftrs = sio.loadmat(subsamp_f)
+        raw_ftrs = temp_ftrs['subsamp_se_ftrs']
         # Z-score features
-        temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0, zero_nans=False, verbose=False) #normalization is done in place
+        temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0.25, zero_nans=False, verbose=False) #normalization is done in place
         mns_dict[chan_label] = temp_mns
         sds_dict[chan_label] = temp_sds
 
+        # Import non-szr data
+        temp_ftrs = sio.loadmat(f)
+        temp_n_wind = temp_ftrs['nonszr_se_ftrs'].shape[1]
+        raw_ftrs = temp_ftrs['nonszr_se_ftrs']
         ftrs[:, ptr:ptr + temp_n_wind] = raw_ftrs
         targ_labels[ptr:ptr + temp_n_wind] = 0
         sub_ids[ptr:ptr + temp_n_wind] = non_subs[f_ct]

@@ -149,7 +149,7 @@ for chan in soz_elec_names:
     # print('Loading %s' %
     temp_ftrs = sio.loadmat(os.path.join(subsamp_ftr_path, nonszr_fname))
     # Z-score features
-    temp_mns, temp_sds = dg.trimmed_normalize(temp_ftrs['subsamp_se_ftrs'], 0,
+    temp_mns, temp_sds = dg.trimmed_normalize(temp_ftrs['subsamp_se_ftrs'], 0.25,
                                               zero_nans=False, verbose=False)
     mns_dict[chan] = temp_mns
     sds_dict[chan] = temp_sds
