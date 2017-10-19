@@ -254,17 +254,32 @@ for cloop=1:n_chan,
         n_post_edge_ftr_wind=length(se_class);
 %         temp_time_ids=1:n_post_edge_ftr_wind;
         % Randomly select subset of features (both szr and non szr
-        subsamp_ids=randi(n_post_edge_ftr_wind,1,n_subsamp_obs);
-        subsamp_se_ftrs(:,[1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=se_ftrs(:,subsamp_ids);
-        subsamp_se_ftrs_time_sec([1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=se_time_sec(subsamp_ids);
-        subsamp_szr_class([1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=se_szr_class(subsamp_ids);
-        subsamp_targ_class([1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=se_class(subsamp_ids);
+        if n_post_edge_ftr_wind>=n_subsamp_obs,
+            subsamp_ids=randi(n_post_edge_ftr_wind,1,n_subsamp_obs);
+            subsamp_se_ftrs(:,[1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=se_ftrs(:,subsamp_ids);
+            subsamp_se_ftrs_time_sec([1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=se_time_sec(subsamp_ids);
+            subsamp_szr_class([1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=se_szr_class(subsamp_ids);
+            subsamp_targ_class([1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=se_class(subsamp_ids);
+        else
+            % Not enought data points in file, fill with NaN values
+            subsamp_se_ftrs(:,[1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=NaN;
+            subsamp_se_ftrs_time_sec([1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=NaN;
+            subsamp_szr_class([1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=NaN;
+            subsamp_targ_class([1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=NaN;
+        end
         source_fnames{floop}=full_data_fname;
 
         
     end
     
-    % Save results to disk
+    %% Remove any nan values
+    non_nan_ids=find(~isnan(subsamp_se_ftrs_time_sec));
+    subsamp_se_ftrs=subsamp_se_ftrs(:,non_nan_ids);
+    subsamp_se_ftrs_time_sec=subsamp_se_ftrs_time_sec(non_nan_ids);
+    subsamp_szr_class=subsamp_szr_class(non_nan_ids);
+    subsamp_targ_class=subsamp_targ_class(non_nan_ids);
+    
+    %% Save results to disk
     outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE',num2str(sub_id));
     if ~exist(outdir,'dir'),
         mkdir(outdir);
