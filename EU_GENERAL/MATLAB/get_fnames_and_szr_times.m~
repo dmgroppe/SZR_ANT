@@ -36,10 +36,7 @@ szr_times_csv=fullfile(git_root,'EU_METADATA','SZR_TIMES',['szr_on_off_FR_' num2
 fid=fopen(szr_times_csv,'r');
 while ~feof(fid)
     tline = fgetl(fid);
-    if sum(tline=='"'),
-       error('%s has " in it. SOZ electrodes probably run over multiple lines. Fix it.', ...
-           szr_times_csv);
-    end
+    if sum(
 end
 fclose(fid);
 
