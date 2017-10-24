@@ -10,13 +10,14 @@
 % sub_id=590; %
 % sub_id=862;%
 % sub_id=565; %
-%sub_id=253; %
+sub_id=253; %
 %sub_id=273; %
 %sub_id=1125; % DONE
 %sub_id=1077; %
 %do_subs=[620, 590, 862, 565, 253, 273, 1077];
-%do_subs=565; % DONE
-do_subs=273; %doing!!!!
+%do_subs=[273, 958, 565]; % DONE
+% need to do
+do_subs=[922, 970];
 
 for sub_id=do_subs,
     
