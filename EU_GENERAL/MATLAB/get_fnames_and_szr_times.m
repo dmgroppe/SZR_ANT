@@ -30,6 +30,19 @@ else
     external_root='/media/dgroppe/';
 end
 szr_times_csv=fullfile(git_root,'EU_METADATA','SZR_TIMES',['szr_on_off_FR_' num2str(sub_id) '.csv']);
+
+% First scan the file to make sure there are no " indicating SOZ electrode
+% lists that are so long they go over multiple lines
+fid=fopen(szr_times_csv,'r');
+while ~feof(fid)
+    tline = fgetl(fid);
+    if sum(tline=='"'),
+       error('%s has " in it. SOZ electrodes probably run over multiple lines. Fix it.', ...
+           szr_times_csv);
+    end
+end
+fclose(fid);
+
 szr_times=csv2Cell(szr_times_csv,',',1);
 n_szrs=size(szr_times,1);
 fprintf('%d clinical+subclinical szrs\n',n_szrs);

@@ -7,12 +7,16 @@
 
 %% Load PSD data
 %sub=264; %20 (0.14)=# (proportion) of total files actually sampled.
-sub=565; %20 (0.09)=# (proportion) of total files actually sampled.
-%sub=590; %11 (0.04)=# (proportion) of total files actually sampled.
-%sub=620; %3 (0.01)=# (proportion) of total files actually sampled.
+%sub=565; %20 (0.09)=# (proportion) of total files actually sampled.
 % sub=1096; % 20 (0.12)=# (proportion) of total files actually sampled.
 %sub=1125; %20 (0.12)=# (proportion) of total files actually sampled.
-sub=273;
+%sub=273; %20 (0.10)=# (proportion) of total files actually sampled.
+% sub=1077; %20 (0.11)=# (proportion) of total files actually sampled.
+% sub=862; %20 (0.09)=# (proportion) of total files actually sampled.
+% sub=253;%20 (0.07)=# (proportion) of total files actually sampled.
+sub=590; %20 (0.08)=# (proportion) of total files actually sampled.
+sub=620; %20 (0.08)=# (proportion) of total files actually sampled.
+sub=958; %20 (0.09)=# (proportion) of total files actually sampled.
 
 psd_fname=sprintf('/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/PSD/%d_non_szr_psd.mat',sub);
 load(psd_fname);
