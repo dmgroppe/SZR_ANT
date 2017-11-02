@@ -142,6 +142,8 @@ def import_data(szr_fnames, non_fnames, szr_subs, non_subs, n_szr_wind, n_non_wi
         temp_ftrs = sio.loadmat(f)
         temp_n_wind = temp_ftrs['nonszr_se_ftrs'].shape[1]
         raw_ftrs = temp_ftrs['nonszr_se_ftrs']
+        # Z-score based on trimmed subsampled means, SDs
+        dg.applyNormalize(raw_ftrs, mns_dict[chan_label], sds_dict[chan_label])
         ftrs[:, ptr:ptr + temp_n_wind] = raw_ftrs
         targ_labels[ptr:ptr + temp_n_wind] = 0
         sub_ids[ptr:ptr + temp_n_wind] = non_subs[f_ct]
@@ -155,7 +157,7 @@ def import_data(szr_fnames, non_fnames, szr_subs, non_subs, n_szr_wind, n_non_wi
         temp_ftrs = sio.loadmat(f)
         temp_n_wind = temp_ftrs['se_ftrs'].shape[1]
         raw_ftrs = temp_ftrs['se_ftrs']
-        # Z-score based on non-ictal means, SDs
+        # Z-score based on trimmed subsampled means, SDs
         dg.applyNormalize(raw_ftrs, mns_dict[chan_label], sds_dict[chan_label])
 
         ftrs[:, ptr:ptr + temp_n_wind] = raw_ftrs
