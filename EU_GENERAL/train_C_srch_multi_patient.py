@@ -132,10 +132,10 @@ def import_data(szr_fnames, non_fnames, szr_subs, non_subs, n_szr_wind, n_non_wi
         subsamp_f=f[:-7]+'subsamp.mat'
         temp_ftrs = sio.loadmat(subsamp_f)
         raw_ftrs = temp_ftrs['subsamp_se_ftrs']
-        # Z-score features
-        temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0.25, zero_nans=False, verbose=False) #normalization is done in place
-        mns_dict[chan_label] = temp_mns
-        sds_dict[chan_label] = temp_sds
+        # Z-score features USE THE CODE BELOW
+        # temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0.25, zero_nans=False, verbose=False) #normalization is done in place
+        # mns_dict[chan_label] = temp_mns
+        # sds_dict[chan_label] = temp_sds
 
         # Load nonszr data
         print('Loading file %s' % f)
@@ -143,7 +143,12 @@ def import_data(szr_fnames, non_fnames, szr_subs, non_subs, n_szr_wind, n_non_wi
         temp_n_wind = temp_ftrs['nonszr_se_ftrs'].shape[1]
         raw_ftrs = temp_ftrs['nonszr_se_ftrs']
         # Z-score based on trimmed subsampled means, SDs
-        dg.applyNormalize(raw_ftrs, mns_dict[chan_label], sds_dict[chan_label])
+        # dg.applyNormalize(raw_ftrs, mns_dict[chan_label], sds_dict[chan_label])
+
+        temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0, zero_nans=False, verbose=False) #normalization is done in place
+        mns_dict[chan_label] = temp_mns
+        sds_dict[chan_label] = temp_sds
+
         ftrs[:, ptr:ptr + temp_n_wind] = raw_ftrs
         targ_labels[ptr:ptr + temp_n_wind] = 0
         sub_ids[ptr:ptr + temp_n_wind] = non_subs[f_ct]
