@@ -129,10 +129,10 @@ def import_data(szr_fnames, non_fnames, szr_subs, non_subs, n_szr_wind, n_non_wi
         chan_list.append(chan_label)
 
         # Load subsampled data (possibly contains both szr and non-szr data)
-        subsamp_f=f[:-7]+'subsamp.mat'
-        temp_ftrs = sio.loadmat(subsamp_f)
-        raw_ftrs = temp_ftrs['subsamp_se_ftrs']
-        # Z-score features USE THE CODE BELOW
+        # subsamp_f=f[:-7]+'subsamp.mat'
+        # temp_ftrs = sio.loadmat(subsamp_f)
+        # raw_ftrs = temp_ftrs['subsamp_se_ftrs']
+        ## Z-score features USE THE CODE BELOW
         # temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0.25, zero_nans=False, verbose=False) #normalization is done in place
         # mns_dict[chan_label] = temp_mns
         # sds_dict[chan_label] = temp_sds
