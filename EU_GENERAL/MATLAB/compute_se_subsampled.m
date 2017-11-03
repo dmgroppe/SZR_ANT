@@ -1,4 +1,5 @@
-%sub_id=1096; % DONE
+% DONE
+% 264, 273, 565, 590, 1096, 1125
 %sub_id=620; 
 %sub_id=264; % DONE
 % sub_id=590; 
@@ -14,7 +15,7 @@ if ismac,
 else
     root_dir='/home/dgroppe/GIT/SZR_ANT/';
 end
-subs=[565, 590];
+subs=[253, 620, 862, 1077];
 
 for sub_id=subs,
 

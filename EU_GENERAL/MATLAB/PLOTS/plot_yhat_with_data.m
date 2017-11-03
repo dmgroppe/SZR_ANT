@@ -4,8 +4,16 @@
 % It is useful for seeing what features pickup and miss
 
 %% Load data
-ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/';
-% sub=1096;
+if ismac,
+    szr_ant_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
+    ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/';
+    yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_1_yhat/';
+else
+   szr_ant_root='/home/dgroppe/GIT/SZR_ANT/';
+   ftr_root='/home/dgroppe/GIT/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/'; 
+   yhat_root='/home/dgroppe/GIT/SZR_ANT/MODELS/genLogregSe_1_yhat/';
+end
+    % sub=1096;
 % chan='HL2-HL3';
 %chan='HL3-HL4';
 % szr_num=6;
@@ -34,17 +42,16 @@ end
 %     se_ftrs(a,:)=se_ftrs(a,:)/max(se_ftrs(a,:));
 % end
 
-%% Load yhat
+%% Load yhat and z-scored features
 %load('/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/1096_HL1_HL2_phat_szr6.mat')
-yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_3_yhat/';
+%yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_3_yhat/';
 %load(fullfile(yhat_root,'1096_HL3_HL4_phat_szr6.mat'))
 load(fullfile(yhat_root,sprintf('%d_%s_%s_phat_szr%d.mat',sub,chan1,chan2,szr_num)));
 
 
 %% Load PSD
 % /Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/PSD/1096_non_szr_psd.mat
-psd_fname=sprintf( ...
-    '/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/PSD/%d_non_szr_psd.mat',sub);
+psd_fname=sprintf('%s/EU_METADATA/PSD/%d_non_szr_psd.mat',szr_ant_root,sub);
 if exist(psd_fname,'file'),
     psd_exists=1;
     load(psd_fname);
@@ -83,6 +90,8 @@ band_labels={'DeltaMag','ThetaMag','AlphaMag','BetaMag','GammaMag','HGammaMag'};
 %% Plot raw data, yhat, ftrs, & spectrograms
 figure(1); clf();
 set(gcf,'position',[85   170   844   512]);
+
+% Raw data
 ax1=subplot(511);
 plot(targ_raw_ieeg_sec,targ_raw_ieeg,'b-');
 axis tight;
@@ -90,7 +99,7 @@ ht=title(ftr_fname);
 set(ht,'interpreter','none');
 ylabel('Volatge');
 
-% True Szr class and estimated szr class (note szrs start wit 5 sec before
+% True Szr class and estimated szr class (note szrs start at 5 sec before
 % clinician onset
 ax2=subplot(512); hold on;
 area(se_time_sec,yhat);

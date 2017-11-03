@@ -18,6 +18,7 @@ sub_id=253; %
 %do_subs=[273, 958, 565]; % DONE
 % need to do
 do_subs=[922, 970];
+%do_subs=970;
 
 for sub_id=do_subs,
     
