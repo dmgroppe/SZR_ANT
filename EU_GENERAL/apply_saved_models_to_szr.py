@@ -85,10 +85,10 @@ ftr_root = os.path.join(path_dict['eu_gen_ftrs'],'SE') # TODO make able to deal 
 soz_elec_names, szr_fname_dict = sub_soz_elec_names(sub, ftr_root)
 ftr_path = os.path.join(ftr_root, str(sub))
 for elec in soz_elec_names:
-    # load subsampled file (random samples that may contain szr and non-szr data)
+    # Load subsampled file (random samples that may contain szr and non-szr data)
     uni_chans = elec.split('-')
     subsamp_fname = str(sub) + '_' + uni_chans[0] + '_' + uni_chans[1] + '_subsamp.mat'
-    # print('Loading %s' % nonszr_fname)
+    # print('Loading %s' % subsamp_fname)
     temp_ftrs = sio.loadmat(os.path.join(ftr_path, subsamp_fname))
     # Z-score features
     raw_ftrs=temp_ftrs['subsamp_se_ftrs']
