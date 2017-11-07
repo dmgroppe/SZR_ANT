@@ -26,28 +26,34 @@ def chan_labels_from_fname(in_file):
     chan_label=jf_splt[1]+'-'+jf_splt[2]
     return chan_label
 
-
 # Get list of electrodes for the subject
 def sub_soz_elec_names(sub, ftr_root):
     soz_elec_names = list()
     szr_fname_dict = dict()
     non_elec_names = list()
+    subsamp_elec_names=list()
 
     ftr_path = os.path.join(ftr_root, str(sub))
     for f in os.listdir(ftr_path):
         if f.endswith('non.mat'):
             non_elec_names.append(chan_labels_from_fname(f))
+        elif f.endswith('subsamp.mat'):
+            subsamp_elec_names.append(chan_labels_from_fname(f))
         elif f.endswith('.mat') and f.startswith(str(sub) + '_'):
+            #perionset file
             temp_label = chan_labels_from_fname(f)
             if temp_label in soz_elec_names:
-                szr_fname_dict[soz_elec_names[-1]].append(f)
+                #szr_fname_dict[soz_elec_names[-1]].append(f)
+                szr_fname_dict[temp_label].append(f)
             else:
                 soz_elec_names.append(temp_label)
                 szr_fname_dict[temp_label] = [f]
 
     soz_elec_names = np.unique(soz_elec_names)
+    for elec in soz_elec_names:
+        szr_fname_dict[elec]=np.sort(szr_fname_dict[elec])
     non_elec_names = np.unique(non_elec_names)
-    print('%d total # of SOZ electrodes for this sub' % len(soz_elec_names))
+    print('%d total # of electrodes for this sub' % len(soz_elec_names))
 
     return soz_elec_names, szr_fname_dict
 
