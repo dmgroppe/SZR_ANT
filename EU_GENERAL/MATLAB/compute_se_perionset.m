@@ -1,13 +1,17 @@
-sub_id=1096; %DONE (need sgrams)
-% sub_id=620; %DONE (need sgrams)
+%sub_id=1096; %DONE
+% sub_id=620; %DONE
 %sub_id=264; % DONE
 % sub_id=590; % DONE
 %sub_id=253; % DONE
 % sub_id=862; % DONE
-% sub_id=565; %DONE
+ sub_id=565; %DONE
 % sub_id=273; % DONE
 % sub_id=1125; % DONE
 % sub_id=1077; %DONE
+% sub_id=958;  %DONE
+% sub_id=970; %DONE
+% sub_id=922; %DONE
+
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
 else
@@ -117,7 +121,8 @@ for a=1:n_soz_chan,
         fprintf('SOZ channel %s is bad. Ignoring it.\n',temp_label);
     else
         good_chan_ids=[good_chan_ids a];
-        fprintf('%s-%s # of obs: %d\n',soz_chans_bi{a,1},soz_chans_bi{a,2},n_tpt_ct(a));
+        %fprintf('%s-%s # of obs: %d\n',soz_chans_bi{a,1},soz_chans_bi{a,2},n_tpt_ct(a));
+fprintf('%s-%s # of obs\n',soz_chans_bi{a,1},soz_chans_bi{a,2});
     end
 end
 soz_chans_bi=soz_chans_bi(good_chan_ids,:);
@@ -254,7 +259,7 @@ for cloop=1:size(soz_chans_bi,1),
             [sgram_S,sgram_t,sgram_f]=mtspecgramcDG(targ_raw_ieeg,sgramCfg.movingwin,sgramCfg);
             sgram_S=10*log10(sgram_S);
             %%
-            clear targ_raw_ieeg_tpts;
+            % DG ?? clear targ_raw_ieeg_tpts;
             
             % Figure out how many feature time points there are
             wind_len=256*wind_len_sec; 

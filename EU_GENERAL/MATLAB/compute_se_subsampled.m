@@ -15,7 +15,9 @@ if ismac,
 else
     root_dir='/home/dgroppe/GIT/SZR_ANT/';
 end
-subs=[253, 620, 862, 1077];
+% DONE subs=[253, 620, 862, 1077];
+% DONE subs=[958, 970];
+subs=[922];
 
 for sub_id=subs,
 
