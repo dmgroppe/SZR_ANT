@@ -26,10 +26,13 @@ yhat_root=fullfile(szr_ant_root,'MODELS',model_name);
 dash_id=find(chan=='-');
 chan1=chan(1:dash_id-1);
 chan2=chan(dash_id+1:end);
-ftr_fname=sprintf('%d_%s_%s_szr%d.mat',sub,chan1,chan2,szr_num);
-fprintf('Loading %s\n',ftr_fname);
+ftr_fname_loaded=sprintf('%d_%s_%s_szr%d.mat',sub,chan1,chan2,szr_num);
+%fprintf('Loading %s\n',ftr_fname_loaded);
 %ftr_fname='1096_HL3_HL4_szr6.mat';
-load(fullfile(ftr_root,num2str(sub),ftr_fname));
+%load(fullfile(ftr_root,num2str(sub),ftr_fname_loaded));
+in_fname_ftrs=fullfile(ftr_root,num2str(sub),ftr_fname_loaded);
+fprintf('Loading %s\n',in_fname_ftrs);
+load(in_fname_ftrs);
 
 % Remove _ from feature labels
 for a=1:size(ftr_labels,1),
@@ -47,7 +50,11 @@ end
 %load('/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/1096_HL1_HL2_phat_szr6.mat')
 %yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_3_yhat/';
 %load(fullfile(yhat_root,'1096_HL3_HL4_phat_szr6.mat'))
-load(fullfile(yhat_root,sprintf('%d_%s_%s_phat_szr%d.mat',sub,chan1,chan2,szr_num)));
+%load(fullfile(yhat_root,sprintf('%d_%s_%s_phat_szr%d.mat',sub,chan1,chan2,szr_num)));
+in_fname_yhat=fullfile(yhat_root,sprintf('%d_%s_%s_phat_szr%d.mat',sub,chan1,chan2,szr_num));
+fprintf('Loading %s\n',in_fname_yhat);
+load(in_fname_yhat);
+
 
 % Scale all features from 0 to 1
 % for a=1:size(ftr_labels,1),
@@ -61,6 +68,7 @@ load(fullfile(yhat_root,sprintf('%d_%s_%s_phat_szr%d.mat',sub,chan1,chan2,szr_nu
 psd_fname=sprintf('%s/EU_METADATA/PSD/%d_non_szr_psd.mat',szr_ant_root,sub);
 if exist(psd_fname,'file'),
     psd_exists=1;
+    fprintf('Loading %s\n',psd_fname);
     load(psd_fname);
     chan_id=NaN;
     for a=1:size(bipolar_labels,1),
@@ -106,7 +114,7 @@ set(gcf,'position',[85   100   844   582]);
 ax1=subplot(611);
 plot(targ_raw_ieeg_sec,targ_raw_ieeg,'b-');
 axis tight;
-ht=title(ftr_fname);
+ht=title(ftr_fname_loaded);
 set(ht,'interpreter','none');
 ylabel('Volatge');
 

@@ -146,10 +146,11 @@ sgramCfg.movingwin=[sgramCfg.T .2];
 
 %% Loop over bipolar soz chans
 n_tpt_ct=zeros(size(soz_chans_bi,1),1);
-for cloop=1:size(soz_chans_bi,1),
-%for cloop=1:1,
+%DG ?? for cloop=1:size(soz_chans_bi,1),
+for cloop=1:1,
     fprintf('Working on chan %s-%s\n',soz_chans_bi{cloop,1},soz_chans_bi{cloop,2});
-    for sloop=1:n_szrs,
+    for sloop=7:7,
+%    DG ??        for sloop=1:n_szrs,
         % See if this channel was part of soz for this szr
         if ismember(soz_chans_bi{cloop,1},cli_szr_info(sloop).clinical_soz_chans) || ...
             ismember(soz_chans_bi{cloop,2},cli_szr_info(sloop).clinical_soz_chans)
@@ -172,11 +173,13 @@ for cloop=1:size(soz_chans_bi,1),
             fszr_offset_tpt=round(Fs*cli_szr_info(sloop).clinical_offset_sec);
             fprintf('Szr onset tpt %d\n',fszr_onset_tpt);
             fprintf('Szr offset tpt %d\n',fszr_offset_tpt);
-            szr_class=zeros(pat.a_n_samples,1,'int8');
+            % DG ?? orig szr_class=zeros(pat.a_n_samples,1,'int8');
+            szr_class=zeros(pat.a_n_samples,1);
             szr_class(fszr_onset_tpt:fszr_offset_tpt)=1;
             
             % Identify target window onset for classifier 5 sec before clinician onset
-            targ_window=zeros(pat.a_n_samples,1,'int8');
+            % DG orig ?? targ_window=zeros(pat.a_n_samples,1,'int8');
+            targ_window=zeros(pat.a_n_samples,1);
             targ_onset_tpt=fszr_onset_tpt-round(Fs*5);
             if targ_onset_tpt<0,
                 targ_onset_tpt=1;
@@ -240,8 +243,8 @@ for cloop=1:size(soz_chans_bi,1),
             
             % Clip raw szr data
             targ_raw_ieeg_tpts=(targ_win_dec>0);
-            targ_raw_ieeg=ieeg(targ_raw_ieeg_tpts);
-            targ_raw_ieeg_sec=time_dec(targ_raw_ieeg_tpts);
+            %targ_raw_ieeg=ieeg(targ_raw_ieeg_tpts);
+%             targ_raw_ieeg_sec=time_dec(targ_raw_ieeg_tpts);
             
             % Compute spectrogram of target window
             % Extend target window forward and backward a bit to capture
@@ -255,6 +258,9 @@ for cloop=1:size(soz_chans_bi,1),
                 stop_targ_id=n_ieeg_dec_tpts;
             end
             sgramCfg.start_time=time_dec(start_targ_id);
+            targ_raw_ieeg=ieeg(start_targ_id:stop_targ_id);
+            targ_raw_ieeg_sec=time_dec(start_targ_id:stop_targ_id);
+                        
             %%
             [sgram_S,sgram_t,sgram_f]=mtspecgramcDG(targ_raw_ieeg,sgramCfg.movingwin,sgramCfg);
             sgram_S=10*log10(sgram_S);

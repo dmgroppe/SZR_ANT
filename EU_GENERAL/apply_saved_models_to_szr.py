@@ -37,14 +37,18 @@ def sub_soz_elec_names(sub, ftr_root):
         elif f.endswith('subsamp.mat'):
             subsamp_elec_names.append(chan_labels_from_fname(f))
         elif f.endswith('.mat') and f.startswith(str(sub) + '_'):
+            #perionset file
             temp_label = chan_labels_from_fname(f)
             if temp_label in soz_elec_names:
-                szr_fname_dict[soz_elec_names[-1]].append(f)
+                #szr_fname_dict[soz_elec_names[-1]].append(f)
+                szr_fname_dict[temp_label].append(f)
             else:
                 soz_elec_names.append(temp_label)
                 szr_fname_dict[temp_label] = [f]
 
     soz_elec_names = np.unique(soz_elec_names)
+    for elec in soz_elec_names:
+        szr_fname_dict[elec]=np.sort(szr_fname_dict[elec])
     non_elec_names = np.unique(non_elec_names)
     print('%d total # of electrodes for this sub' % len(soz_elec_names))
 
@@ -88,7 +92,7 @@ for elec in soz_elec_names:
     # Load subsampled file (random samples that may contain szr and non-szr data)
     uni_chans = elec.split('-')
     subsamp_fname = str(sub) + '_' + uni_chans[0] + '_' + uni_chans[1] + '_subsamp.mat'
-    # print('Loading %s' % subsamp_fname)
+    print('Loading %s' % subsamp_fname)
     temp_ftrs = sio.loadmat(os.path.join(ftr_path, subsamp_fname))
     # Z-score features
     raw_ftrs=temp_ftrs['subsamp_se_ftrs']
@@ -97,7 +101,7 @@ for elec in soz_elec_names:
 
     # load non szr file
     nonszr_fname = str(sub) + '_' + uni_chans[0] + '_' + uni_chans[1] + '_non.mat'
-    # print('Loading %s' % nonszr_fname)
+    print('Loading %s' % nonszr_fname)
     temp_ftrs = sio.loadmat(os.path.join(ftr_path, nonszr_fname))
     # Z-score features
     raw_ftrs=temp_ftrs['nonszr_se_ftrs']
@@ -117,10 +121,11 @@ for elec in soz_elec_names:
                                                           'ftr_labels': temp_ftrs['ftr_labels'],
                                                           'ftr_fname': nonszr_fname})
 
+    #print('szr_fname_dict[elec]: {}'.format(szr_fname_dict[elec]))
     # get list of szr files
     for szr_f in szr_fname_dict[elec]:
         # load file
-        #         print('Loading %s' % szr_f)
+        print('Loading %s' % szr_f)
         temp_ftrs = sio.loadmat(os.path.join(ftr_path, szr_f))
         raw_ftrs = temp_ftrs['se_ftrs']
         # Z-score based on non-ictal means, SDs
