@@ -203,6 +203,7 @@ if psd_exists,
         plot(xlim,[1 1]*hz_id,'w-');
         
         hz_id_low=findTpt(bands(bloop,1),sgram_f);
+        fprintf('Band %d Hz ids: %d to %d\n',bloop,hz_id_low,hz_id);
         sgram_band(bloop,:)=mean(sgram_tscore(:,hz_id_low:hz_id),2);
     end
 end

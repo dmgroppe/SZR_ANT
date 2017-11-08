@@ -146,11 +146,11 @@ sgramCfg.movingwin=[sgramCfg.T .2];
 
 %% Loop over bipolar soz chans
 n_tpt_ct=zeros(size(soz_chans_bi,1),1);
-%DG ?? for cloop=1:size(soz_chans_bi,1),
-for cloop=1:1,
+for cloop=1:size(soz_chans_bi,1),
+%for cloop=1:1,
     fprintf('Working on chan %s-%s\n',soz_chans_bi{cloop,1},soz_chans_bi{cloop,2});
-    for sloop=7:7,
-%    DG ??        for sloop=1:n_szrs,
+%    for sloop=7:7,
+    for sloop=1:n_szrs,
         % See if this channel was part of soz for this szr
         if ismember(soz_chans_bi{cloop,1},cli_szr_info(sloop).clinical_soz_chans) || ...
             ismember(soz_chans_bi{cloop,2},cli_szr_info(sloop).clinical_soz_chans)
@@ -173,13 +173,13 @@ for cloop=1:1,
             fszr_offset_tpt=round(Fs*cli_szr_info(sloop).clinical_offset_sec);
             fprintf('Szr onset tpt %d\n',fszr_onset_tpt);
             fprintf('Szr offset tpt %d\n',fszr_offset_tpt);
-            % DG ?? orig szr_class=zeros(pat.a_n_samples,1,'int8');
-            szr_class=zeros(pat.a_n_samples,1);
+            szr_class=zeros(pat.a_n_samples,1,'int8');
+            % use float instead of int, easier for deubugging szr_class=zeros(pat.a_n_samples,1);
             szr_class(fszr_onset_tpt:fszr_offset_tpt)=1;
             
             % Identify target window onset for classifier 5 sec before clinician onset
-            % DG orig ?? targ_window=zeros(pat.a_n_samples,1,'int8');
-            targ_window=zeros(pat.a_n_samples,1);
+            targ_window=zeros(pat.a_n_samples,1,'int8');
+            % use float instead of int, easier for debugging targ_window=zeros(pat.a_n_samples,1);
             targ_onset_tpt=fszr_onset_tpt-round(Fs*5);
             if targ_onset_tpt<0,
                 targ_onset_tpt=1;
@@ -265,7 +265,7 @@ for cloop=1:1,
             [sgram_S,sgram_t,sgram_f]=mtspecgramcDG(targ_raw_ieeg,sgramCfg.movingwin,sgramCfg);
             sgram_S=10*log10(sgram_S);
             %%
-            % DG ?? clear targ_raw_ieeg_tpts;
+            clear targ_raw_ieeg_tpts;
             
             % Figure out how many feature time points there are
             wind_len=256*wind_len_sec; 
