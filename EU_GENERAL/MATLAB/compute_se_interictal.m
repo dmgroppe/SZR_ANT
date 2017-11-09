@@ -1,4 +1,4 @@
-sub_id=1096; % DONE
+%sub_id=1096; % DONE
 %sub_id=620; % DONE
 %sub_id=264; % DONE
 % sub_id=590; % DONE
@@ -8,6 +8,7 @@ sub_id=1096; % DONE
 %sub_id=273; % DONE
 %sub_id=1125; % DONE
 %sub_id=1077; %DONE
+sub_id=922;
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
@@ -15,6 +16,9 @@ else
     root_dir='/home/dgroppe/GIT/SZR_ANT/';
 end
 
+subs=[922, 958, 970];
+
+for sub_id=subs,
 
 %% EDM Lags and moving window length
 edm_lags=0:2:8;
@@ -276,7 +280,7 @@ for cloop=1:n_chan,
 end
 
 
-
+end
 
 
 

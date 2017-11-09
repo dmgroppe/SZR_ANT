@@ -4,13 +4,15 @@
 % sub_id=590; % DONE
 %sub_id=253; % DONE
 % sub_id=862; % DONE
- sub_id=565; %DONE
+% sub_id=565; %DONE
 % sub_id=273; % DONE
 % sub_id=1125; % DONE
 % sub_id=1077; %DONE
 % sub_id=958;  %DONE
 % sub_id=970; %DONE
 % sub_id=922; %DONE
+subs=[253, 264, 590, 620, 862, 1077, 1096, 1125, 958, 970, 922];
+%subs=[273, 565]; % DONE
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
@@ -18,6 +20,7 @@ else
     root_dir='/home/dgroppe/GIT/SZR_ANT/';
 end
 
+for sub_id=subs,
 
 %% Get all the files with clinical szrs and their SOZ
 cli_szr_info=get_szr_fnames(sub_id);
@@ -388,3 +391,4 @@ save(outfname,'n_tpt_ct','soz_chans_bi','ftr_fs');
 
 disp('Done!!');
 
+end

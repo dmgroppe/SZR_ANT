@@ -98,13 +98,23 @@ if psd_exists,
     plot(sgram_f,squeeze(psd_samps(used_file_ids,:,chan_id)));
     hold on;
 end
+xlabel('Hz');
+ylabel('dB');
+title('Non-ictal PSD for this chan (lines are diff clips)');
 axis tight;
 
 
 %% Bands
 bands=[0 4; 4 8; 8 13; 13 30; 30 50; 70 100];
-band_labels={'DeltaMag','ThetaMag','AlphaMag','BetaMag','GammaMag','HGammaMag'};
+band_labels={'Delta','Theta','Alpha','Beta','Gamma','HGamma'};
 n_band=size(bands,1);
+band_rgb=zeros(n_band,3);
+band_rgb(1,:)=[250 175 63]/255; % Delta (Orange)
+band_rgb(2,:)=[1 0 0]; % Theta (red)
+band_rgb(3,:)=[158 40 226]/255; % Alpha (purple)
+band_rgb(4,:)=[0 0 1]; % Beta (blue)
+band_rgb(5,:)=[0 1 0]; % Green (gamma)
+band_rgb(6,:)=[1 0 1]; % High gamm (magenta)
 
 %% Plot raw data, yhat, ftrs, & spectrograms
 figure(1); clf();
@@ -147,7 +157,7 @@ clickText(h,'Gamma');
 h=plot(se_time_sec,ftrs_z(6,:),'m-','linewidth',2); % High Gamma
 clickText(h,'HGamma');
 axis tight
-ylabel('Z');
+ylabel('hilbert se(z)');
 
 % Spectrogram of Szr with freq bands marked with white lines
 ax5=subplot(615);
@@ -173,7 +183,7 @@ for bloop=1:n_band,
 %     disp(hz_id);
     plot(xlim,[1 1]*hz_id,'w-');
 end
-
+ht=title('Raw Sgram (dB)');
 
 if psd_exists,
     sgram_band=zeros(n_band,length(sgram_t));
@@ -206,25 +216,19 @@ if psd_exists,
         fprintf('Band %d Hz ids: %d to %d\n',bloop,hz_id_low,hz_id);
         sgram_band(bloop,:)=mean(sgram_tscore(:,hz_id_low:hz_id),2);
     end
+    ht=title('Sgram (t)');
 end
 
 % t-scored sgram ftrs
 ax4=subplot(614); hold on;
-% h=plot(sgram_t,sgram_band); hold on;
-h=plot(sgram_t,sgram_band(1,:),'-','linewidth',2,'color',[250 175 63]/256); % Delta
-clickText(h,'Delta');
-h=plot(sgram_t,sgram_band(2,:),'r-','linewidth',2); % Theta
-clickText(h,'Theta');
-h=plot(sgram_t,sgram_band(3,:),'-','linewidth',2,'color',[158 40 226]/256); % Alpha
-clickText(h,'Alpha');
-h=plot(sgram_t,sgram_band(4,:),'b-','linewidth',2); % Beta
-clickText(h,'Beta');
-h=plot(sgram_t,sgram_band(5,:),'g-','linewidth',2); % Gamma
-clickText(h,'Gamma');
-h=plot(sgram_t,sgram_band(6,:),'m-','linewidth',2); % High Gamma
-clickText(h,'HGamma');
+for bloop=1:n_band,
+    h=plot(sgram_t,sgram_band(bloop,:),'-','linewidth',2,'color', ...
+        band_rgb(bloop,:));
+    clickText(h,band_labels{bloop});
+end
 axis tight
-ylabel('t');
+legend(band_labels,'location','northeast');
+ylabel('sgram pwr(t)');
 
 linkaxes([ax1 ax2 ax3 ax4],'x');
 % print(1,'-djpeg','
