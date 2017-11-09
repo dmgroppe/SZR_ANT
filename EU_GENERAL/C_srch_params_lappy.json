@@ -1,5 +1,5 @@
-{"model_type": "svm",
-"model_name": "genSvmSe",
+{"model_type": "logreg",
+"model_name": "temp",
 "gam": 0.079550,
 "C": 0.053477,
 "patience": 0,

@@ -17,6 +17,7 @@ import os
 import sys
 import ieeg_funcs as ief
 import dgFuncs as dg
+import euGenFuncs as eu
 import pickle
 from sklearn import svm
 from sklearn.externals import joblib
@@ -25,146 +26,146 @@ import json
 ## Useful functions
 
 # Function for extracting channel names from filename
-def chan_labels_from_fname(in_file):
-    """ Extracts the bipolar channel label from a feature file name """
-    just_fname=in_file.split('/')[-1]
-    jf_splt=just_fname.split('_')
-    chan_label=jf_splt[1]+'-'+jf_splt[2]
-    return chan_label
+# def chan_labels_from_fname(in_file):
+#     """ Extracts the bipolar channel label from a feature file name """
+#     just_fname=in_file.split('/')[-1]
+#     jf_splt=just_fname.split('_')
+#     chan_label=jf_splt[1]+'-'+jf_splt[2]
+#     return chan_label
 
 
-def data_size_and_fnames(sub_list, ftr_root, ftr):
-    """ Get size of data (and filenames) """
-    grand_non_fnames = list()
-    grand_szr_fnames = list()
-    grand_n_szr_wind = 0
-    grand_n_non_wind = 0
-    non_file_subs=list()
-    szr_file_subs = list()
-    non_file_chans=list()
-    szr_file_chans = list()
-    # TODO need to record list of subjects and channels to make sure they are the same across features
-    ftr_path=os.path.join(ftr_root,ftr)
-    for sub in sub_list:
-        print('Working on sub %d' % sub)
-        non_fnames = list()
-        szr_fnames = list()
-        subsamp_fnames = list()
+# def data_size_and_fnames(sub_list, ftr_root, ftr):
+#     """ Get size of data (and filenames) """
+#     grand_non_fnames = list()
+#     grand_szr_fnames = list()
+#     grand_n_szr_wind = 0
+#     grand_n_non_wind = 0
+#     non_file_subs=list()
+#     szr_file_subs = list()
+#     non_file_chans=list()
+#     szr_file_chans = list()
+#     # TODO need to record list of subjects and channels to make sure they are the same across features
+#     ftr_path=os.path.join(ftr_root,ftr)
+#     for sub in sub_list:
+#         print('Working on sub %d' % sub)
+#         non_fnames = list()
+#         szr_fnames = list()
+#         subsamp_fnames = list()
+#
+#         # Get filenames (and full path)
+#         sub_ftr_path = os.path.join(ftr_path, str(sub))
+#         for f in os.listdir(sub_ftr_path):
+#             if f.endswith('non.mat'):
+#                 non_fnames.append(os.path.join(sub_ftr_path, f))
+#                 non_file_subs.append(sub)
+#                 non_file_chans.append(chan_labels_from_fname(f))
+#             elif f.endswith('subsamp.mat'):
+#                 subsamp_fnames.append(os.path.join(sub_ftr_path, f))  # This isn't actually needed for anything yet
+#             elif f.endswith('.mat') and f.startswith(str(sub) + '_'):
+#                 szr_fnames.append(os.path.join(sub_ftr_path, f))
+#                 szr_file_subs.append(sub)
+#                 szr_file_chans.append(chan_labels_from_fname(f))
+#
+#         print('%d non-szr files found' % len(non_fnames))
+#         print('%d szr files found' % len(szr_fnames))
+#
+#         # Loop over NON-szr files to get total # of windows
+#         n_non_wind = 0
+#         ftr_dim = 0
+#         for f in non_fnames:
+#             #             in_file=os.path.join(ftr_path,f)
+#             #             temp_ftrs=sio.loadmat(in_file)
+#             temp_ftrs = sio.loadmat(f)
+#             n_non_wind += temp_ftrs['nonszr_se_ftrs'].shape[1]
+#             if ftr_dim == 0:
+#                 ftr_dim = temp_ftrs['nonszr_se_ftrs'].shape[0]
+#             elif ftr_dim != temp_ftrs['nonszr_se_ftrs'].shape[0]:
+#                 raise ValueError('# of features in file does match previous files')
+#
+#         print('%d total # of NON-szr time windows for this sub' % n_non_wind)
+#
+#         # Loop over SZR files to get total # of windows
+#         n_szr_wind = 0
+#         for f in szr_fnames:
+#             #             in_file=os.path.join(ftr_path,f)
+#             #             temp_ftrs=sio.loadmat(in_file)
+#             temp_ftrs = sio.loadmat(f)
+#             n_szr_wind += temp_ftrs['se_ftrs'].shape[1]
+#         print('%d total # of SZR time windows for this sub' % n_szr_wind)
+#
+#         grand_non_fnames += non_fnames
+#         grand_szr_fnames += szr_fnames
+#         grand_n_szr_wind += n_szr_wind
+#         grand_n_non_wind += n_non_wind
+#
+#     ftr_info_dict=dict()
+#     ftr_info_dict['szr_file_chans']=szr_file_chans
+#     ftr_info_dict['non_file_chans'] = non_file_chans
+#     ftr_info_dict['szr_file_subs'] = szr_file_subs
+#     ftr_info_dict['non_file_subs'] = non_file_subs
+#     ftr_info_dict['ftr_dim'] = ftr_dim
+#     ftr_info_dict['grand_n_non_wind']=grand_n_non_wind
+#     ftr_info_dict['grand_n_szr_wind']=grand_n_szr_wind
+#     ftr_info_dict['grand_non_fnames']=grand_non_fnames
+#     ftr_info_dict['grand_szr_fnames']=grand_szr_fnames
+#
+#     return ftr_info_dict
 
-        # Get filenames (and full path)
-        sub_ftr_path = os.path.join(ftr_path, str(sub))
-        for f in os.listdir(sub_ftr_path):
-            if f.endswith('non.mat'):
-                non_fnames.append(os.path.join(sub_ftr_path, f))
-                non_file_subs.append(sub)
-                non_file_chans.append(chan_labels_from_fname(f))
-            elif f.endswith('subsamp.mat'):
-                subsamp_fnames.append(os.path.join(sub_ftr_path, f))  # This isn't actually needed for anything yet
-            elif f.endswith('.mat') and f.startswith(str(sub) + '_'):
-                szr_fnames.append(os.path.join(sub_ftr_path, f))
-                szr_file_subs.append(sub)
-                szr_file_chans.append(chan_labels_from_fname(f))
 
-        print('%d non-szr files found' % len(non_fnames))
-        print('%d szr files found' % len(szr_fnames))
-
-        # Loop over NON-szr files to get total # of windows
-        n_non_wind = 0
-        ftr_dim = 0
-        for f in non_fnames:
-            #             in_file=os.path.join(ftr_path,f)
-            #             temp_ftrs=sio.loadmat(in_file)
-            temp_ftrs = sio.loadmat(f)
-            n_non_wind += temp_ftrs['nonszr_se_ftrs'].shape[1]
-            if ftr_dim == 0:
-                ftr_dim = temp_ftrs['nonszr_se_ftrs'].shape[0]
-            elif ftr_dim != temp_ftrs['nonszr_se_ftrs'].shape[0]:
-                raise ValueError('# of features in file does match previous files')
-
-        print('%d total # of NON-szr time windows for this sub' % n_non_wind)
-
-        # Loop over SZR files to get total # of windows
-        n_szr_wind = 0
-        for f in szr_fnames:
-            #             in_file=os.path.join(ftr_path,f)
-            #             temp_ftrs=sio.loadmat(in_file)
-            temp_ftrs = sio.loadmat(f)
-            n_szr_wind += temp_ftrs['se_ftrs'].shape[1]
-        print('%d total # of SZR time windows for this sub' % n_szr_wind)
-
-        grand_non_fnames += non_fnames
-        grand_szr_fnames += szr_fnames
-        grand_n_szr_wind += n_szr_wind
-        grand_n_non_wind += n_non_wind
-
-    ftr_info_dict=dict()
-    ftr_info_dict['szr_file_chans']=szr_file_chans
-    ftr_info_dict['non_file_chans'] = non_file_chans
-    ftr_info_dict['szr_file_subs'] = szr_file_subs
-    ftr_info_dict['non_file_subs'] = non_file_subs
-    ftr_info_dict['ftr_dim'] = ftr_dim
-    ftr_info_dict['grand_n_non_wind']=grand_n_non_wind
-    ftr_info_dict['grand_n_szr_wind']=grand_n_szr_wind
-    ftr_info_dict['grand_non_fnames']=grand_non_fnames
-    ftr_info_dict['grand_szr_fnames']=grand_szr_fnames
-
-    return ftr_info_dict
-
-
-def import_data(szr_fnames, non_fnames, szr_subs, non_subs, n_szr_wind, n_non_wind, ftr_dim):
-    # ftr_path=os.path.join(ftr_root,str(sub))
-
-    # Preallocate memory
-    ftrs = np.zeros((ftr_dim, n_szr_wind + n_non_wind))
-    targ_labels = np.zeros(n_szr_wind + n_non_wind)
-    sub_ids=np.zeros(n_szr_wind + n_non_wind)
-
-    # Import non-szr data
-    ptr = 0
-    mns_dict = dict()
-    sds_dict = dict()
-    chan_list=list()
-    for f_ct, f in enumerate(non_fnames):
-        chan_label = str(non_subs[f_ct])+'_'+chan_labels_from_fname(f)
-        print(chan_label)
-        chan_list.append(chan_label)
-
-        # Load subsampled data (possibly contains both szr and non-szr data)
-        subsamp_f=f[:-7]+'subsamp.mat'
-        temp_ftrs = sio.loadmat(subsamp_f)
-        raw_ftrs = temp_ftrs['subsamp_se_ftrs']
-        # Z-score features
-        temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0.25, zero_nans=False, verbose=False) #normalization is done in place
-        mns_dict[chan_label] = temp_mns
-        sds_dict[chan_label] = temp_sds
-
-        # Import non-szr data
-        temp_ftrs = sio.loadmat(f)
-        temp_n_wind = temp_ftrs['nonszr_se_ftrs'].shape[1]
-        raw_ftrs = temp_ftrs['nonszr_se_ftrs']
-        dg.applyNormalize(raw_ftrs, mns_dict[chan_label], sds_dict[chan_label])
-        ftrs[:, ptr:ptr + temp_n_wind] = raw_ftrs
-        targ_labels[ptr:ptr + temp_n_wind] = 0
-        sub_ids[ptr:ptr + temp_n_wind] = non_subs[f_ct]
-        ptr += temp_n_wind
-
-    # Import szr data
-    for f_ct, f in enumerate(szr_fnames):
-        #chan_label = chan_labels_from_fname(f)
-        chan_label = str(szr_subs[f_ct]) + '_' + chan_labels_from_fname(f)
-
-        temp_ftrs = sio.loadmat(f)
-        temp_n_wind = temp_ftrs['se_ftrs'].shape[1]
-        raw_ftrs = temp_ftrs['se_ftrs']
-        # Z-score based on non-ictal means, SDs
-        dg.applyNormalize(raw_ftrs, mns_dict[chan_label], sds_dict[chan_label])
-
-        ftrs[:, ptr:ptr + temp_n_wind] = raw_ftrs
-        targ_labels[ptr:ptr + temp_n_wind] = 1
-        sub_ids[ptr:ptr + temp_n_wind] = szr_subs[f_ct]
-        ptr += temp_n_wind
-
-    return ftrs.T, targ_labels, sub_ids
+# def import_data(szr_fnames, non_fnames, szr_subs, non_subs, n_szr_wind, n_non_wind, ftr_dim):
+#     # ftr_path=os.path.join(ftr_root,str(sub))
+#
+#     # Preallocate memory
+#     ftrs = np.zeros((ftr_dim, n_szr_wind + n_non_wind))
+#     targ_labels = np.zeros(n_szr_wind + n_non_wind)
+#     sub_ids=np.zeros(n_szr_wind + n_non_wind)
+#
+#     # Import non-szr data
+#     ptr = 0
+#     mns_dict = dict()
+#     sds_dict = dict()
+#     chan_list=list()
+#     for f_ct, f in enumerate(non_fnames):
+#         chan_label = str(non_subs[f_ct])+'_'+chan_labels_from_fname(f)
+#         print(chan_label)
+#         chan_list.append(chan_label)
+#
+#         # Load subsampled data (possibly contains both szr and non-szr data)
+#         subsamp_f=f[:-7]+'subsamp.mat'
+#         temp_ftrs = sio.loadmat(subsamp_f)
+#         raw_ftrs = temp_ftrs['subsamp_se_ftrs']
+#         # Z-score features
+#         temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0.25, zero_nans=False, verbose=False) #normalization is done in place
+#         mns_dict[chan_label] = temp_mns
+#         sds_dict[chan_label] = temp_sds
+#
+#         # Import non-szr data
+#         temp_ftrs = sio.loadmat(f)
+#         temp_n_wind = temp_ftrs['nonszr_se_ftrs'].shape[1]
+#         raw_ftrs = temp_ftrs['nonszr_se_ftrs']
+#         dg.applyNormalize(raw_ftrs, mns_dict[chan_label], sds_dict[chan_label])
+#         ftrs[:, ptr:ptr + temp_n_wind] = raw_ftrs
+#         targ_labels[ptr:ptr + temp_n_wind] = 0
+#         sub_ids[ptr:ptr + temp_n_wind] = non_subs[f_ct]
+#         ptr += temp_n_wind
+#
+#     # Import szr data
+#     for f_ct, f in enumerate(szr_fnames):
+#         #chan_label = chan_labels_from_fname(f)
+#         chan_label = str(szr_subs[f_ct]) + '_' + chan_labels_from_fname(f)
+#
+#         temp_ftrs = sio.loadmat(f)
+#         temp_n_wind = temp_ftrs['se_ftrs'].shape[1]
+#         raw_ftrs = temp_ftrs['se_ftrs']
+#         # Z-score based on non-ictal means, SDs
+#         dg.applyNormalize(raw_ftrs, mns_dict[chan_label], sds_dict[chan_label])
+#
+#         ftrs[:, ptr:ptr + temp_n_wind] = raw_ftrs
+#         targ_labels[ptr:ptr + temp_n_wind] = 1
+#         sub_ids[ptr:ptr + temp_n_wind] = szr_subs[f_ct]
+#         ptr += temp_n_wind
+#
+#     return ftrs.T, targ_labels, sub_ids
 
 
 ## Start of main function
@@ -230,8 +231,8 @@ print('Training subs: {}'.format(train_subs_list))
 # ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/'
 ftr_root=path_dict['eu_gen_ftrs']
 ftr='SE'
-ftr_info_dict=data_size_and_fnames(train_subs_list, ftr_root, ftr)
-#ftrs_tr, targ_labels_tr=import_data(szr_fnames_tr, non_fnames_tr, n_szr_wind_tr, n_non_wind_tr, ftr_dim)
+ftr_info_dict=eu.data_size_and_fnames(train_subs_list, ftr_root, ftr)
+#ftrs_tr, targ_labels_tr=eu.import_data(szr_fnames_tr, non_fnames_tr, n_szr_wind_tr, n_non_wind_tr, ftr_dim)
 
 n_dim=ftr_info_dict['ftr_dim']
 n_non_wind=ftr_info_dict['grand_n_non_wind']
@@ -244,7 +245,7 @@ print('Total # of time windows: %d ' % n_wind)
 # print('Total # of files: %d' % f_ct)
 
 # Load training/validation data into a single matrix
-ftrs, szr_class, sub_id=import_data(ftr_info_dict['grand_szr_fnames'], ftr_info_dict['grand_non_fnames'],
+ftrs, szr_class, sub_id=eu.import_data(ftr_info_dict['grand_szr_fnames'], ftr_info_dict['grand_non_fnames'],
                                        ftr_info_dict['szr_file_subs'],ftr_info_dict['non_file_subs'],
                                        n_szr_wind, n_non_wind, n_dim)
 
