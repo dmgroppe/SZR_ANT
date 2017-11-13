@@ -26,7 +26,7 @@ path_dict=ief.get_path_dict()
 #metadata_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA'
 #metadata_dir='/Users/davidgroppe/GIT/OCSVM_EDMSE/matlab/EU/metadata'
 #metadata_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/ALL_SZR_HTML/'
-metadata_dir=ps.path.join(path_dict['szr_ant_root'],'EU_METADATA/ALL_SZR_HTML/')
+metadata_dir=os.path.join(path_dict['szr_ant_root'],'EU_METADATA/ALL_SZR_HTML/')
 html_fname=os.path.join(metadata_dir,'all_szrs_FR_'+sub+'.html')
 print('Attempting to read %s' % html_fname)
 htable=pd.read_html(html_fname)
