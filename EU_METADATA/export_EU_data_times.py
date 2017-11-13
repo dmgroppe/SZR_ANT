@@ -97,7 +97,8 @@ file_times=pd.DataFrame({'HeaderFname': hdr_files,
 
 
 # Output to csv so MATLAB can read it
-out_path='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/IEEG_ON_OFF/'
+#out_path='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/IEEG_ON_OFF/'
+out_path=os.path.join(path_dict['szr_ant_root'],'EU_METADATA/IEEG_ON_OFF/')
 out_fname=os.path.join(out_path,'data_on_off_FR_'+str(sub)+'.csv')
 print('Saving file to:')
 print(out_fname)
