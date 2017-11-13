@@ -41,6 +41,11 @@ model_type=params['model_type']
 print('Model type is %s' % model_type)
 ftr_types=params['use_ftrs']
 print('Features being used: {}'.format(ftr_types))
+if params['equal_sub_wts']=="False":
+    equal_sub_wts=False
+else:
+    equal_sub_wts = True
+print('Weight subjects equally={}'.format(equal_sub_wts))
 # if params['ictal_wind']=='small':
 #     small_ictal_wind=True
 # elif params['ictal_wind']=='max':
@@ -200,8 +205,10 @@ for rand_ct in range(n_rand_params):
                 model = linear_model.LogisticRegression(class_weight='balanced', C=C)
 
             train_bool = sub_id != left_out_id
-            #model.fit(ftrs[train_bool, :], szr_class[train_bool ], sample_weight=samp_wts[subset_id])
-            model.fit(ftrs[train_bool , :], szr_class[train_bool]) # CORRECT
+            if equal_sub_wts==True:
+                model.fit(ftrs[train_bool, :], szr_class[train_bool ], sample_weight=samp_wts[subset_id])
+            else:
+                model.fit(ftrs[train_bool , :], szr_class[train_bool])
             #model.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code
 
             # Save model from this left out sub
