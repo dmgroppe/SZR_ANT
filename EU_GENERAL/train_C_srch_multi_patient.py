@@ -17,7 +17,6 @@ import sys
 import ieeg_funcs as ief
 import dgFuncs as dg
 import euGenFuncs as eu
-from sklearn.metrics import roc_auc_score
 import pickle
 from sklearn import svm
 from sklearn.externals import joblib
@@ -135,12 +134,10 @@ print('# of subs=%d' % n_train_subs)
 valid_sens = np.zeros((n_train_subs,n_rand_params))
 valid_spec = np.zeros((n_train_subs,n_rand_params))
 valid_acc = np.zeros((n_train_subs,n_rand_params))
-valid_auc = np.zeros((n_train_subs,n_rand_params))
 valid_bal_acc = np.zeros((n_train_subs,n_rand_params))
 train_sens = np.zeros((n_train_subs,n_rand_params))
 train_spec = np.zeros((n_train_subs,n_rand_params))
 train_acc = np.zeros((n_train_subs,n_rand_params))
-train_auc = np.zeros((n_train_subs,n_rand_params))
 train_bal_acc = np.zeros((n_train_subs,n_rand_params))
 pptn_missed_szrs = np.zeros((n_train_subs,n_rand_params))
 pptn_preonset_stim = np.zeros((n_train_subs,n_rand_params))
@@ -152,8 +149,6 @@ C_vals=np.ones(n_rand_params)*ini_C # Start at ini_C from json file
 # C = SVM regularization parameter, the smaller it is, the stronger the regularization
 #gamma_vals=10**np.random.uniform(-3,0,n_rand_params)
 #gamma defines how much influence a single training example has. The larger gamma is, the closer other examples must be to be affected.
-best_valid_auc=0
-best_train_auc=0
 best_valid_bal_acc=0
 best_train_bal_acc=0
 best_models=None
@@ -166,8 +161,6 @@ tried_C=list()
 tried_gamma=list()
 tried_train_acc=list()
 tried_valid_acc=list()
-tried_train_auc=list()
-tried_valid_auc=list()
 
 for rand_ct in range(n_rand_params):
     C=C_vals[rand_ct]  # Start with C=1 and then change it according to train-testing error dif
@@ -189,8 +182,6 @@ for rand_ct in range(n_rand_params):
         temp_valid_sens = np.zeros(n_train_subs)
         temp_valid_spec = np.zeros(n_train_subs)
         temp_valid_bacc = np.zeros(n_train_subs)
-        temp_valid_auc = np.zeros(n_train_subs)
-        temp_train_auc = np.zeros(n_train_subs)
         for left_out_ct, left_out_id in enumerate(uni_subs):
             print('Left out sub %d (FR_%d) of %d' % (left_out_ct+1,left_out_id,n_train_subs))
             #rbf_svc = svm.SVC(kernel='rbf', gamma=0.7, C=C).fit(ftrs.T, szr_class)
@@ -224,36 +215,31 @@ for rand_ct in range(n_rand_params):
             temp_valid_bacc[left_out_ct], temp_valid_sens[left_out_ct], temp_valid_spec[left_out_ct] = ief.perf_msrs(
                 szr_class[train_bool==False],
                 class_hat[train_bool==False])
-            temp_train_auc[left_out_ct] = roc_auc_score(szr_class[train_bool], class_hat[train_bool])
-            temp_valid_auc[left_out_ct] = roc_auc_score(szr_class[train_bool==False], class_hat[train_bool==False])
             # print('Bal Acc (Train/Valid): %.3f/%3f ' % (temp_train_bacc[left_out_ct ],temp_valid_bacc[left_out_ct]))
             # exit()
 
         mn_temp_valid_bacc=np.mean(temp_valid_bacc)
         mn_temp_train_bacc = np.mean(temp_train_bacc)
-        mn_temp_valid_auc=np.mean(temp_valid_auc)
-        mn_temp_train_auc = np.mean(temp_train_auc)
 
         # Keep track of results for this value of C and gamma
         tried_C.append(C)
         tried_gamma.append(gam)
         tried_train_acc.append(mn_temp_train_bacc)
         tried_valid_acc.append(mn_temp_valid_bacc)
-        tried_train_auc.append(mn_temp_train_auc)
-        tried_valid_auc.append(mn_temp_valid_auc)
 
         if mn_temp_valid_bacc>best_vbal_acc_this_gam:
             best_vbal_acc_this_gam=mn_temp_valid_bacc
             best_models_this_gam=temp_models.copy()
             C_vals[rand_ct]=C #Store current best C value for this gamma value
             best_valid_bal_acc_by_sub=temp_valid_bacc
-            best_valid_auc_by_sub = temp_valid_auc
-            best_train_auc_by_sub = temp_train_auc
+
+            #TODO: remove this?
+            # out_model_fname = os.path.join(model_path, 'temp_classify_models_srch.pkl')
+            # print('Saving best for model for this gamma value as %s' % out_model_fname)
+            # pickle.dump(best_models_this_gam, open(out_model_fname, 'wb'))
 
             print('Best valid acc so far: %.2f for current gamma value' % best_vbal_acc_this_gam)
-            print('Mean valid AUC: %.2f for current gamma value' % np.mean(best_valid_auc_by_sub))
-            print('Mean train AUC: %.2f for current gamma value' % np.mean(best_train_auc_by_sub))
-                  # Training Data Results
+            # Training Data Results
             # train_acc[:,rand_ct]=np.mean(jive[train_bool]) #TODO remove!
             #print('Training accuracy: %f' % train_acc[left_out_ct,rand_ct])
             train_sens[:,rand_ct]=temp_train_sens
@@ -262,7 +248,6 @@ for rand_ct in range(n_rand_params):
             #print('Training specificity: %f' % train_spec[left_out_ct,rand_ct])
             train_bal_acc[:,rand_ct]=temp_train_bacc
             # print('Training balanced accuracy: %f' % train_bal_acc[left_out_ct,rand_ct])
-            train_auc[:,rand_ct]=temp_train_auc
 
             # Validation Data Results
             # valid_acc[left_out_ct,rand_ct]=np.mean(jive[valid_bool]) #TODO remove!
@@ -273,7 +258,6 @@ for rand_ct in range(n_rand_params):
             #print('Validation specificity: %f' % valid_spec[left_out_ct,rand_ct])
             valid_bal_acc[:,rand_ct] = temp_valid_bacc
             #print('Validation balanced accuracy: %f' % valid_bal_acc[left_out_ct,rand_ct])
-            valid_auc[:, rand_ct] = temp_valid_auc
 
             steps_since_best=0
         else:
@@ -353,8 +337,6 @@ for rand_ct in range(n_rand_params):
          valid_spec=valid_spec,
          valid_bal_acc=valid_bal_acc,
          best_valid_bal_acc_by_sub=best_valid_bal_acc_by_sub,
-         best_train_auc_by_sub=best_train_auc_by_sub,
-         best_valid_auc_by_sub=best_valid_auc_by_sub,
          train_sens=train_sens,
          train_spec=train_spec,
          train_bal_acc=train_bal_acc,
@@ -381,8 +363,6 @@ for rand_ct in range(n_rand_params):
 print('Done!')
 print('Best training data accuracy: %f' % best_train_bal_acc)
 print('Best validation accuracy: %f' % best_valid_bal_acc)
-print('Best training data AUC: %f' % np.mean(best_train_auc_by_sub))
-print('Best validation data AUC: %f' % np.mean(best_valid_auc_by_sub))
 print('Using C=%.2E and gam=%.2E' % (best_C,best_gam))
 print('Model name: {}'.format(model_name))
 print('Features used: {}'.format(use_ftrs))
