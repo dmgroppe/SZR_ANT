@@ -12,6 +12,7 @@ import os
 import sys
 import numpy as np
 from datetime import datetime
+import ieeg_funcs as ief
 
 if len(sys.argv)==1:
     print('Usage: export_EU_data_times.py sub# (e.g., export_EU_data_times.py 1146')
@@ -23,8 +24,13 @@ if len(sys.argv)!=2:
 sub=sys.argv[1]
 
 # Get list of header files
+path_dict=ief.get_path_dict()
+# print(path_dict.keys())
+# print(path_dict['szr_ant_root'])
+# exit()
 #header_dir='/Users/davidgroppe/Dropbox/TWH_INFO/EU_METADATA/'+sub+'_headers/'
-header_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/IEEG_HEADERS/'+sub+'_headers/'
+#header_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/IEEG_HEADERS/'+sub+'_headers/'
+header_dir=os.path.join(path_dict['szr_ant_root'],'EU_METADATA/IEEG_HEADERS/'+sub+'_headers/')
 temp_files=os.listdir(header_dir)
 hdr_files=list()
 for a in temp_files:
