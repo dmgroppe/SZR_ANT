@@ -12,6 +12,7 @@ import numpy as np
 from datetime import datetime
 import pickle
 import sys
+import ieeg_funcs as ief
 
 if len(sys.argv)==1:
     print('Usage: szr_onset2df.py sub# (e.g., szr_onset2df.py 1146')
@@ -21,9 +22,11 @@ if len(sys.argv)!=2:
 
 
 sub=sys.argv[1]
+path_dict=ief.get_path_dict()
 #metadata_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA'
 #metadata_dir='/Users/davidgroppe/GIT/OCSVM_EDMSE/matlab/EU/metadata'
-metadata_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/ALL_SZR_HTML/'
+#metadata_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/ALL_SZR_HTML/'
+metadata_dir=ps.path.join(path_dict['szr_ant_root'],'EU_METADATA/ALL_SZR_HTML/')
 html_fname=os.path.join(metadata_dir,'all_szrs_FR_'+sub+'.html')
 print('Attempting to read %s' % html_fname)
 htable=pd.read_html(html_fname)
@@ -189,7 +192,9 @@ szr_on_off_df=pd.DataFrame({'SzrType': szr_type,
 szr_on_off_df.sort_values('SzrOnsetSec',inplace=True)
 
 #out_path='/Users/davidgroppe/Dropbox/TWH_INFO/EU_METADATA'
-out_path='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/SZR_TIMES/'
+#out_path='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/SZR_TIMES/'
+out_path=os.path.join(path_dict['szr_ant_root'],'EU_METADATA/SZR_TIMES/')
+
 # Output to csv
 out_fname=os.path.join(out_path,'szr_on_off_FR_'+str(sub)+'.csv')
 print('Saving file to:')

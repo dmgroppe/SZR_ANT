@@ -25,9 +25,6 @@ sub=sys.argv[1]
 
 # Get list of header files
 path_dict=ief.get_path_dict()
-# print(path_dict.keys())
-# print(path_dict['szr_ant_root'])
-# exit()
 #header_dir='/Users/davidgroppe/Dropbox/TWH_INFO/EU_METADATA/'+sub+'_headers/'
 #header_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/IEEG_HEADERS/'+sub+'_headers/'
 header_dir=os.path.join(path_dict['szr_ant_root'],'EU_METADATA/IEEG_HEADERS/'+sub+'_headers/')
