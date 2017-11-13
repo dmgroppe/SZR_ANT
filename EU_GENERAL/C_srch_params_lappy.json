@@ -1,7 +1,7 @@
 {"model_type": "logreg",
 "model_name": "temp",
 "gam": 0.079550,
-"C": 0.053477,
+"C": 1,
 "patience": 0,
 "use_ftrs": ["SE"]}
 

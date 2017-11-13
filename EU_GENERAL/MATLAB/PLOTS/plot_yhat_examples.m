@@ -4,19 +4,21 @@
 %load('/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/1096_HL1_HL2_phat_szr6.mat')
 ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/';
 
-example_szr=2;
+example_szr=1;
 switch example_szr,
     case 1,
         sub='1096';
         ftr_fname='1096_HL3_HL4_szr6.mat';
-        load(fullfile(ftr_root,sub,ftr_fname));
-        yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/';
+        load(fullfile(ftr_root,sub,ftr_fname)); % includes se_ftrs
+        %yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/';
+        yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_1_yhat';
         load(fullfile(yhat_root,'1096_HL3_HL4_phat_szr6.mat')); % Test Patient 1, Exmple Szr 1
     otherwise,
         sub='1125';
         ftr_fname='1125_HR11_HR12_szr6.mat';
         load(fullfile(ftr_root,sub,ftr_fname));
-        yhat_root='/Users/davidgroppe/Desktop/genLogregSe_1_yhat/';
+        %yhat_root='/Users/davidgroppe/Desktop/genLogregSe_1_yhat/';
+        %yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/';
         load(fullfile(yhat_root,'1125_HR11_HR12_phat_szr6.mat')); % Test Patient 1, Exmple Szr 1
 end
 
@@ -45,10 +47,11 @@ ylim=get(gca,'ylim');
 plot([0, 0],ylim,'r:','linewidth',3);
 set(gca,'xticklabels',[],'ytick',[],'xtick',xtick);
 set(gca,'LineWidth',2);
-
+set(gca,'xlim',[sgram_t(1), sgram_t(end)]);
 
 ax2=axes('position',[0.1300    0.365    0.7750    0.3157]);
-imagesc(se_ftrs); hold on;
+%imagesc(se_ftrs); hold on; %raw features
+imagesc(ftrs_z); hold on;
 fprintf('Min max cbar values should be: %f %f\n',max(max(se_ftrs)),min(min(se_ftrs)));
 ylim=get(gca,'ylim');
 plot([1, 1]*onset_tpt,ylim,'r:','linewidth',3);
@@ -83,8 +86,9 @@ set(gca,'LineWidth',2);
 set(gca, 'Layer','top')
 
 
-
+out_fig_fname=sprintf('yhat_example_%d',example_szr);
+fprintf('Exporting fig 1 to %s\n',out_fig_fname);
 set(gcf,'paperpositionmode','auto');
-print(1,'-djpeg',sprintf('yhat_example_%d',example_szr));
+print(gcf,'-djpeg',out_fig_fname);
 
 disp('Done!');

@@ -17,156 +17,11 @@ import sys
 import ieeg_funcs as ief
 import dgFuncs as dg
 import euGenFuncs as eu
+from sklearn.metrics import roc_auc_score
 import pickle
 from sklearn import svm
 from sklearn.externals import joblib
 import json
-
-## Useful functions
-
-# Function for extracting channel names from filename
-# def chan_labels_from_fname(in_file):
-#     """ Extracts the bipolar channel label from a feature file name """
-#     just_fname=in_file.split('/')[-1]
-#     jf_splt=just_fname.split('_')
-#     chan_label=jf_splt[1]+'-'+jf_splt[2]
-#     return chan_label
-
-
-# def data_size_and_fnames(sub_list, ftr_root, ftr):
-#     """ Get size of data (and filenames) """
-#     grand_non_fnames = list()
-#     grand_szr_fnames = list()
-#     grand_n_szr_wind = 0
-#     grand_n_non_wind = 0
-#     non_file_subs=list()
-#     szr_file_subs = list()
-#     non_file_chans=list()
-#     szr_file_chans = list()
-#     # TODO need to record list of subjects and channels to make sure they are the same across features
-#     ftr_path=os.path.join(ftr_root,ftr)
-#     for sub in sub_list:
-#         print('Working on sub %d' % sub)
-#         non_fnames = list()
-#         szr_fnames = list()
-#         subsamp_fnames = list()
-#
-#         # Get filenames (and full path)
-#         sub_ftr_path = os.path.join(ftr_path, str(sub))
-#         for f in os.listdir(sub_ftr_path):
-#             if f.endswith('non.mat'):
-#                 non_fnames.append(os.path.join(sub_ftr_path, f))
-#                 non_file_subs.append(sub)
-#                 non_file_chans.append(chan_labels_from_fname(f))
-#             elif f.endswith('subsamp.mat'):
-#                 subsamp_fnames.append(os.path.join(sub_ftr_path, f)) # This isn't actually needed for anythin
-#             elif f.endswith('.mat') and f.startswith(str(sub) + '_'):
-#                 szr_fnames.append(os.path.join(sub_ftr_path, f))
-#                 szr_file_subs.append(sub)
-#                 szr_file_chans.append(chan_labels_from_fname(f))
-#
-#         print('%d non-szr files found' % len(non_fnames))
-#         print('%d szr files found' % len(szr_fnames))
-#
-#         # Loop over NON-szr files to get total # of windows
-#         n_non_wind = 0
-#         ftr_dim = 0
-#         for f in non_fnames:
-#             #             in_file=os.path.join(ftr_path,f)
-#             #             temp_ftrs=sio.loadmat(in_file)
-#             temp_ftrs = sio.loadmat(f)
-#             n_non_wind += temp_ftrs['nonszr_se_ftrs'].shape[1]
-#             if ftr_dim == 0:
-#                 ftr_dim = temp_ftrs['nonszr_se_ftrs'].shape[0]
-#             elif ftr_dim != temp_ftrs['nonszr_se_ftrs'].shape[0]:
-#                 raise ValueError('# of features in file does match previous files')
-#
-#         print('%d total # of NON-szr time windows for this sub' % n_non_wind)
-#
-#         # Loop over SZR files to get total # of windows
-#         n_szr_wind = 0
-#         for f in szr_fnames:
-#             #             in_file=os.path.join(ftr_path,f)
-#             #             temp_ftrs=sio.loadmat(in_file)
-#             temp_ftrs = sio.loadmat(f)
-#             n_szr_wind += temp_ftrs['se_ftrs'].shape[1]
-#         print('%d total # of SZR time windows for this sub' % n_szr_wind)
-#
-#         grand_non_fnames += non_fnames
-#         grand_szr_fnames += szr_fnames
-#         grand_n_szr_wind += n_szr_wind
-#         grand_n_non_wind += n_non_wind
-#
-#     ftr_info_dict=dict()
-#     ftr_info_dict['szr_file_chans']=szr_file_chans
-#     ftr_info_dict['non_file_chans'] = non_file_chans
-#     ftr_info_dict['szr_file_subs'] = szr_file_subs
-#     ftr_info_dict['non_file_subs'] = non_file_subs
-#     ftr_info_dict['ftr_dim'] = ftr_dim
-#     ftr_info_dict['grand_n_non_wind']=grand_n_non_wind
-#     ftr_info_dict['grand_n_szr_wind']=grand_n_szr_wind
-#     ftr_info_dict['grand_non_fnames']=grand_non_fnames
-#     ftr_info_dict['grand_szr_fnames']=grand_szr_fnames
-#
-#     return ftr_info_dict
-
-
-# def import_data(szr_fnames, non_fnames, szr_subs, non_subs, n_szr_wind, n_non_wind, ftr_dim):
-#     # ftr_path=os.path.join(ftr_root,str(sub))
-#
-#     # Preallocate memory
-#     ftrs = np.zeros((ftr_dim, n_szr_wind + n_non_wind))
-#     targ_labels = np.zeros(n_szr_wind + n_non_wind)
-#     sub_ids=np.zeros(n_szr_wind + n_non_wind)
-#
-#     # Import non-szr data
-#     ptr = 0
-#     mns_dict = dict()
-#     sds_dict = dict()
-#     chan_list=list()
-#     for f_ct, f in enumerate(non_fnames):
-#         chan_label = str(non_subs[f_ct])+'_'+chan_labels_from_fname(f)
-#         print(chan_label)
-#         chan_list.append(chan_label)
-#
-#         # Load subsampled data (possibly contains both szr and non-szr data)
-#         subsamp_f=f[:-7]+'subsamp.mat'
-#         temp_ftrs = sio.loadmat(subsamp_f)
-#         raw_ftrs = temp_ftrs['subsamp_se_ftrs']
-#         # Z-score features USE THE CODE BELOW
-#         temp_mns, temp_sds = dg.trimmed_normalize(raw_ftrs, 0.25, zero_nans=False, verbose=False) #normalization is done in place
-#         mns_dict[chan_label] = temp_mns
-#         sds_dict[chan_label] = temp_sds
-#
-#         # Load nonszr data
-#         print('Loading file %s' % f)
-#         temp_ftrs = sio.loadmat(f)
-#         temp_n_wind = temp_ftrs['nonszr_se_ftrs'].shape[1]
-#         raw_ftrs = temp_ftrs['nonszr_se_ftrs']
-#         # Z-score based on trimmed subsampled means, SDs
-#         dg.applyNormalize(raw_ftrs, mns_dict[chan_label], sds_dict[chan_label])
-#         ftrs[:, ptr:ptr + temp_n_wind] = raw_ftrs
-#         targ_labels[ptr:ptr + temp_n_wind] = 0
-#         sub_ids[ptr:ptr + temp_n_wind] = non_subs[f_ct]
-#         ptr += temp_n_wind
-#
-#     # Import szr data
-#     for f_ct, f in enumerate(szr_fnames):
-#         #chan_label = chan_labels_from_fname(f)
-#         chan_label = str(szr_subs[f_ct]) + '_' + chan_labels_from_fname(f)
-#
-#         temp_ftrs = sio.loadmat(f)
-#         temp_n_wind = temp_ftrs['se_ftrs'].shape[1]
-#         raw_ftrs = temp_ftrs['se_ftrs']
-#         # Z-score based on trimmed subsampled means, SDs
-#         dg.applyNormalize(raw_ftrs, mns_dict[chan_label], sds_dict[chan_label])
-#
-#         ftrs[:, ptr:ptr + temp_n_wind] = raw_ftrs
-#         targ_labels[ptr:ptr + temp_n_wind] = 1
-#         sub_ids[ptr:ptr + temp_n_wind] = szr_subs[f_ct]
-#         ptr += temp_n_wind
-#
-#     return ftrs.T, targ_labels, sub_ids
 
 
 ## Start of main function
@@ -280,10 +135,12 @@ print('# of subs=%d' % n_train_subs)
 valid_sens = np.zeros((n_train_subs,n_rand_params))
 valid_spec = np.zeros((n_train_subs,n_rand_params))
 valid_acc = np.zeros((n_train_subs,n_rand_params))
+valid_auc = np.zeros((n_train_subs,n_rand_params))
 valid_bal_acc = np.zeros((n_train_subs,n_rand_params))
 train_sens = np.zeros((n_train_subs,n_rand_params))
 train_spec = np.zeros((n_train_subs,n_rand_params))
 train_acc = np.zeros((n_train_subs,n_rand_params))
+train_auc = np.zeros((n_train_subs,n_rand_params))
 train_bal_acc = np.zeros((n_train_subs,n_rand_params))
 pptn_missed_szrs = np.zeros((n_train_subs,n_rand_params))
 pptn_preonset_stim = np.zeros((n_train_subs,n_rand_params))
@@ -295,6 +152,8 @@ C_vals=np.ones(n_rand_params)*ini_C # Start at ini_C from json file
 # C = SVM regularization parameter, the smaller it is, the stronger the regularization
 #gamma_vals=10**np.random.uniform(-3,0,n_rand_params)
 #gamma defines how much influence a single training example has. The larger gamma is, the closer other examples must be to be affected.
+best_valid_auc=0
+best_train_auc=0
 best_valid_bal_acc=0
 best_train_bal_acc=0
 best_models=None
@@ -307,6 +166,8 @@ tried_C=list()
 tried_gamma=list()
 tried_train_acc=list()
 tried_valid_acc=list()
+tried_train_auc=list()
+tried_valid_auc=list()
 
 for rand_ct in range(n_rand_params):
     C=C_vals[rand_ct]  # Start with C=1 and then change it according to train-testing error dif
@@ -328,6 +189,8 @@ for rand_ct in range(n_rand_params):
         temp_valid_sens = np.zeros(n_train_subs)
         temp_valid_spec = np.zeros(n_train_subs)
         temp_valid_bacc = np.zeros(n_train_subs)
+        temp_valid_auc = np.zeros(n_train_subs)
+        temp_train_auc = np.zeros(n_train_subs)
         for left_out_ct, left_out_id in enumerate(uni_subs):
             print('Left out sub %d (FR_%d) of %d' % (left_out_ct+1,left_out_id,n_train_subs))
             #rbf_svc = svm.SVC(kernel='rbf', gamma=0.7, C=C).fit(ftrs.T, szr_class)
@@ -361,31 +224,36 @@ for rand_ct in range(n_rand_params):
             temp_valid_bacc[left_out_ct], temp_valid_sens[left_out_ct], temp_valid_spec[left_out_ct] = ief.perf_msrs(
                 szr_class[train_bool==False],
                 class_hat[train_bool==False])
+            temp_train_auc[left_out_ct] = roc_auc_score(szr_class[train_bool], class_hat[train_bool])
+            temp_valid_auc[left_out_ct] = roc_auc_score(szr_class[train_bool==False], class_hat[train_bool==False])
             # print('Bal Acc (Train/Valid): %.3f/%3f ' % (temp_train_bacc[left_out_ct ],temp_valid_bacc[left_out_ct]))
             # exit()
 
         mn_temp_valid_bacc=np.mean(temp_valid_bacc)
         mn_temp_train_bacc = np.mean(temp_train_bacc)
+        mn_temp_valid_auc=np.mean(temp_valid_auc)
+        mn_temp_train_auc = np.mean(temp_train_auc)
 
         # Keep track of results for this value of C and gamma
         tried_C.append(C)
         tried_gamma.append(gam)
         tried_train_acc.append(mn_temp_train_bacc)
         tried_valid_acc.append(mn_temp_valid_bacc)
+        tried_train_auc.append(mn_temp_train_auc)
+        tried_valid_auc.append(mn_temp_valid_auc)
 
         if mn_temp_valid_bacc>best_vbal_acc_this_gam:
             best_vbal_acc_this_gam=mn_temp_valid_bacc
             best_models_this_gam=temp_models.copy()
             C_vals[rand_ct]=C #Store current best C value for this gamma value
             best_valid_bal_acc_by_sub=temp_valid_bacc
-
-            #TODO: remove this?
-            # out_model_fname = os.path.join(model_path, 'temp_classify_models_srch.pkl')
-            # print('Saving best for model for this gamma value as %s' % out_model_fname)
-            # pickle.dump(best_models_this_gam, open(out_model_fname, 'wb'))
+            best_valid_auc_by_sub = temp_valid_auc
+            best_train_auc_by_sub = temp_train_auc
 
             print('Best valid acc so far: %.2f for current gamma value' % best_vbal_acc_this_gam)
-            # Training Data Results
+            print('Mean valid AUC: %.2f for current gamma value' % np.mean(best_valid_auc_by_sub))
+            print('Mean train AUC: %.2f for current gamma value' % np.mean(best_train_auc_by_sub))
+                  # Training Data Results
             # train_acc[:,rand_ct]=np.mean(jive[train_bool]) #TODO remove!
             #print('Training accuracy: %f' % train_acc[left_out_ct,rand_ct])
             train_sens[:,rand_ct]=temp_train_sens
@@ -394,6 +262,7 @@ for rand_ct in range(n_rand_params):
             #print('Training specificity: %f' % train_spec[left_out_ct,rand_ct])
             train_bal_acc[:,rand_ct]=temp_train_bacc
             # print('Training balanced accuracy: %f' % train_bal_acc[left_out_ct,rand_ct])
+            train_auc[:,rand_ct]=temp_train_auc
 
             # Validation Data Results
             # valid_acc[left_out_ct,rand_ct]=np.mean(jive[valid_bool]) #TODO remove!
@@ -404,6 +273,7 @@ for rand_ct in range(n_rand_params):
             #print('Validation specificity: %f' % valid_spec[left_out_ct,rand_ct])
             valid_bal_acc[:,rand_ct] = temp_valid_bacc
             #print('Validation balanced accuracy: %f' % valid_bal_acc[left_out_ct,rand_ct])
+            valid_auc[:, rand_ct] = temp_valid_auc
 
             steps_since_best=0
         else:
@@ -483,6 +353,8 @@ for rand_ct in range(n_rand_params):
          valid_spec=valid_spec,
          valid_bal_acc=valid_bal_acc,
          best_valid_bal_acc_by_sub=best_valid_bal_acc_by_sub,
+         best_train_auc_by_sub=best_train_auc_by_sub,
+         best_valid_auc_by_sub=best_valid_auc_by_sub,
          train_sens=train_sens,
          train_spec=train_spec,
          train_bal_acc=train_bal_acc,
@@ -509,6 +381,8 @@ for rand_ct in range(n_rand_params):
 print('Done!')
 print('Best training data accuracy: %f' % best_train_bal_acc)
 print('Best validation accuracy: %f' % best_valid_bal_acc)
+print('Best training data AUC: %f' % np.mean(best_train_auc_by_sub))
+print('Best validation data AUC: %f' % np.mean(best_valid_auc_by_sub))
 print('Using C=%.2E and gam=%.2E' % (best_C,best_gam))
 print('Model name: {}'.format(model_name))
 print('Features used: {}'.format(use_ftrs))
