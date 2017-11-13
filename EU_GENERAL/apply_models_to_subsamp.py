@@ -92,11 +92,24 @@ for model_ct in range(n_models):
 
 
 # Compute performance metrics
-print('Ensemble Performance')
+print('Ensemble Performance (each obs wtd equally)')
 auc = roc_auc_score(szr_class, class_hat)
 print('AUC=%.3f' % auc)
 bal_acc, sens, spec = ief.perf_msrs(szr_class, class_hat >= 0.5)
 print('Balanced Accuracy (sens/spec)=%.3f (%f/%f)' % (bal_acc, sens, spec))
 
-
+# Report results for individual subjects
+print('Subject specific performance')
+crct=(class_hat>0.5)==szr_class
+ictal=szr_class==1
+for sub in subs:
+    print()
+    sub_bool=sub_id==sub
+    print('Sub %d' % int(sub))
+    print('%f of data' % np.mean(sub_bool))
+    #sens=np.mean(crct[ictal and sub_bool])
+    sens=np.mean(crct[np.multiply(ictal,sub_bool)])
+    spec=np.mean(crct[np.multiply(ictal==False,sub_bool)])
+    acc=(sens+spec)/2
+    print('Acc (Sens/Spec): %f (%f/%f)' % (acc,sens,spec))
 
