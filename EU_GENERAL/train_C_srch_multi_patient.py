@@ -206,7 +206,8 @@ for rand_ct in range(n_rand_params):
 
             train_bool = sub_id != left_out_id
             if equal_sub_wts==True:
-                model.fit(ftrs[train_bool, :], szr_class[train_bool ], sample_weight=samp_wts[subset_id])
+                #model.fit(ftrs[train_bool, :], szr_class[train_bool ], sample_weight=samp_wts[subset_id])
+                model.fit(ftrs[train_bool, :], szr_class[train_bool], sample_weight=samp_wts[train_bool])
             else:
                 model.fit(ftrs[train_bool , :], szr_class[train_bool])
             #model.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code
