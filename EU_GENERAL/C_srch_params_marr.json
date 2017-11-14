@@ -1,7 +1,8 @@
 {"model_type": "logreg",
-"model_name": "temp",
+"model_name": "gen14_logreg_se_ewts",
 "gam": 0.079550,
-"C": 0.053477,
+"C": 1,
 "patience": 0,
+"equal_sub_wts": "True",
 "use_ftrs": ["SE"]}
 
