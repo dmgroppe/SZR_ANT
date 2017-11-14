@@ -213,9 +213,18 @@ for rand_ct in range(n_rand_params):
 
             # make predictions from training and validation data
             class_hat = model.predict(ftrs)
-            temp_train_bacc[left_out_ct], temp_train_sens[left_out_ct ], temp_train_spec[left_out_ct ] = ief.perf_msrs(
-                szr_class[train_bool],
-                class_hat[train_bool])
+            # Compute performance on training data
+            for temp_sub in left_in_ids:
+                sub_bool=sub_id==temp_sub
+                temp_bacc, temp_sens, temp_spec= ief.perf_msrs(szr_class[sub_bool], class_hat[sub_bool])
+                temp_train_bacc[left_out_ct]+=temp_bacc/(n_train_subs-1)
+                temp_train_sens[left_out_ct]+=temp_sens/(n_train_subs-1)
+                temp_train_spec[left_out_ct]+=temp_spec/(n_train_subs-1)
+            # temp_train_bacc[left_out_ct], temp_train_sens[left_out_ct ], temp_train_spec[left_out_ct ] = ief.perf_msrs(
+            #     szr_class[train_bool],
+            #     class_hat[train_bool])
+
+            # Compute performance on validation data
             temp_valid_bacc[left_out_ct], temp_valid_sens[left_out_ct], temp_valid_spec[left_out_ct] = ief.perf_msrs(
                 szr_class[train_bool==False],
                 class_hat[train_bool==False])

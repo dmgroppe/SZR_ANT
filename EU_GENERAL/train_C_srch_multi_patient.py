@@ -225,10 +225,6 @@ for rand_ct in range(n_rand_params):
                 temp_train_bacc[left_out_ct]+=temp_bacc/(n_train_subs-1)
                 temp_train_sens[left_out_ct]+=temp_sens/(n_train_subs-1)
                 temp_train_spec[left_out_ct]+=temp_spec/(n_train_subs-1)
-            # print('left_in_ids {}'.format(left_in_ids))
-            # print('n_train_subs {}'.format(n_train_subs))
-            # print('left_out_id {}'.format(left_out_id))
-            # exit()
 
             # temp_train_bacc[left_out_ct], temp_train_sens[left_out_ct ], temp_train_spec[left_out_ct ] = ief.perf_msrs(
             #     szr_class[train_bool],
