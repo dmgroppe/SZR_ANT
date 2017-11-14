@@ -364,6 +364,7 @@ for rand_ct in range(n_rand_params):
          best_C = best_C,
          best_gam=best_gam,
          best_models=best_models,
+         equal_sub_wts=equal_sub_wts,
          ftr_types=ftr_types,
          left_out_id=left_out_id)
 
@@ -374,3 +375,4 @@ print('Using C=%.2E and gam=%.2E' % (best_C,best_gam))
 print('Model name: {}'.format(model_name))
 print('Features used: {}'.format(use_ftrs))
 print('Metrics save to: %s' % out_metrics_fname)
+print('Equal subject wts={}'.format(equal_sub_wts))
