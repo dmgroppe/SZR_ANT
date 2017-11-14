@@ -3,5 +3,6 @@
 "gam": 0.079550,
 "C": 0.1,
 "patience": 0,
+"equal_sub_wts": "True",
 "use_ftrs": ["SE"]}
 

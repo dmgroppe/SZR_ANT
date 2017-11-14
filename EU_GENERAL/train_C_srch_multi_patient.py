@@ -189,6 +189,7 @@ for rand_ct in range(n_rand_params):
         temp_valid_bacc = np.zeros(n_train_subs)
         for left_out_ct, left_out_id in enumerate(uni_subs):
             print('Left out sub %d (FR_%d) of %d' % (left_out_ct+1,left_out_id,n_train_subs))
+            left_in_ids=np.setdiff1d(uni_subs,left_out_id)
             #rbf_svc = svm.SVC(kernel='rbf', gamma=0.7, C=C).fit(ftrs.T, szr_class)
             if 'model' in locals():
                 del model # clear model just in case
@@ -217,9 +218,21 @@ for rand_ct in range(n_rand_params):
 
             # make predictions from training and validation data
             class_hat = model.predict(ftrs)
-            temp_train_bacc[left_out_ct], temp_train_sens[left_out_ct ], temp_train_spec[left_out_ct ] = ief.perf_msrs(
-                szr_class[train_bool],
-                class_hat[train_bool])
+            # Compute performance on training data
+            for temp_sub in left_in_ids:
+                sub_bool=sub_id==temp_sub
+                temp_bacc, temp_sens, temp_spec= ief.perf_msrs(szr_class[sub_bool], class_hat[sub_bool])
+                temp_train_bacc[left_out_ct]+=temp_bacc/(n_train_subs-1)
+                temp_train_sens[left_out_ct]+=temp_sens/(n_train_subs-1)
+                temp_train_spec[left_out_ct]+=temp_spec/(n_train_subs-1)
+            # print('left_in_ids {}'.format(left_in_ids))
+            # print('n_train_subs {}'.format(n_train_subs))
+            # print('left_out_id {}'.format(left_out_id))
+            # exit()
+
+            # temp_train_bacc[left_out_ct], temp_train_sens[left_out_ct ], temp_train_spec[left_out_ct ] = ief.perf_msrs(
+            #     szr_class[train_bool],
+            #     class_hat[train_bool])
             temp_valid_bacc[left_out_ct], temp_valid_sens[left_out_ct], temp_valid_spec[left_out_ct] = ief.perf_msrs(
                 szr_class[train_bool==False],
                 class_hat[train_bool==False])
