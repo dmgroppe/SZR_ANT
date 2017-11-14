@@ -46,6 +46,7 @@ if params['equal_sub_wts']=="False":
     equal_sub_wts=False
 else:
     equal_sub_wts = True
+print('Weight subjects equally={}'.format(equal_sub_wts))
 # if params['ictal_wind']=='small':
 #     small_ictal_wind=True
 # elif params['ictal_wind']=='max':
@@ -74,6 +75,7 @@ model_path=os.path.join(model_root,model_name+'_'+str(model_num))
 print('Model will be stored to %s' % model_path)
 if os.path.exists(model_path)==False:
     os.mkdir(model_path)
+exit()
 
 # Import list of subjects to use
 #use_subs_df=pd.read_csv(os.path.join(path_dict['szr_ant_root'],'use_subs.txt'),header=None,na_filter=False)
@@ -346,6 +348,7 @@ for rand_ct in range(n_rand_params):
          pptn_missed_szrs=pptn_missed_szrs,
          pptn_preonset_stim=pptn_preonset_stim,
          n_train_steps=n_train_steps,
+         uni_subs=uni_subs,
          rand_ct=rand_ct,
          C_vals=C_vals,
          gamma_vals=gamma_vals,

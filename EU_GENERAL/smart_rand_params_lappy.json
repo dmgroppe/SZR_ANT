@@ -1,6 +1,7 @@
 {"model_type": "logreg",
-"model_name": "genLogregSe",
+"model_name": "tempEqWt",
 "n_rand_params": 1,
 "patience": 0,
+"equal_sub_wts": "True",
 "use_ftrs": ["SE"]}
 
