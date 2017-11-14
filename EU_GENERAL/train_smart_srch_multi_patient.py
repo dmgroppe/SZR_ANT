@@ -75,7 +75,6 @@ model_path=os.path.join(model_root,model_name+'_'+str(model_num))
 print('Model will be stored to %s' % model_path)
 if os.path.exists(model_path)==False:
     os.mkdir(model_path)
-exit()
 
 # Import list of subjects to use
 #use_subs_df=pd.read_csv(os.path.join(path_dict['szr_ant_root'],'use_subs.txt'),header=None,na_filter=False)
