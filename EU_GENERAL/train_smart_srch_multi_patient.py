@@ -348,7 +348,6 @@ for rand_ct in range(n_rand_params):
          pptn_missed_szrs=pptn_missed_szrs,
          pptn_preonset_stim=pptn_preonset_stim,
          n_train_steps=n_train_steps,
-         uni_subs=uni_subs,
          rand_ct=rand_ct,
          C_vals=C_vals,
          gamma_vals=gamma_vals,
