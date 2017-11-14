@@ -69,18 +69,18 @@ ftrs, szr_class, sub_id=eu.import_data(ftr_info_dict['grand_szr_fnames'], ftr_in
 
 
 # Set sample weights to weight each subject (and preictal/ictal equally:
+uni_subs = np.unique(sub_id)
+n_subs = len(uni_subs)
 wt_subs_equally=False
-if wt_subs_equally==True:
-    uni_subs=np.unique(sub_id)
-    n_train_subs = len(uni_subs)
-    samp_wts = np.ones(n_wind)
-    for sub_loop in uni_subs:
-        subset_id = (sub_id == sub_loop)
-        n_obs = np.sum(subset_id)
-        print('Sub #%d has %d observations' % (sub_loop, int(n_obs)))
-        samp_wts[subset_id] = samp_wts[subset_id] / n_obs
-    print('Sum samp wts=%f' % np.sum(samp_wts))
-    print('# of subs=%d' % n_train_subs)
+# if wt_subs_equally==True:
+#     samp_wts = np.ones(n_wind)
+#     for sub_loop in uni_subs:
+#         subset_id = (sub_id == sub_loop)
+#         n_obs = np.sum(subset_id)
+#         print('Sub #%d has %d observations' % (sub_loop, int(n_obs)))
+#         samp_wts[subset_id] = samp_wts[subset_id] / n_obs
+#     print('Sum samp wts=%f' % np.sum(samp_wts))
+#     print('# of subs=%d' % n_subs)
 
 
 # Apply ensemble of models on validation data
@@ -102,14 +102,31 @@ print('Balanced Accuracy (sens/spec)=%.3f (%f/%f)' % (bal_acc, sens, spec))
 print('Subject specific performance')
 crct=(class_hat>0.5)==szr_class
 ictal=szr_class==1
-for sub in subs:
+bacc_by_sub=np.zeros(n_subs)
+sens_by_sub=np.zeros(n_subs)
+spec_by_sub=np.zeros(n_subs)
+auc_by_sub=np.zeros(n_subs)
+for sub_ct, sub in enumerate(subs):
     print()
     sub_bool=sub_id==sub
     print('Sub %d' % int(sub))
     print('%f of data' % np.mean(sub_bool))
     #sens=np.mean(crct[ictal and sub_bool])
-    sens=np.mean(crct[np.multiply(ictal,sub_bool)])
-    spec=np.mean(crct[np.multiply(ictal==False,sub_bool)])
-    acc=(sens+spec)/2
-    print('Acc (Sens/Spec): %f (%f/%f)' % (acc,sens,spec))
+    sens_by_sub[sub_ct]=np.mean(crct[np.multiply(ictal,sub_bool)])
+    spec_by_sub[sub_ct]=np.mean(crct[np.multiply(ictal==False,sub_bool)])
+    bacc_by_sub[sub_ct]=(sens_by_sub[sub_ct]+spec_by_sub[sub_ct])/2
+    print('Acc (Sens/Spec): %f (%f/%f)' % (bacc_by_sub[sub_ct],
+                                           sens_by_sub[sub_ct],
+                                           spec_by_sub[sub_ct]))
+    auc_by_sub[sub_ct]=roc_auc_score(szr_class[sub_bool], class_hat[sub_bool])
+    print('AUC=%f' % auc_by_sub[sub_ct])
 
+print('Mean across subs:')
+m, low, hi=dg.mean_and_cis(bacc_by_sub)
+print('Mean (95p CI) bacc: %f (%f-%f)' % (m,low,hi))
+m, low, hi=dg.mean_and_cis(spec_by_sub)
+print('Mean (95p CI) spec: %f (%f-%f)' % (m,low,hi))
+m, low, hi=dg.mean_and_cis(sens_by_sub)
+print('Mean (95p CI) sens: %f (%f-%f)' % (m,low,hi))
+m, low, hi=dg.mean_and_cis(auc_by_sub)
+print('Mean (95p CI) AUC: %f (%f-%f)' % (m,low,hi))
