@@ -20,7 +20,7 @@ sub=958; %20 (0.09)=# (proportion) of total files actually sampled.
 sub=922; %20 (0.18)=# (proportion) of total files actually sampled.
 sub=970; %20 (0.10)=# (proportion) of total files actually sampled.
 sub=115; %20 (0.08)=# (proportion) of total files actually sampled.
-sub=442;
+sub=442; %20 (0.11)=# (proportion) of total files actually sampled.
 
 psd_fname=sprintf('/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/PSD/%d_non_szr_psd.mat',sub);
 load(psd_fname);
