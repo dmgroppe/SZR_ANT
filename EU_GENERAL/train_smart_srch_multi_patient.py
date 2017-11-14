@@ -185,6 +185,7 @@ for rand_ct in range(n_rand_params):
         temp_valid_bacc = np.zeros(n_train_subs)
         for left_out_ct, left_out_id in enumerate(uni_subs):
             print('Left out sub %d (FR_%d) of %d' % (left_out_ct+1,left_out_id,n_train_subs))
+            left_in_ids=np.setdiff1d(uni_subs,left_out_id)
             #rbf_svc = svm.SVC(kernel='rbf', gamma=0.7, C=C).fit(ftrs.T, szr_class)
             if 'model' in locals():
                 del model # clear model just in case
