@@ -13,6 +13,8 @@
 % sub_id=922; %DONE
 subs=[253, 264, 590, 620, 862, 1077, 1096, 1125, 958, 970, 922];
 %subs=[273, 565]; % DONE
+subs=[115]; % DONE
+subs=[442];
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
