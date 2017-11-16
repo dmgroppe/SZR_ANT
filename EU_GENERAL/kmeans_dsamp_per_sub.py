@@ -30,7 +30,8 @@ if len(sys.argv)!=2:
 sub=int(sys.argv[1])
 
 # Load raw ftrs
-ftr_fname='/Users/davidgroppe/Desktop/train_ftrs_aes.npz'
+#ftr_fname='/Users/davidgroppe/Desktop/train_ftrs_aes.npz'
+ftr_fname='train_ftrs_aes.npz'
 npz=np.load(ftr_fname)
 print(npz.keys())
 
