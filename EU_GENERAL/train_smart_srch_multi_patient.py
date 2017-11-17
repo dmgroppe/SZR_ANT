@@ -79,12 +79,9 @@ if os.path.exists(model_path)==False:
 # Import list of subjects to use
 #use_subs_df=pd.read_csv(os.path.join(path_dict['szr_ant_root'],'use_subs.txt'),header=None,na_filter=False)
 use_subs_df=pd.read_csv('train_subs.txt',header=None,na_filter=False)
-#test_sub_list=['NA']
-test_sub_list=['1096']
 train_subs_list=[]
 for sub in use_subs_df.iloc[:,0]:
-    if not sub in test_sub_list:
-        train_subs_list.append(sub)
+    train_subs_list.append(sub)
         
 print('Training subs: {}'.format(train_subs_list))
 
