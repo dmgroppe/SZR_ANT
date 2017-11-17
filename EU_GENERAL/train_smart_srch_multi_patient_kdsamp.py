@@ -105,6 +105,7 @@ print('Total # of features %d' % n_ftrs)
 ftrs=np.zeros((n_wind,n_ftrs))
 sub_id=np.zeros(n_wind,dtype=int)
 szr_class=np.zeros(n_wind)
+dsamp_wts=np.zeros(n_wind)
 obs_ct=0
 for sub in train_subs_list:
     in_fname='kdownsampled_'+str(sub)+'.npz'
@@ -113,6 +114,7 @@ for sub in train_subs_list:
     ftrs[obs_ct:obs_ct+n_obs_this_sub,:]=npz['ftrs_dsamp']
     sub_id[obs_ct:obs_ct+n_obs_this_sub]=sub
     szr_class[obs_ct:obs_ct+n_obs_this_sub]=npz['szr_class_dsamp']
+    dsamp_wts[obs_ct:obs_ct+n_obs_this_sub]=npz['dsamp_wts']
     obs_ct+=n_obs_this_sub
 
 # ftr_info_dict=eu.data_size_and_fnames(train_subs_list, ftr_root, ftr)
@@ -136,12 +138,14 @@ for sub in train_subs_list:
 # Set sample weights to weight each subject (and preictal/ictal equally:
 uni_subs=np.unique(sub_id)
 n_train_subs = len(uni_subs)
-samp_wts = np.ones(n_wind)
-for sub_loop in uni_subs:
-    subset_id = (sub_id == sub_loop)
-    n_obs = np.sum(subset_id)
-    print('Sub #%d has %d observations' % (sub_loop, int(n_obs)))
-    samp_wts[subset_id] = samp_wts[subset_id] / n_obs
+# samp_wts = np.ones(n_wind)
+# for sub_loop in uni_subs:
+#     subset_id = (sub_id == sub_loop)
+#     n_obs = np.sum(subset_id)
+#     print('Sub #%d has %d observations' % (sub_loop, int(n_obs)))
+#     samp_wts[subset_id] = samp_wts[subset_id] / n_obs
+#samp_wts=np.multiply(samp_wts,dsamp_wts) #weight each obs by the number of members of each cluster
+samp_wts=dsamp_wts
 print('Sum samp wts=%f' % np.sum(samp_wts))
 print('# of subs=%d' % n_train_subs)
 
