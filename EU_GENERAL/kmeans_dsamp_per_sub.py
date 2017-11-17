@@ -18,7 +18,10 @@ def kmeans_downsample(ftrs,downsample_fact):
     k=int(np.round(n_obs/downsample_fact))
     print('Trying %d clusters' % k)
     kclusters = KMeans(n_clusters=k).fit(ftrs)
-    return kclusters, k
+    n_obs_per_clust=np.zeros(k)
+    for a in range(k):
+        n_obs_per_clust[a]=np.sum(kclusters.labels_==a)
+    return kclusters, k, n_obs_per_clust
 
 
 if len(sys.argv)==1:
@@ -82,10 +85,12 @@ obs_ct+=k
     
 print('Done')
 
+clust_wts=n_obs_per_clust/np.sum(n_obs_per_clust)
+
 # Save results to disk
 out_fname='kdownsampled_'+str(sub)
 print('Saving file as %s' % out_fname)
-np.savez(out_fname,ftrs_dsamp=ftrs_dsamp,szr_class_dsamp=szr_class_dsamp)
+np.savez(out_fname,ftrs_dsamp=ftrs_dsamp,szr_class_dsamp=szr_class_dsamp,clust_wts=clust_wts)
 
 
 
