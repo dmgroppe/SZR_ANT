@@ -60,37 +60,38 @@ print('# of total downsampled windows %d' % n_downsamp_obs)
 ftrs_dsamp=np.zeros((n_downsamp_obs,n_dim))
 sub_ids_dsamp=np.zeros(n_downsamp_obs)
 szr_class_dsamp=np.zeros(n_downsamp_obs)
+dsamp_wts=np.zeros(n_downsamp_obs)
 
 obs_ct=0
 print('Working on sub %d' % sub)
 # Cluster ictal observations
 print('Clustering ictal observations')
 ictal_bool=np.multiply(npz['sub_id']==sub,npz['szr_class']==1)
-ictal_kclusters, k=kmeans_downsample(npz['ftrs'][ictal_bool,:],downsample_fact)
+ictal_kclusters, k, n_obs_per_clust=kmeans_downsample(npz['ftrs'][ictal_bool,:],downsample_fact)
 obs_ct_stop=obs_ct+k
 sub_ids_dsamp[obs_ct:obs_ct_stop]=sub
 ftrs_dsamp[obs_ct:obs_ct_stop,:]=ictal_kclusters.cluster_centers_
 szr_class_dsamp[obs_ct:obs_ct_stop]=1
+dsamp_wts[obs_ct:obs_ct_stop]=n_obs_per_clust/(2*np.sum(n_obs_per_clust))
 obs_ct+=k
     
 # Cluster non-ictal observations
 print('Clustering NONictal observations')
 nonictal_bool=np.multiply(npz['sub_id']==sub,npz['szr_class']==0)
-nonictal_kclusters, k=kmeans_downsample(npz['ftrs'][nonictal_bool,:],downsample_fact)
+nonictal_kclusters, k, n_obs_per_clust=kmeans_downsample(npz['ftrs'][nonictal_bool,:],downsample_fact)
 obs_ct_stop=obs_ct+k
 sub_ids_dsamp[obs_ct:obs_ct_stop]=sub
 ftrs_dsamp[obs_ct:obs_ct_stop,:]=nonictal_kclusters.cluster_centers_
 szr_class_dsamp[obs_ct:obs_ct_stop]=0
+dsamp_wts[obs_ct:obs_ct_stop]=n_obs_per_clust/(2*np.sum(n_obs_per_clust))
 obs_ct+=k
     
 print('Done')
 
-clust_wts=n_obs_per_clust/np.sum(n_obs_per_clust)
-
 # Save results to disk
 out_fname='kdownsampled_'+str(sub)
 print('Saving file as %s' % out_fname)
-np.savez(out_fname,ftrs_dsamp=ftrs_dsamp,szr_class_dsamp=szr_class_dsamp,clust_wts=clust_wts)
+np.savez(out_fname,ftrs_dsamp=ftrs_dsamp,szr_class_dsamp=szr_class_dsamp,dsamp_wts=dsamp_wts)
 
 
 
