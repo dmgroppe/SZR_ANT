@@ -174,7 +174,7 @@ n_train_steps=np.zeros(n_rand_params)
 #C_vals=np.random.exponential(1,n_rand_params)
 #gamma_vals=np.random.exponential(1,n_rand_params)
 #C_vals=np.ones(n_rand_params)*10
-C_vals=10**np.random.uniform(0,5,n_rand_params)
+C_vals=10**np.random.uniform(1,7,n_rand_params)
 # C = SVM regularization parameter, the smaller it is, the stronger the regularization
 gamma_vals=10**np.random.uniform(-7,-2,n_rand_params)
 #gamma defines how much influence a single training example has. The larger gamma is, the closer other examples must be to be affected.
