@@ -1,81 +1,80 @@
+""" This function plots the balanced accuracy on training and validation data as a function of C & gamma
+hyperparameters for all models with the same stem name"""
+
 import numpy as np
-import sys
-import pandas as pd
-import os
-import pickle
-import scipy.io as sio
-import ieeg_funcs as ief
-# import re
-import dgFuncs as dg
-from sklearn import preprocessing
-# from scipy import stats
-# from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
+import os
+import ieeg_funcs as ief
+import sys
 
-
-
+## Start of main function
 if len(sys.argv)==1:
-    print('Usage: plot_rand_srch.py model_stem (e.g., eu_svm_sbox')
+    print('Usage: plt_hyper_srch.py model_stem')
     exit()
 if len(sys.argv)!=2:
-    raise Exception('Error: plot_rand_srch.py requires 1 argument: eu_svm_sbox')
+    raise Exception('Error: plt_hyper_srch.py requires 1 argument: model_stem')
 
 # Import Parameters from json file
 model_stem=sys.argv[1]
-print('Importing model parameters from %s' % model_stem)
 
-#/home/dgroppe/GIT/SZR_ANT/MODELS/eu_svm_sbox7_1096
-in_path='/home/dgroppe/GIT/SZR_ANT/MODELS/'
-model_names=list()
-for fname in os.listdir(in_path):
-    if fname.startswith(model_stem):
-        model_names.append(fname)
-    
-print('Model names: {}'.format(model_names))
-C_list=list()
-g_list=list()
-vbacc_list=list()
-for mname in model_names:
-    metrics_fname=os.path.join(in_path,mname,'classification_metrics.npz')
-    metrics=np.load(metrics_fname)
-    C_list=C_list+metrics['C_list'].tolist()
-    g_list=g_list+metrics['g_list'].tolist()
-    vbacc_list=vbacc_list+metrics['valid_bal_acc_list'].tolist()
+path_dict=ief.get_path_dict()
+print(path_dict.keys())
 
-# C_list=metrics['C_list']
-C_ray=np.asarray(C_list)
-# print(C_ray)
-# g_list=metrics['g_list']
-g_ray=np.asarray(g_list)
-# print(g_ray)
-# vbacc_list=metrics['valid_bal_acc_list']
-vbacc_ray=np.asarray(vbacc_list)
-# print(vbacc_ray)
+#model_stem='genSvmSe'
+#model_stem='genSvmEqWtsAes'
+####model_stem='svmKdsampSeAes'
+#model_stem='tempEqWt'
+#model_stem='genLogregSe'
+#model_dir='/home/dgroppe/GIT/SZR_ANT/MODELS/'
+model_dir=os.path.join(path_dict['szr_ant_root'],'MODELS')
+#model_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/'
+C_srch=list()
+valid_bal_acc_srch=list()
+train_bal_acc_srch=list()
+model_names_srch=list()
+gamma_srch=list()
+for f in os.listdir(model_dir):
+    f_splt=f.split('_')
+    if f_splt[0]==model_stem:
+        # model of desired type
+        in_fname=os.path.join(model_dir,f,'classify_metrics_srch.npz')
+        if os.path.isfile(in_fname):
+            temp=np.load(in_fname)
+            C_srch=C_srch+list(temp['tried_C'])
+    #         C_srch=C_srch+list(temp['C_srch'])
+    #         temp_gamma=[temp['gamma'] for a in range(len(temp['C_srch']))]
+            gamma_srch=gamma_srch+list(temp['tried_gamma'])
+            valid_bal_acc_srch=valid_bal_acc_srch+list(temp['tried_valid_acc'])
+            train_bal_acc_srch=train_bal_acc_srch+list(temp['tried_train_acc'])
+            model_names_srch=model_names_srch+[f for a in range(len(temp['tried_C']))]
 
-# plt.figure(1)
-# plt.plot(vbacc_ray,'-o')
+mx_id=np.argmax(valid_bal_acc_srch)
+print('%d hyperparameters tried' % len(valid_bal_acc_srch))
+print('Best Validation Accuracy: %f' % valid_bal_acc_srch[mx_id])
+print('Using C=%f, gam=%f' % (C_srch[mx_id],gamma_srch[mx_id]))
+print('Best model name is %s' % model_names_srch[mx_id])
 
-print('Max validation balanced accuracy is %f' % np.max(vbacc_ray))
-argmx=np.argmax(vbacc_ray)
-print('Using C=%f and gamma=%f' % (C_ray[argmx],g_ray[argmx]) )
-print('i.e., log10(C)=%f and log10(gamma)=%f' % (np.log10(C_ray[argmx]),np.log10(g_ray[argmx])) )
-
-# fig=plt.figure(2)
-# plt.clf()
-# ax = fig.add_subplot(111, projection='3d')
-# plt.plot(np.log10(C_ray),np.log10(g_ray),vbacc_ray,'.')
-# ax.set_xlabel('log10(C)')
-# ax.set_ylabel('log10(Gamma)')
-# plt.show()
-fig=plt.figure(3)
+plt.figure(1)
 plt.clf()
-plt.scatter(np.log10(C_ray),np.log10(g_ray),c=vbacc_ray,s=32)
+#plt.scatter(np.arange(len(vbacc_ray)),vbacc_ray,c=vbacc_ray)
+plt.scatter(np.log10(C_srch),np.log10(gamma_srch),c=valid_bal_acc_srch,cmap='plasma',s=32)
+plt.plot(np.log10(C_srch[mx_id]),np.log10(gamma_srch[mx_id]),'k.')
 plt.xlabel('log10(C)')
 plt.ylabel('log10(Gamma)')
-plt.title('Smart Random Search Validation Performance: '+model_stem)
 cbar=plt.colorbar()
 cbar.set_label('Balanced Accuracy', rotation=90)
+plt.title('Validation Data')
 plt.show()
 
-
+plt.figure(2)
+plt.clf()
+#plt.scatter(np.arange(len(vbacc_ray)),vbacc_ray,c=vbacc_ray)
+plt.scatter(np.log10(C_srch),np.log10(gamma_srch),c=train_bal_acc_srch,cmap='plasma',s=32)
+plt.plot(np.log10(C_srch[mx_id]),np.log10(gamma_srch[mx_id]),'k.')
+plt.xlabel('log10(C)')
+plt.ylabel('log10(Gamma)')
+cbar=plt.colorbar()
+cbar.set_label('Balanced Accuracy', rotation=90)
+plt.title('Training Data')
+plt.show()
