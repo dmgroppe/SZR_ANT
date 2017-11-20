@@ -181,7 +181,7 @@ fontSize=12;
 unitLocation='top';
 hCbar = cbarDGplus(pos,limits,cmapName,nTick,units,unitLocation,fontSize);
 
-end
+
 
 %% Plot raw iEEG FIGURE 1
 
