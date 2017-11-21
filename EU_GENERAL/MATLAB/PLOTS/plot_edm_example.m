@@ -8,7 +8,7 @@ else
 end
 sub='1096';
 fontsize=16;
-print_em=0;
+print_em=1;
 
 %% Load features
 ftr_fname='1096_HL3_HL4_szr6.mat';
@@ -38,17 +38,17 @@ set(gcf,'position',[131   416   868   276]);
 ftr_tpts=find(se_time_sec<=targ_raw_ieeg_sec(show_tpts(end)));
 show_dat=se_ftrs(1:6,ftr_tpts);
 full_show_dat=se_ftrs(:,ftr_tpts);
-mx_ftr=max(max(full_show_dat));
-fprintf('Max ftr value in time window of interest (all EDM values): %f z\n',mx_ftr);
-min_ftr=min(min(full_show_dat));
-fprintf('Min ftr value in time window of interest (all EDM values): %f z\n',min_ftr);
-imagesc(show_dat);
+% Get max and min values from EDM smoothed features (Fig 3) so that Fig 2
+% and Fig 3 can share the same colorscale
+mx_cmap=max(max(full_show_dat));
+min_cmap=min(min(full_show_dat));
+imagesc(show_dat,[min_cmap, mx_cmap]);
 
 rel_se_stim_sec=se_time_sec-onset_sec;
 xtick=[];
 xticklabel=[];
 ct=0;
-clear onset_x
+clear onset_x;
 for tloop=-4:2:14,
     disp(tloop);
     xtick=[xtick findTpt(tloop,rel_se_stim_sec)];
@@ -120,14 +120,14 @@ plot([1, 1]*onset_x,ylim,'r:','linewidth',3);
 
 
 % Add colorbar
-% pos=[.91 .11 .02 .815];
-% limits=[-1, 1];
-% cmapName='parula';
-% units='';
-% nTick=0;
-% fontSize=12;
-% unitLocation='top';
-% hCbar = cbarDGplus(pos,limits,cmapName,nTick,units,unitLocation,fontSize);
+pos=[.91 .11 .02 .815];
+limits=[-1, 1];
+cmapName='parula';
+units='';
+nTick=0;
+fontSize=12;
+unitLocation='top';
+hCbar = cbarDGplus(pos,limits,cmapName,nTick,units,unitLocation,fontSize);
 
 if print_em,
     fprintf('Saving figure to edm_example_smoothed_nrg\n');
