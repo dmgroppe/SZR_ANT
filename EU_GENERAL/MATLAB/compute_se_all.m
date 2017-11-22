@@ -1,11 +1,12 @@
 %sub_id=1096; % done
 %sub_id=620;
-sub_id=264; % pickup file 58
+%sub_id=264; % pickup file 58
 % sub_id=590;
 %sub_id=253;
 % sub_id=862;
 % sub_id=565;
 %sub_id=1125; % done
+sub_id=273;
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
