@@ -85,7 +85,10 @@ wt_subs_equally=False
 
 # Apply ensemble of models on validation data
 for model_ct in range(n_models):
-    tmp_yhat = models[model_ct].predict_proba(ftrs)[:, 1]
+    print('Working on model %d of %d' % (model_ct,n_models))
+    tmp_yhat = models[model_ct].predict(ftrs)
+    print(tmp_yhat.shape)
+    #tmp_yhat = models[model_ct].predict(ftrs)[:, 1]
     if model_ct == 0:
         class_hat = np.zeros(tmp_yhat.shape)
     class_hat += tmp_yhat / n_models

@@ -170,10 +170,10 @@ def import_data(szr_fnames, non_fnames, szr_subs, non_subs, n_szr_wind, n_non_wi
 
 ## Start of main function
 if len(sys.argv)==1:
-    print('Usage: train_smart_srch_multi_patient.py srch_params.json')
+    print('Usage: apply_model_to_subsamp_test.py model_name')
     exit()
 if len(sys.argv)!=2:
-    raise Exception('Error: train_smart_srch_multi_patient.py requires 1 argument: srch_params.json')
+    raise Exception('Error: apply_model_to_subsamp_test.py requires 1 argument: model_name')
 
 # Import Parameters from json file
 param_fname=sys.argv[1]
