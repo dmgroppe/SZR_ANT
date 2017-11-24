@@ -55,8 +55,6 @@ print('Weight subjects equally={}'.format(equal_sub_wts))
 # else:
 #     raise Exception('ictal_wind needs to be "small" or "max"')
 use_ftrs=['SE'] #TODO import this from json file
-n_rand_params=int(params['n_rand_params'])
-print('# of random initial hyperparameters to try %d' % n_rand_params)
 patience=int(params['patience'])
 print('# of steps to wait when performance no longer increases %d' % patience)
 gam=float(params['gamma'])
