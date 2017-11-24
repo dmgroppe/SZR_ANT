@@ -57,10 +57,11 @@ print('Weight subjects equally={}'.format(equal_sub_wts))
 use_ftrs=['SE'] #TODO import this from json file
 patience=int(params['patience'])
 print('# of steps to wait when performance no longer increases %d' % patience)
-gam=float(params['gam'])
-print('Gamma=%f' % gam)
-C=float(params['C'])
-print('C=%f' % C)
+gam=10**float(params['gam'])
+print('Gamma=%.2E' % gam)
+C=10**float(params['C'])
+print('C=%.2E' % C)
+exit()
 
 # Find if there are any existing models of this name
 # If so, grab the number of model an increment that number by 1 to get new model name
