@@ -1,4 +1,4 @@
-# Performs LOOCV on train_subs.txt using a grid search of gamma values and hand set initial C value. You need to
+# Performs LOOCV on train_subs.txt using a grid search of a hand set gamma value and initial C value. You need to
 # set these yourself in the code (it is not in the json parameter file).
 # Some parameters are fed in via a json file like this:
 # {"model_type": "svm",
