@@ -57,7 +57,7 @@ print('Weight subjects equally={}'.format(equal_sub_wts))
 use_ftrs=['SE'] #TODO import this from json file
 patience=int(params['patience'])
 print('# of steps to wait when performance no longer increases %d' % patience)
-gam=float(params['gamma'])
+gam=float(params['gam'])
 print('Gamma=%f' % gam)
 C=float(params['C'])
 print('C=%f' % C)
