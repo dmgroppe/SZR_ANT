@@ -135,18 +135,6 @@ print('Sum samp wts=%f' % np.sum(samp_wts))
 print('# of subs=%d' % n_train_subs)
 
 # LOOCV on training data
-valid_sens = np.zeros((n_train_subs,n_rand_params))
-valid_spec = np.zeros((n_train_subs,n_rand_params))
-valid_acc = np.zeros((n_train_subs,n_rand_params))
-valid_bal_acc = np.zeros((n_train_subs,n_rand_params))
-train_sens = np.zeros((n_train_subs,n_rand_params))
-train_spec = np.zeros((n_train_subs,n_rand_params))
-train_acc = np.zeros((n_train_subs,n_rand_params))
-train_bal_acc = np.zeros((n_train_subs,n_rand_params))
-pptn_missed_szrs = np.zeros((n_train_subs,n_rand_params))
-pptn_preonset_stim = np.zeros((n_train_subs,n_rand_params))
-mn_stim_latency = np.zeros((n_train_subs,n_rand_params))
-n_train_steps=np.zeros(n_rand_params)
 #gamma defines how much influence a single training example has. The larger gamma is, the closer other examples must be to be affected.
 best_valid_bal_acc=0
 best_train_bal_acc=0
@@ -237,7 +225,7 @@ for C_loop in range(10): # Note max # of C values to try is 10
     if mn_temp_valid_bacc>best_vbal_acc_this_gam:
         best_vbal_acc_this_gam=mn_temp_valid_bacc
         best_models_this_gam=temp_models.copy()
-        C_vals[rand_ct]=C #Store current best C value for this gamma value
+        C_vals=C #Store current best C value for this gamma value
         best_valid_bal_acc_by_sub=temp_valid_bacc
 
         #TODO: remove this?
@@ -247,24 +235,14 @@ for C_loop in range(10): # Note max # of C values to try is 10
 
         print('Best valid acc so far: %.2f for current gamma value' % best_vbal_acc_this_gam)
         # Training Data Results
-        # train_acc[:,rand_ct]=np.mean(jive[train_bool]) #TODO remove!
-        #print('Training accuracy: %f' % train_acc[left_out_ct,rand_ct])
-        train_sens[:,rand_ct]=temp_train_sens
-        #print('Training sensitivity: %f' % train_sens[left_out_ct,rand_ct])
-        train_spec[:,rand_ct]=temp_train_spec
-        #print('Training specificity: %f' % train_spec[left_out_ct,rand_ct])
-        train_bal_acc[:,rand_ct]=temp_train_bacc
-        # print('Training balanced accuracy: %f' % train_bal_acc[left_out_ct,rand_ct])
+        train_sens=temp_train_sens
+        train_spec=temp_train_spec
+        train_bal_acc=temp_train_bacc
 
         # Validation Data Results
-        # valid_acc[left_out_ct,rand_ct]=np.mean(jive[valid_bool]) #TODO remove!
-        #print('Validation accuracy: %f' % valid_acc[left_out_ct,rand_ct])
-        valid_sens[:,rand_ct]=temp_valid_sens
-        #print('Validation sensitivity: %f' % valid_sens[left_out_ct,rand_ct])
-        valid_spec[:,rand_ct]=temp_valid_spec
-        #print('Validation specificity: %f' % valid_spec[left_out_ct,rand_ct])
-        valid_bal_acc[:,rand_ct] = temp_valid_bacc
-        #print('Validation balanced accuracy: %f' % valid_bal_acc[left_out_ct,rand_ct])
+        valid_sens=temp_valid_sens
+        valid_spec=temp_valid_spec
+        valid_bal_acc=temp_valid_bacc
 
         steps_since_best=0
     else:
@@ -274,7 +252,7 @@ for C_loop in range(10): # Note max # of C values to try is 10
     if C_change<2:
         C_change=2
     print('C_change=%f' % C_change)
-    n_train_steps[rand_ct] += 1
+    n_train_steps += 1
 
     if steps_since_best>patience:
         break
@@ -302,33 +280,33 @@ for C_loop in range(10): # Note max # of C values to try is 10
 # print('# of patients=%d' % len(train_subs_list))
 print('DONE WITH RANDOM GAMMA VALUE of %.2E' % gam)
 print('Training Data')
-mn, ci_low, ci_hi=dg.mean_and_cis(train_bal_acc[:,rand_ct])
+mn, ci_low, ci_hi=dg.mean_and_cis(train_bal_acc)
 print('Mean (0.95 CI) Balanced Accuracy %.3f (%.3f-%.3f)' % (mn,ci_low,ci_hi))
-mn, ci_low, ci_hi=dg.mean_and_cis(train_sens[:,rand_ct])
+mn, ci_low, ci_hi=dg.mean_and_cis(train_sens)
 print('Mean (0.95 CI) Sensitivity %.3f (%.3f-%.3f)' % (mn,ci_low,ci_hi))
-mn, ci_low, ci_hi=dg.mean_and_cis(train_spec[:,rand_ct])
+mn, ci_low, ci_hi=dg.mean_and_cis(train_spec)
 print('Mean (0.95 CI) Specificity %.3f (%.3f-%.3f)' % (mn,ci_low,ci_hi))
 
 # print('Mean (0.95 CI) Sensitivty %.3f (%.3f)' % (np.mean(perf['train_sens']),)
 print('Validation Data')
-mn, ci_low, ci_hi=dg.mean_and_cis(valid_bal_acc[:,rand_ct])
+mn, ci_low, ci_hi=dg.mean_and_cis(valid_bal_acc)
 print('Mean (0.95 CI) Balanced Accuracy %.3f (%.3f-%.3f)' % (mn,ci_low,ci_hi))
-mn, ci_low, ci_hi=dg.mean_and_cis(valid_sens[:,rand_ct])
+mn, ci_low, ci_hi=dg.mean_and_cis(valid_sens)
 print('Mean (0.95 CI) Sensitivity %.3f (%.3f-%.3f)' % (mn,ci_low,ci_hi))
-mn, ci_low, ci_hi=dg.mean_and_cis(valid_spec[:,rand_ct])
+mn, ci_low, ci_hi=dg.mean_and_cis(valid_spec)
 print('Mean (0.95 CI) Specificity %.3f (%.3f-%.3f)' % (mn,ci_low,ci_hi))
 
-temp_mn_acc=np.mean(valid_bal_acc[:, rand_ct],axis=0)
+temp_mn_acc=np.mean(valid_bal_acc,axis=0)
 if  temp_mn_acc> best_valid_bal_acc:
     best_models = best_models_this_gam.copy()
     out_model_fname = os.path.join(model_path, 'classify_models_srch.pkl')
     print('Saving model as %s' % out_model_fname)
     pickle.dump(best_models, open(out_model_fname, 'wb'))
     #best_C=C
-    best_C=C_vals[rand_ct]
+    best_C=C_vals
     best_gam=gam
     best_valid_bal_acc = temp_mn_acc
-    best_train_bal_acc = np.mean(train_bal_acc[:, rand_ct],axis=0)
+    best_train_bal_acc = np.mean(train_bal_acc,axis=0)
     print('NEW best accuracy so far: %f' % best_valid_bal_acc)
     print('Using C=%.2E and gam=%.2E' % (best_C,best_gam))
 else:
@@ -351,7 +329,6 @@ np.savez(out_metrics_fname,
      pptn_missed_szrs=pptn_missed_szrs,
      pptn_preonset_stim=pptn_preonset_stim,
      n_train_steps=n_train_steps,
-     rand_ct=rand_ct,
      C_vals=C_vals,
      gamma_vals=gamma_vals,
      tried_C=tried_C,
