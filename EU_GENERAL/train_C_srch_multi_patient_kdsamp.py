@@ -151,7 +151,7 @@ tried_valid_acc=list()
 
 C_direction=0 # C = SVM regularization parameter, the smaller it is, the stronger the regularization
 print('Using gamma value of %.2E' % gam)
-
+n_train_steps=0
 best_vbal_acc_this_gam=0 # best balanced accuracy for this value of gamma
 steps_since_best = 0
 for C_loop in range(10): # Note max # of C values to try is 10
@@ -325,12 +325,9 @@ np.savez(out_metrics_fname,
      train_spec=train_spec,
      train_bal_acc=train_bal_acc,
      train_subs_list=train_subs_list,
-     mn_stim_latency=mn_stim_latency,
-     pptn_missed_szrs=pptn_missed_szrs,
-     pptn_preonset_stim=pptn_preonset_stim,
      n_train_steps=n_train_steps,
      C_vals=C_vals,
-     gamma_vals=gamma_vals,
+     gam=gam,
      tried_C=tried_C,
      tried_gamma=tried_gamma,
      tried_train_acc=tried_train_acc,
