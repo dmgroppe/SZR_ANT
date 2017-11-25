@@ -1,0 +1,7 @@
+{"model_type": "logreg",
+"model_name": "logregFinale",
+"equal_sub_wts": "True",
+"gamma": 0.001,
+"C": 1,
+"use_ftrs": ["SE"]}
+

@@ -80,13 +80,18 @@ plot_hyper_srch_lap.ipynb or plot_hyper_srch_marr.ipynb\
 \
 \
 ***** Apply ensemble of LOOCV models to test data\
-1) \cf2 \cb1 \CocoaLigature1 Applies saved ensemble of models to all of a subject's szr and subsampled non-szrr files and outputs the mean predictions to a mat file in the model's directory. This is useful for figuring out how well the model is at detecting ictal activity and for computing accuracy on test data:\cf5 \
+1) \cb1 \CocoaLigature1 Applies saved ensemble of models to all of a subject's szr and subsampled non-szrr files and outputs the mean predictions to a mat file in the model's directory. This is useful for figuring out how well the model is at detecting ictal activity and for computing accuracy on test data:\cf5 \
 \cf2 \cb3 \CocoaLigature0 python apply_saved_models_to_szr.py 1096 genLogregSe_1\cf5 \cb1 \CocoaLigature1 \
 \cf2 \cb3 \CocoaLigature0 \
 To visualize these data run:\
 plot_yhat_with_data.m\
 \
-2) Applies saved ensemble of models to continuous files:\
+\
+2) Applies saved models to subsampled data:\
+python apply_models_to_subsamp.py logregAesFinale_1 train_subsAES.txt\
+python apply_models_to_subsamp.py logregAesFinale_1 test_subsAES.txt\
+\
+3) Applies saved ensemble of models to continuous files:\
 python apply_saved_model_to_all_clips.py 1096 genLogregSe_1\
 \
 \
