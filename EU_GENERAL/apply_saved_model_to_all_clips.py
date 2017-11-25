@@ -95,14 +95,15 @@ def continuous_fnames(sub, cont_ftr_root, szr_ftr_root):
 
 ## Start of main function
 if len(sys.argv)==1:
-    print('Usage: apply_saved_models_to_all_clips.py sub_id model_name')
+    print('Usage: apply_saved_models_to_all_clips.py sub_id model_name model_type')
     exit()
-if len(sys.argv)!=3:
-    raise Exception('Error: apply_saved_models_to_all_clips.py requires 2 arguments: sub_id model_name')
+if len(sys.argv)!=4:
+    raise Exception('Error: apply_saved_models_to_all_clips.py requires 2 arguments: sub_id model_name model_type')
 
 # Import Parameters from command line
 sub = int(sys.argv[1])
 model_name=sys.argv[2]
+model_type =sys.argv[3] # 'logreg' or 'svm' # TODO make this work for SVMs too
 
 # TODO fix
 path_dict=ief.get_path_dict()
@@ -121,7 +122,6 @@ print('# of clips %d' % len(clip_list))
 # model_name='genSvmSe_3'
 # model_name = 'genLogregSe_3'
 # model_type='svm'
-model_type = 'logreg' # TODO make this work for SVMs too
 # model_fname=os.path.join('/home/dgroppe/GIT/SZR_ANT/MODELS/',model_name,'classify_models_srch.pkl')
 
 # TODO fix path
