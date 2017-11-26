@@ -179,7 +179,7 @@ for clip in clip_list:
         # Apply classifiers
         for model_ct in range(n_models):
             if model_type == 'svm':
-                tmp_yhat_va = models[model_ct].predict(raw_ftrs.T)[:, 1]
+                tmp_yhat_va = models[model_ct].predict(raw_ftrs.T)
             else:
                 tmp_yhat_va = models[model_ct].predict_proba(raw_ftrs.T)[:, 1]
             if model_ct == 0:
