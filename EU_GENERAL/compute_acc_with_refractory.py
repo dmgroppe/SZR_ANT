@@ -48,6 +48,7 @@ n_false_pos = 0
 n_clin_szr = 0
 n_true_pos = 0
 stim_latency_sec = list()
+stim_latency_hit = list()
 
 
 # Loop over yhat files
@@ -116,10 +117,14 @@ for f in os.listdir(yhat_path):
             for temp_ct, onset_id in enumerate(onset_id_list):
                 if sum(stim[onset_id:offset_id_list[temp_ct]]):
                     n_true_pos += 1
+                    stim_latency_hit.append(1)
+                else:
+                    stim_latency_hit.append(0)
                 # Find closest stimulation to clinician defined onset
                 temp_id = np.argmin(np.abs(np.asarray(stim_ids) - onset_id))
                 closest_id = stim_ids[temp_id]
                 stim_latency_sec.append((closest_id - onset_id) / Fs)
+
 
 fp_per_hour = n_false_pos / total_hrs
 print('%f of false positives/hr' % fp_per_hour)
@@ -139,6 +144,7 @@ outfname=str(sub)+'_thresh_'+replace_periods(str(stim_thresh))+'_refract_'+repla
 print('Saving results to %s' % os.path.join(outpath,outfname))
 np.savez(os.path.join(outpath,outfname),
          stim_latency_sec=stim_latency_sec,
+         stim_latency_hit=stim_latency_hit,
          sens=sens,
          n_clin_szr=n_clin_szr,
          n_true_pos=n_true_pos,
