@@ -154,14 +154,14 @@ np.savez(os.path.join(outpath,outfname),
          stim_thresh=stim_thresh,
          refract_min=refract_min)
 
-plt.figure(1)
-plt.clf()
-plt.boxplot(stim_latency_sec)
-plt.plot(np.ones(len(stim_latency_sec)),stim_latency_sec,'b.')
-plt.ylabel('Seconds')
-plt.xticks([])
-plt.title('Stim Latency relative to Szr Onset')
-xlim=[.85, 1.15]
-plt.xlim(xlim)
-plt.plot(xlim,[0, 0],'k:')
-plt.show()
+# plt.figure(1)
+# plt.clf()
+# plt.boxplot(stim_latency_sec)
+# plt.plot(np.ones(len(stim_latency_sec)),stim_latency_sec,'b.')
+# plt.ylabel('Seconds')
+# plt.xticks([])
+# plt.title('Stim Latency relative to Szr Onset')
+# xlim=[.85, 1.15]
+# plt.xlim(xlim)
+# plt.plot(xlim,[0, 0],'k:')
+# plt.show()
