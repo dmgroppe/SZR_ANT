@@ -139,7 +139,7 @@ for floop=1:n_files,
 
     % Remove initial time points polluted by edge effects
     se_szr_class=se_szr_class(edge_pts:end); % Whether or not time window is within clinician defined onset-offset
-    
+    se_time_sec=se_time_sec(edge_pts:end); % Time in second that corresponds to se_szr_class labels
     
     % Save results to disk
     temp_id=find(file_info(floop).fname=='.');

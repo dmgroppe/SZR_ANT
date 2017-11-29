@@ -126,7 +126,12 @@ for f in os.listdir(yhat_path):
                 temp_id = np.argmin(np.abs(np.asarray(stim_ids) - onset_id))
                 closest_id = stim_ids[temp_id]
                 stim_latency_sec.append((closest_id - onset_id) / Fs)
-
+                if stim_latency_sec[-1]>=-5 and stim_latency_sec[-1]<=0:
+                    # Stimulation occurred withing 5 sec before clinician onset.
+                    # I count this as a hit due to training
+                    if stim_latency_hit[-1]==0:
+                        stim_latency_hit[-1]=1
+                        n_true_pos += 1
 
 fp_per_hour = n_false_pos / total_hrs
 print('%f of false positives/hr' % fp_per_hour)
