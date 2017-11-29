@@ -86,7 +86,7 @@ for f in os.listdir(yhat_path):
 
         # Compute false positives
         se_szr_class = np.squeeze(label_mat['se_szr_class'])
-        nonszr_bool = se_szr_class == 0
+        nonszr_bool = se_szr_class == 0 # TODO extend this 5 sec before clinician onset, should probably make a separate matlab variable
         #print('false+ %d' % np.sum(stim[nonszr_bool]))
         n_false_pos += np.sum(stim[nonszr_bool])
 
@@ -126,11 +126,16 @@ for f in os.listdir(yhat_path):
                 closest_id = stim_ids[temp_id]
                 stim_latency_sec.append((closest_id - onset_id) / Fs)
                 if stim_latency_sec[-1]>=-5 and stim_latency_sec[-1]<=0:
-                    # Stimulation occurred withing 5 sec before clinician onset.
+                    # Stimulation occurred within 5 sec before clinician onset.
                     # I count this as a hit due to training
                     if stim_latency_hit[-1]==0:
                         stim_latency_hit[-1]=1
                         n_true_pos += 1
+                if stim_latency_sec[-1]>50 and stim_latency_hit[-1]==1
+                    # Stimulation occurred more than 50 sec after clinician onset.
+                    # I count this as a miss even if it happened during the seizure
+                    stim_latency_hit[-1] = 0
+                    n_true_pos += -1
 
 fp_per_hour = n_false_pos / total_hrs
 print('%f of false positives/hr' % fp_per_hour)
