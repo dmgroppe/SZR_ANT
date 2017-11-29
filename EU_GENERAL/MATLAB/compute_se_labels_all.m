@@ -1,11 +1,13 @@
 sub_id=1096; %done
-sub_id=1125;
+sub_id=1125; %done
 %sub_id=620;
 %sub_id=264;
 % sub_id=590;
 %sub_id=253;
-% sub_id=862;
 % sub_id=565;
+% sub_id=273; %done
+% sub_id=264;
+sub_id=862;
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
@@ -17,7 +19,8 @@ end
 
 
 %% Get list of all files and the timing of all szrs (clinical and subclinical)
-file_info=get_fnames_and_szr_times2(sub_id);
+%file_info=get_fnames_and_szr_times2(sub_id);
+file_info=get_fnames_and_szr_times(sub_id);
 n_files=length(file_info);
 
 
