@@ -69,7 +69,7 @@ for f in os.listdir(yhat_path):
         splt_f = f.split('_')
         label_fname = str(sub) + '_y_' + splt_f[0] + '_' + splt_f[1] + '.mat'
         label_f = os.path.join(label_path, label_fname)
-        print('Loading file %s' label_f)
+        print('Loading file %s' % label_f)
         label_mat = sio.loadmat(label_f)
         exit()
 
