@@ -131,7 +131,7 @@ for f in os.listdir(yhat_path):
                     if stim_latency_hit[-1]==0:
                         stim_latency_hit[-1]=1
                         n_true_pos += 1
-                if stim_latency_sec[-1]>50 and stim_latency_hit[-1]==1
+                if stim_latency_sec[-1]>50 and stim_latency_hit[-1]==1:
                     # Stimulation occurred more than 50 sec after clinician onset.
                     # I count this as a miss even if it happened during the seizure
                     stim_latency_hit[-1] = 0
