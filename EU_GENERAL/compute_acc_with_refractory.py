@@ -71,7 +71,6 @@ for f in os.listdir(yhat_path):
         label_f = os.path.join(label_path, label_fname)
         print('Loading file %s' % label_f)
         label_mat = sio.loadmat(label_f)
-        exit()
 
         # Compute stimulations with refractory periods
         stim = np.zeros(n_wind)
