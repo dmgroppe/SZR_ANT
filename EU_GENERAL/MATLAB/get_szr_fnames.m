@@ -1,5 +1,5 @@
 function cli_szr_info=get_szr_fnames(sub_id)
-%function cli_szr_info=get_szr_fnames(sub_id,file_dir)
+%function cli_szr_info=get_szr_fnames(sub_id)
 % 
 % Extracts information about each clinical szr for a particular patient.
 %

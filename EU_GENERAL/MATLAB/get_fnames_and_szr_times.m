@@ -7,7 +7,6 @@ function file_info=get_fnames_and_szr_times(sub_id)
 % between clinical and subclinical szrs
 %
 % sub_id - subject id (e.g., 1096)
-% file_dir-path to where the ieeg data are stored
 %
 % Output:
 % file_info =  struct array with fields:
@@ -23,6 +22,9 @@ function file_info=get_fnames_and_szr_times(sub_id)
 %     szr_offsets_sec: 1119
 %
 % Note, this function used to be called get_fnames_and_szr_times2.m
+%
+% Note also that files in file_info are sorted according to time of
+% occurrence
 
 %% Load szr onset and offset times
 %'/home/dgroppe/GIT/SZR_ANT/
@@ -89,6 +91,12 @@ file_info=struct('fname',file_times(:,3),'file_onset_sec',f_onsets, ...
     'file_offset_sec',f_offsets,'file_onset_hrs',file_times(:,5),'file_dur_sec', ...
     file_dur);
 for floop=1:n_files,
+    % For some reason I have to do this again. Otherwise all fields have
+    % the same value regardless of file.
+    file_info(floop).file_onset_sec=f_onsets(floop);
+    file_info(floop).file_offset_sec=f_offsets(floop);
+    file_info(floop).file_onset_hrs=file_times(floop,5);
+    file_info(floop).file_dur_sec=file_dur(floop);
     clin_sonsets_this_file=[];
     clin_soffsets_this_file=[];
     sub_sonsets_this_file=[];
@@ -106,6 +114,7 @@ for floop=1:n_files,
                     sub_soffsets_this_file=[sub_soffsets_this_file szr_offsets(sloop)-f_onsets(floop)];
                 end
             else
+                fprintf('Getting info from file: %s\n',file_info(floop).fname); 
                 warning('Szr onset is in this file but NOT the offset. I will call all time points after onset "szr".');
                 if clin_szr(sloop),
                     clin_sonsets_this_file=[clin_sonsets_this_file szr_onsets(sloop)-f_onsets(floop)];
@@ -117,6 +126,7 @@ for floop=1:n_files,
             end
         elseif (szr_offsets(sloop)>=f_onsets(floop)) && (szr_offsets(sloop)<=f_offsets(floop))
             % Szr offset is in this file but NOT the onset
+            fprintf('Getting info from file: %s\n',file_info(floop).fname);
             warning('Szr offset is in this file but NOT the onset. I will call all time points before onset "szr".');
             if clin_szr(sloop),
                 clin_sonsets_this_file=[clin_sonsets_this_file 0];

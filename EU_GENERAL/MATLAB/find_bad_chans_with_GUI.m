@@ -12,17 +12,21 @@
 %sub=1125; %20 (0.12)=# (proportion) of total files actually sampled.
 %sub=273; %20 (0.10)=# (proportion) of total files actually sampled.
 % sub=1077; %20 (0.11)=# (proportion) of total files actually sampled.
-% sub=862; %20 (0.09)=# (proportion) of total files actually sampled.
+sub=862; %20 (0.09)=# (proportion) of total files actually sampled.
 % sub=253;%20 (0.07)=# (proportion) of total files actually sampled.
-sub=590; %20 (0.08)=# (proportion) of total files actually sampled.
-sub=620; %20 (0.08)=# (proportion) of total files actually sampled.
-sub=958; %20 (0.09)=# (proportion) of total files actually sampled.
-sub=922; %20 (0.18)=# (proportion) of total files actually sampled.
-sub=970; %20 (0.10)=# (proportion) of total files actually sampled.
-sub=115; %20 (0.08)=# (proportion) of total files actually sampled.
-sub=442; %20 (0.11)=# (proportion) of total files actually sampled.
+% sub=590; %20 (0.08)=# (proportion) of total files actually sampled.
+% sub=620; %20 (0.08)=# (proportion) of total files actually sampled.
+% sub=958; %20 (0.09)=# (proportion) of total files actually sampled.
+% sub=922; %20 (0.18)=# (proportion) of total files actually sampled.
+% sub=970; %20 (0.10)=# (proportion) of total files actually sampled.
+% sub=115; %20 (0.08)=# (proportion) of total files actually sampled.
+% sub=442; %20 (0.11)=# (proportion) of total files actually sampled.
 
+if ismac,
 psd_fname=sprintf('/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/PSD/%d_non_szr_psd.mat',sub);
+else
+   psd_fname=sprintf('/home/dgroppe/GIT/SZR_ANT/EU_METADATA/PSD/%d_non_szr_psd.mat',sub);
+end
 load(psd_fname);
 good_psd_ids=find(psd_samps(:,1,end)); % # of files that were acutally computed
 %(sometimes I quite PSD computation early

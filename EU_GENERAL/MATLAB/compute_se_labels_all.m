@@ -1,5 +1,5 @@
-sub_id=1096; %done
-sub_id=1125; %done
+% sub_id=1096; %done
+% sub_id=1125; %done
 %sub_id=620;
 %sub_id=264;
 % sub_id=590;
@@ -32,8 +32,7 @@ end
 wind_len_sec=1; % moving window length in seconds
 edge_pts=1178; % # of initial time points to remove due to edge effect
 
-%% Loop over SOZ electrodes
-% Loop over files
+%% Loop over files
 %for floop=1:2, %PICKUP ?? start at n_files=25
 for floop=1:n_files,
     % Compute features

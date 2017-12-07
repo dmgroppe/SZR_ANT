@@ -4,9 +4,15 @@ sub=1096; %0.12=proportion of desired files actually sampled.
 sub=1125; %0.12=proportion of desired files actually sampled.
 sub=264; %0.14=proportion of desired files actually sampled.
 sub=590; %0.04=proportion of desired files actually sampled.
+sub=862; 
+
 
 clear psd_samps
+if ismac,
 in_fname=sprintf('/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/PSD/%d_non_szr_psd.mat',sub);
+else
+   in_fname=sprintf('/home/dgroppe/GIT/SZR_ANT/EU_METADATA/PSD/%d_non_szr_psd.mat',sub);
+end
 load(in_fname);
 [n_samp, n_freq, n_chan]=size(psd_samps);
 good_psd_ids=find(psd_samps(:,1,1)); % # of files that were acutally computed
