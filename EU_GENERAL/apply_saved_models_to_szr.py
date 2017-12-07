@@ -109,7 +109,8 @@ for elec in soz_elec_names:
 
     # Apply classifier to non-szr data
     for model_ct in range(n_models):
-        tmp_yhat_va = models[model_ct].predict_proba(raw_ftrs.T)[:, 1]
+        #tmp_yhat_va = models[model_ct].predict_proba(raw_ftrs.T)[:, 1]
+        tmp_yhat_va = models[model_ct].predict(raw_ftrs.T)
         if model_ct == 0:
             yhat = np.zeros(tmp_yhat_va.shape)
         yhat += tmp_yhat_va / n_models
@@ -133,7 +134,8 @@ for elec in soz_elec_names:
 
         # Apply classifiers
         for model_ct in range(n_models):
-            tmp_yhat_va = models[model_ct].predict_proba(raw_ftrs.T)[:, 1]
+            #tmp_yhat_va = models[model_ct].predict_proba(raw_ftrs.T)[:, 1]
+            tmp_yhat_va = models[model_ct].predict(raw_ftrs.T)
             if model_ct == 0:
                 yhat = np.zeros(tmp_yhat_va.shape)
             yhat += tmp_yhat_va / n_models

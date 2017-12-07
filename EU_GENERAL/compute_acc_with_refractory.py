@@ -28,8 +28,8 @@ model_name=sys.argv[3]
 
 Fs = 9.84615384615  # sampling rate of moving spectral energy window
 # Set stim refractory period
-refract_min=0.5
-refract_tpt=np.round(Fs*refract_min*60)
+refract_min=0.5 # length of refractory period in minutes
+refract_tpt=np.round(Fs*refract_min*60) #length of refractory period in time points
 
 
 # Get list of yhat files
@@ -54,9 +54,10 @@ stim_latency_hit = list()
 # Loop over yhat files
 #temp_files=['109600102_0000_yhat.npz','109600102_0001_yhat.npz','109600102_0002_yhat.npz','109600102_0072_yhat.npz']
 #for f in temp_files:
+clin_szr_ct=0
 for f in os.listdir(yhat_path):
     if f.endswith('.npz'):
-        print('Analyzing file %s' % f)
+        #TODO print('Analyzing file %s' % f)
         yhat_npz = np.load(os.path.join(yhat_path, f))
         n_wind = len(yhat_npz['max_yhat'])
 
@@ -69,7 +70,7 @@ for f in os.listdir(yhat_path):
         splt_f = f.split('_')
         label_fname = str(sub) + '_y_' + splt_f[0] + '_' + splt_f[1] + '.mat'
         label_f = os.path.join(label_path, label_fname)
-        print('Loading file %s' % label_f)
+        #TODO print('Loading file %s' % label_f)
         label_mat = sio.loadmat(label_f)
 
         # Compute stimulations with refractory periods
@@ -113,7 +114,8 @@ for f in os.listdir(yhat_path):
                 offset_id_list.append(tloop - 1)
             if len(onset_id_list) != len(offset_id_list):
                 raise Exception('Error: len(onset_id_list)!=len(offset_id_list) in %s!!!!')
-
+            print('Clinical szr onsets: {}'.format(onset_id_list))
+            print('Clinical szr offsets: {}'.format(offset_id_list))
             # Loop over clinical szrs (may be more than one in the clip)
             for temp_ct, onset_id in enumerate(onset_id_list):
                 if sum(stim[onset_id:offset_id_list[temp_ct]]):
@@ -136,6 +138,11 @@ for f in os.listdir(yhat_path):
                     # I count this as a miss even if it happened during the seizure
                     stim_latency_hit[-1] = 0
                     n_true_pos += -1
+                clin_szr_ct+=1
+                print('Clinical Szr #%d, file %s' % (clin_szr_ct,label_f))
+                print('yhat from %s' % os.path.join(yhat_path, f))
+                print('Hit=%d, Latency=%f sec' % (stim_latency_hit[-1],stim_latency_sec[-1]))
+                #exit() # TODO ?????
 
 fp_per_hour = n_false_pos / total_hrs
 print('%f of false positives/hr' % fp_per_hour)
