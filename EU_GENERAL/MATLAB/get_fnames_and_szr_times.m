@@ -90,6 +90,7 @@ end
 file_info=struct('fname',file_times(:,3),'file_onset_sec',f_onsets, ...
     'file_offset_sec',f_offsets,'file_onset_hrs',file_times(:,5),'file_dur_sec', ...
     file_dur);
+
 for floop=1:n_files,
     % For some reason I have to do this again. Otherwise all fields have
     % the same value regardless of file.
@@ -99,8 +100,12 @@ for floop=1:n_files,
     file_info(floop).file_dur_sec=file_dur(floop);
     clin_sonsets_this_file=[];
     clin_soffsets_this_file=[];
+    clin_szr_csv_id=[];
+    sub_szr_csv_id=[];
     sub_sonsets_this_file=[];
     sub_soffsets_this_file=[];
+    % Loop over clinical and subclinical szrs to see if this file contains
+    % any of them
     for sloop=1:n_szrs,
         if (szr_onsets(sloop)>=f_onsets(floop)) && (szr_onsets(sloop)<=f_offsets(floop))
             % Szr onset is in this file
@@ -109,9 +114,11 @@ for floop=1:n_files,
                 if clin_szr(sloop),
                     clin_sonsets_this_file=[clin_sonsets_this_file szr_onsets(sloop)-f_onsets(floop)];
                     clin_soffsets_this_file=[clin_soffsets_this_file szr_offsets(sloop)-f_onsets(floop)];
+                    clin_szr_csv_id=[clin_szr_csv_id sloop];
                 else
                     sub_sonsets_this_file=[sub_sonsets_this_file szr_onsets(sloop)-f_onsets(floop)];
                     sub_soffsets_this_file=[sub_soffsets_this_file szr_offsets(sloop)-f_onsets(floop)];
+                    sub_szr_csv_id=[sub_szr_csv_id sloop];
                 end
             else
                 fprintf('Getting info from file: %s\n',file_info(floop).fname); 
@@ -119,9 +126,11 @@ for floop=1:n_files,
                 if clin_szr(sloop),
                     clin_sonsets_this_file=[clin_sonsets_this_file szr_onsets(sloop)-f_onsets(floop)];
                     clin_soffsets_this_file=[clin_soffsets_this_file f_offsets(floop)-f_onsets(floop)];
+                    clin_szr_csv_id=[clin_szr_csv_id sloop];
                 else
                     sub_sonsets_this_file=[sub_sonsets_this_file szr_onsets(sloop)-f_onsets(floop)];
                     sub_soffsets_this_file=[sub_soffsets_this_file f_offsets(floop)-f_onsets(floop)];
+                    sub_szr_csv_id=[sub_szr_csv_id sloop];
                 end
             end
         elseif (szr_offsets(sloop)>=f_onsets(floop)) && (szr_offsets(sloop)<=f_offsets(floop))
@@ -131,15 +140,32 @@ for floop=1:n_files,
             if clin_szr(sloop),
                 clin_sonsets_this_file=[clin_sonsets_this_file 0];
                 clin_soffsets_this_file=[clin_soffsets_this_file szr_offsets(sloop)-f_onsets(floop)];
+                clin_szr_csv_id=[clin_szr_csv_id sloop];
             else
                 sub_sonsets_this_file=[sub_sonsets_this_file 0];
                 sub_soffsets_this_file=[sub_soffsets_this_file szr_offsets(sloop)-f_onsets(floop)];
+                sub_szr_csv_id=[sub_szr_csv_id sloop];
+            end
+        elseif (szr_onsets(sloop)<=f_onsets(floop)) && (szr_offsets(sloop)>=f_offsets(floop))
+            % Szr spans entire file
+            fprintf('Getting info from file: %s\n',file_info(floop).fname);
+            warning('Szr spans entire file. I will call all time points "szr".');
+            if clin_szr(sloop),
+                clin_sonsets_this_file=[clin_sonsets_this_file 0];
+                clin_soffsets_this_file=[clin_soffsets_this_file f_offsets(floop)-f_onsets(floop)];
+                clin_szr_csv_id=[clin_szr_csv_id sloop];
+            else
+                sub_sonsets_this_file=[sub_sonsets_this_file 0];
+                sub_soffsets_this_file=[sub_soffsets_this_file f_offsets(floop)-f_onsets(floop)];
+                sub_szr_csv_id=[sub_szr_csv_id sloop];
             end
         end
     end
     file_info(floop).clin_szr_onsets_sec=clin_sonsets_this_file;
     file_info(floop).clin_szr_offsets_sec=clin_soffsets_this_file;
+    file_info(floop).clin_szr_csv_id=clin_szr_csv_id;
     file_info(floop).sub_szr_onsets_sec=sub_sonsets_this_file;
     file_info(floop).sub_szr_offsets_sec=sub_soffsets_this_file;
+    file_info(floop).sub_szr_csv_id=sub_szr_csv_id;
 end
 

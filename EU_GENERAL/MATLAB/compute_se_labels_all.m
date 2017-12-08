@@ -23,7 +23,6 @@ end
 file_info=get_fnames_and_szr_times(sub_id);
 n_files=length(file_info);
 
-
 % outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE');
 if ~exist(outdir,'dir'),
     mkdir(outdir);
@@ -31,6 +30,7 @@ end
 
 wind_len_sec=1; % moving window length in seconds
 edge_pts=1178; % # of initial time points to remove due to edge effect
+
 
 %% Loop over files
 %for floop=1:2, %PICKUP ?? start at n_files=25
@@ -46,19 +46,13 @@ for floop=1:n_files,
         error('Could not find file: %s',full_data_fname);
     end
     fprintf('Fs=%f\n',Fs);
-    %fprintf('# of monopolar chans %d\n',pat.a_n_chan);
     fprintf('# of samples=%d\n',(pat.a_n_samples));
     
     % Import entire clip (typically 1 hour long)
-    %     pat.a_channs_cell={soz_chans_bi{cloop,1}}; % Channel to import
-    %     ieeg_temp1=pat.get_bin_signals(1,pat.a_n_samples);
-    %
-    %     pat.a_channs_cell={soz_chans_bi{cloop,2}}; % Channel to import
-    %     ieeg_temp2=pat.get_bin_signals(1,pat.a_n_samples);
     ieeg=zeros(pat.a_n_samples,1);
     ieeg_time_sec_pre_decimate=[0:(length(ieeg)-1)]/Fs; % time relative to start of file
     
-    % TODO ?? modify code below to descriminate between clinical and
+    % TODO ?? modify code below to discriminate between clinical and
     % subclinical szrs
     
     %% Compute ictal-class

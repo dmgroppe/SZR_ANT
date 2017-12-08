@@ -1,3 +1,8 @@
+%% Figure out what's going wrong with compute_se_labels_all.m
+file_info=get_fnames_and_szr_times(862);
+
+%%
+n_files=length(file_info);
 for a=1:n_files,
     if strcmpi(file_info(a).fname,'86201102_0141.head'),
    fprintf('%d: %s\n',a,file_info(a).fname);
@@ -23,6 +28,8 @@ end
 figure(1); clf;
 plot(f_onset2);
 xlabel('Sec');
+
+
 %% Get and plot szr durations
 subs=[115 253 264 273 442 565 590 620 862 922 958 970 1077 1096 1125];
 dur=[];
