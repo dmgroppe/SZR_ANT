@@ -17,6 +17,13 @@ function file_info=get_fnames_and_szr_times(sub_id)
 %      relative to an arbitrary date
 %      file_onset_hrs: '2009-06-18 18:54:10.000'
 %        file_dur_sec: [165x1 double]
+%      clin_szr_onsets_sec: 0
+%     clin_szr_offsets_sec: 3600
+%          clin_szr_csv_id: 8
+%       sub_szr_onsets_sec: []
+%      sub_szr_offsets_sec: []
+%           sub_szr_csv_id: []
+%          
 %      szr_onsets_sec: 1082<-onset of any seizures in seconds relative to
 %      the start of the file
 %     szr_offsets_sec: 1119
