@@ -7,6 +7,9 @@
 # "gamma": .001,
 # "use_ftrs": ["SE"]}
 #
+# for example the file final_params.json
+#
+# Note K-means downsampling is NOT done
 # TODO: currently code only works with one feature. Need to add others.
 
 import numpy as np
