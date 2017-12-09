@@ -125,26 +125,23 @@ for hdr_ct, hdr_fname in enumerate(on_off_df['HeaderFname']):
         plt.plot(xlim,[0.5, 0.5],'k:')
         plt.show()
 
-    # Load list of szrs
-    # TODO get from path_dict
-    # szr_times_fname = os.path.join('/home/dgroppe/GIT/SZR_ANT/EU_METADATA/SZR_TIMES/',
-    #                                'szr_on_off_FR_' + str(sub) + '.pkl')
-    szr_times_fname = os.path.join(path_dict['szr_ant_root'],'EU_METADATA','SZR_TIMES/',
-                                   'szr_on_off_FR_' + str(sub) + '.pkl')
-    szr_df = pickle.load(open(szr_times_fname, 'rb'))
-    n_szr = szr_df.shape[0]
+# Load list of szrs
+szr_times_fname = os.path.join(path_dict['szr_ant_root'],'EU_METADATA','SZR_TIMES/',
+                               'szr_on_off_FR_' + str(sub) + '.pkl')
+szr_df = pickle.load(open(szr_times_fname, 'rb'))
+n_szr = szr_df.shape[0]
 
-    # np.savez('sbox.npz',stim_sec=stim_sec)
-    # Loop over szrs and:
-    stim_lat = np.zeros(n_szr)
-    clin_szr = np.zeros(n_szr)
-    szr_hit = np.zeros(n_szr)
-    stim_sec_np = np.asarray(stim_sec)
-    for szr_id in range(n_szr):
-        onset_sec = szr_df['SzrOnsetSec'][szr_id]
-        offset_sec = szr_df['SzrOffsetSec'][szr_id]
-        if szr_df['SzrType'][szr_id] == 'Clinical':
-            clin_szr[szr_id] = 1
+# np.savez('sbox.npz',stim_sec=stim_sec)
+# Loop over szrs and:
+stim_lat = np.zeros(n_szr)
+clin_szr = np.zeros(n_szr)
+szr_hit = np.zeros(n_szr)
+stim_sec_np = np.asarray(stim_sec)
+for szr_id in range(n_szr):
+    onset_sec = szr_df['SzrOnsetSec'][szr_id]
+    offset_sec = szr_df['SzrOffsetSec'][szr_id]
+    if szr_df['SzrType'][szr_id] == 'Clinical':
+        clin_szr[szr_id] = 1
 
         # 1) find the stimulation that is closest in time to seizure onset
         nearest_id = dg.find_nearest(stim_sec, onset_sec)
@@ -162,65 +159,10 @@ for hdr_ct, hdr_fname in enumerate(on_off_df['HeaderFname']):
 
         print('Szr %d, lat %f, hit %d, duration=%f' % (szr_id, stim_lat[szr_id], szr_hit[szr_id], offset_sec - onset_sec))
 
-    print('%d clinical szrs' % np.sum(clin_szr))
-    print('%d subclinical szrs' % np.sum(clin_szr == 0))
-    print('%d/%d szrs stimulated' % (np.sum(szr_hit), n_szr))
+print('%d clinical szrs' % np.sum(clin_szr))
+print('%d subclinical szrs' % np.sum(clin_szr == 0))
+print('%d/%d szrs stimulated' % (np.sum(szr_hit), n_szr))
 
-    # 1) find the stimulation that is closest in time to seizure onset
-    # 2) see if stimulation happens SOMEwhere in the target window
-
-
-        # Compute sensitivity and latency to clinical szr onset (if any clinical szrs in the file)
-        # if 1 in se_szr_class:
-        #     print('Clinical szr present')
-        #     onset_id_list = list()
-        #     offset_id_list = list()
-        #     in_szr = False
-        #     for tloop, y in enumerate(se_szr_class):
-        #         if in_szr == False:
-        #             if y == 1:
-        #                 # entered new clinical szr
-        #                 onset_id_list.append(tloop)
-        #                 n_clin_szr += 1
-        #                 in_szr = True
-        #         else:
-        #             if y == 0:
-        #                 # exited clinical szr
-        #                 offset_id_list.append(tloop - 1)
-        #                 in_szr = False
-        #     if in_szr == True:
-        #         # szr lasts until end of file
-        #         offset_id_list.append(tloop - 1)
-        #     if len(onset_id_list) != len(offset_id_list):
-        #         raise Exception('Error: len(onset_id_list)!=len(offset_id_list) in %s!!!!')
-        #     print('Clinical szr onsets: {}'.format(onset_id_list))
-        #     print('Clinical szr offsets: {}'.format(offset_id_list))
-        #     # Loop over clinical szrs (may be more than one in the clip)
-        #     for temp_ct, onset_id in enumerate(onset_id_list):
-        #         if sum(stim[onset_id:offset_id_list[temp_ct]]):
-        #             n_true_pos += 1
-        #             stim_latency_hit.append(1)
-        #         else:
-        #             stim_latency_hit.append(0)
-        #         # Find closest stimulation to clinician defined onset
-        #         temp_id = np.argmin(np.abs(np.asarray(stim_ids) - onset_id))
-        #         closest_id = stim_ids[temp_id]
-        #         stim_latency_sec.append((closest_id - onset_id) / Fs)
-        #         if stim_latency_sec[-1]>=-5 and stim_latency_sec[-1]<=0:
-        #             # Stimulation occurred within 5 sec before clinician onset.
-        #             # I count this as a hit due to training
-        #             if stim_latency_hit[-1]==0:
-        #                 stim_latency_hit[-1]=1
-        #                 n_true_pos += 1
-        #         if stim_latency_sec[-1]>50 and stim_latency_hit[-1]==1:
-        #             # Stimulation occurred more than 50 sec after clinician onset.
-        #             # I count this as a miss even if it happened during the seizure
-        #             stim_latency_hit[-1] = 0
-        #             n_true_pos += -1
-        #         clin_szr_ct+=1
-        #         print('Clinical Szr #%d, file %s' % (clin_szr_ct,label_f))
-        #         print('yhat from %s' % os.path.join(yhat_path, f))
-        #         print('Hit=%d, Latency=%f sec' % (stim_latency_hit[-1],stim_latency_sec[-1]))
 
 fp_per_hour = n_false_pos / total_hrs
 print('%f of false positives/hr' % fp_per_hour)
@@ -235,7 +177,7 @@ else:
     sd_latency_sec = np.std(stim_latency_sec)
     print('Mean(SD) latency of stim relative to clinician onset: %.1f (%.1f) seconds' % (mn_latency_sec, sd_latency_sec))
 
-
+# Save results to disk
 # outpath=os.path.join(path_dict['szr_ant_root'],'MODELS',model_name)
 # outfname=str(sub)+'_thresh_'+replace_periods(str(stim_thresh))+'_refract_'+replace_periods(str(refract_sec))+'_stim_results'
 # print('Saving results to %s' % os.path.join(outpath,outfname))
