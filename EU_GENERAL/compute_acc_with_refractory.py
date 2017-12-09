@@ -126,8 +126,46 @@ for hdr_ct, hdr_fname in enumerate(on_off_df['HeaderFname']):
         plt.show()
 
     # Load list of szrs
-    np.savez('sbox.npz',stim_sec=stim_sec)
+    # TODO get from path_dict
+    # szr_times_fname = os.path.join('/home/dgroppe/GIT/SZR_ANT/EU_METADATA/SZR_TIMES/',
+    #                                'szr_on_off_FR_' + str(sub) + '.pkl')
+    szr_times_fname = os.path.join(path_dict['szr_ant_root'],'EU_METADATA','SZR_TIMES/',
+                                   'szr_on_off_FR_' + str(sub) + '.pkl')
+    szr_df = pickle.load(open(szr_times_fname, 'rb'))
+    n_szr = szr_df.shape[0]
+
+    # np.savez('sbox.npz',stim_sec=stim_sec)
     # Loop over szrs and:
+    stim_lat = np.zeros(n_szr)
+    clin_szr = np.zeros(n_szr)
+    szr_hit = np.zeros(n_szr)
+    stim_sec_np = np.asarray(stim_sec)
+    for szr_id in range(n_szr):
+        onset_sec = szr_df['SzrOnsetSec'][szr_id]
+        offset_sec = szr_df['SzrOffsetSec'][szr_id]
+        if szr_df['SzrType'][szr_id] == 'Clinical':
+            clin_szr[szr_id] = 1
+
+        # 1) find the stimulation that is closest in time to seizure onset
+        nearest_id = dg.find_nearest(stim_sec, onset_sec)
+        # nearest_id=dg.find_nearest(stim_sec_np,onset_sec)
+        stim_lat[szr_id] = onset_sec - stim_sec[nearest_id]
+
+        #         temp_id = np.argmin(np.abs(np.asarray(stim_ids) - onset_id))
+        #         closest_id = stim_ids[temp_id]
+
+        # 2) see if stimulation happens SOMEwhere in the target window
+        # tim_bool=(stim_lat>=onset_sec) and (stim_lat<=offset_sec)
+        stim_bool = np.multiply(stim_sec_np >= onset_sec - 5, stim_sec_np <= offset_sec)
+        if np.sum(stim_bool) > 0:
+            szr_hit[szr_id] = 1
+
+        print('Szr %d, lat %f, hit %d, duration=%f' % (szr_id, stim_lat[szr_id], szr_hit[szr_id], offset_sec - onset_sec))
+
+    print('%d clinical szrs' % np.sum(clin_szr))
+    print('%d subclinical szrs' % np.sum(clin_szr == 0))
+    print('%d/%d szrs stimulated' % (np.sum(szr_hit), n_szr))
+
     # 1) find the stimulation that is closest in time to seizure onset
     # 2) see if stimulation happens SOMEwhere in the target window
 
