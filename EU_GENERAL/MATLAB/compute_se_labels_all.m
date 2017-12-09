@@ -6,8 +6,8 @@
 %sub_id=253;
 % sub_id=565;
 % sub_id=273; %done
-% sub_id=264;
-sub_id=862;
+sub_id=264;
+%sub_id=862;
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
