@@ -48,7 +48,6 @@ else:
 # Accuracy metrics
 total_hrs = 0
 n_false_pos = 0
-n_clin_szr = 0
 n_true_pos = 0
 stim_latency_sec = list()
 stim_latency_hit = list()
@@ -162,7 +161,8 @@ for szr_id in range(n_szr):
 
     print('%s Szr %d, lat %f, hit %d, duration=%f' % (szr_df['SzrType'][szr_id],szr_id, stim_lat[szr_id], szr_hit[szr_id], offset_sec - onset_sec))
 
-print('%d clinical szrs' % np.sum(clin_szr))
+n_clin_szr=np.sum(clin_szr)
+print('%d clinical szrs' % n_clin_szr)
 print('%d subclinical szrs' % np.sum(clin_szr == 0))
 clin_bool=clin_szr==1
 print('%d/%d clinical szrs stimulated' % (np.sum(szr_hit[clin_bool]), np.sum(clin_bool)))
@@ -197,26 +197,25 @@ print('%f of false positives/day' % (fp_per_hour*24))
 #          stim_thresh=stim_thresh,
 #          refract_sec=refract_sec)
 
-plt.figure(1)
-plt.clf()
-plt.boxplot(stim_lat[clin_bool])
-# plt.plot(np.ones(np.sum(clin_bool)),stim_latency_sec,'b.')
-plt.ylabel('Seconds')
-plt.xticks([])
-plt.title('Stim Latency relative to Clin Szr Onset')
-xlim=[.85, 1.15]
-plt.xlim(xlim)
-plt.plot(xlim,[0, 0],'k:')
-plt.show()
-
 # plt.figure(1)
 # plt.clf()
-# plt.boxplot(stim_latency_sec)
-# plt.plot(np.ones(len(stim_latency_sec)),stim_latency_sec,'b.')
+# plt.boxplot(stim_lat[clin_bool])
 # plt.ylabel('Seconds')
 # plt.xticks([])
-# plt.title('Stim Latency relative to Szr Onset')
+# plt.title('Stim Latency relative to Clin Szr Onset')
 # xlim=[.85, 1.15]
 # plt.xlim(xlim)
 # plt.plot(xlim,[0, 0],'k:')
 # plt.show()
+
+plt.figure(1)
+plt.clf()
+plt.boxplot(stim_lat[clin_bool])
+plt.plot(np.ones(n_clin_szr)+(np.random.rand(n_clin_szr)-0.5)/2,stim_lat[clin_bool],'b.')
+plt.ylabel('Seconds')
+plt.xticks([])
+plt.title('Stim Latency relative to Clin Szr Onset')
+xlim=[.85, 1.15]
+# plt.xlim(xlim)
+# plt.plot(xlim,[0, 0],'k:')
+plt.show()
