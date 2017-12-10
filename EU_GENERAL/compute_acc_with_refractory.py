@@ -171,15 +171,15 @@ print('%d/%d subclinical szrs stimulated' % (np.sum(szr_hit[clin_bool==False]), 
 fp_per_hour = n_false_pos / total_hrs
 print('%f of false positives/hr' % fp_per_hour)
 print('%f of false positives/day' % (fp_per_hour*24))
-if n_clin_szr == 0:
-    print('No clinical szrs captured')
-    sens = np.nan
-else:
-    sens = n_true_pos / n_clin_szr
-    print('%d/%d clinical szrs, Sensitivity=%f' % (n_true_pos, n_clin_szr, sens))
-    mn_latency_sec = np.mean(stim_latency_sec)
-    sd_latency_sec = np.std(stim_latency_sec)
-    print('Mean(SD) latency of stim relative to clinician onset: %.1f (%.1f) seconds' % (mn_latency_sec, sd_latency_sec))
+# if n_clin_szr == 0:
+#     print('No clinical szrs captured')
+#     sens = np.nan
+# else:
+#     sens = n_true_pos / n_clin_szr
+#     print('%d/%d clinical szrs, Sensitivity=%f' % (n_true_pos, n_clin_szr, sens))
+#     mn_latency_sec = np.mean(stim_latency_sec)
+#     sd_latency_sec = np.std(stim_latency_sec)
+#     print('Mean(SD) latency of stim relative to clinician onset: %.1f (%.1f) seconds' % (mn_latency_sec, sd_latency_sec))
 
 # Save results to disk
 # outpath=os.path.join(path_dict['szr_ant_root'],'MODELS',model_name)
@@ -196,6 +196,18 @@ else:
 #          fp_per_hour=fp_per_hour,
 #          stim_thresh=stim_thresh,
 #          refract_sec=refract_sec)
+
+plt.figure(1)
+plt.clf()
+plt.boxplot(stim_lat[clin_bool])
+# plt.plot(np.ones(np.sum(clin_bool)),stim_latency_sec,'b.')
+plt.ylabel('Seconds')
+plt.xticks([])
+plt.title('Stim Latency relative to Clin Szr Onset')
+xlim=[.85, 1.15]
+plt.xlim(xlim)
+plt.plot(xlim,[0, 0],'k:')
+plt.show()
 
 # plt.figure(1)
 # plt.clf()
