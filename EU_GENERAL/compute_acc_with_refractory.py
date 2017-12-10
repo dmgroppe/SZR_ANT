@@ -161,7 +161,7 @@ for szr_id in range(n_szr):
 
     print('%s Szr %d, lat %f, hit %d, duration=%f' % (szr_df['SzrType'][szr_id],szr_id, stim_lat[szr_id], szr_hit[szr_id], offset_sec - onset_sec))
 
-n_clin_szr=np.sum(clin_szr)
+n_clin_szr=int(np.sum(clin_szr))
 print('%d clinical szrs' % n_clin_szr)
 print('%d subclinical szrs' % np.sum(clin_szr == 0))
 clin_bool=clin_szr==1
@@ -213,8 +213,7 @@ np.savez('temp.npz',stim_lat=stim_lat,clin_bool=clin_bool,n_clin_szr=n_clin_szr)
 plt.figure(1)
 plt.clf()
 plt.boxplot(stim_lat[clin_bool])
-#plt.plot(np.ones(n_clin_szr)+(np.random.rand(n_clin_szr)-0.5)/2,stim_lat[clin_bool],'b.')
-plt.plot(np.ones(n_clin_szr),stim_lat[clin_bool],'b.')
+plt.plot(np.ones(n_clin_szr)+(np.random.rand(n_clin_szr)-0.5)/25,stim_lat[clin_bool],'b.')
 plt.ylabel('Seconds')
 plt.xticks([])
 plt.title('Stim Latency relative to Clin Szr Onset')
