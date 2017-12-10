@@ -107,14 +107,15 @@ for hdr_ct, hdr_fname in enumerate(on_off_df['HeaderFname']):
 
     # Compute false positives
     se_szr_class = np.squeeze(label_mat['se_szr_class'])
-    print('Min se_szr_class: %f' % np.min(se_szr_class))
-    # TODO make this also ignore subclinical szrs  !!!!!!
+    # print('Min se_szr_class: %f' % np.min(se_szr_class))
+    # Note, this ignores subclinical szrs (se_szr_class=-1) and clinical szrs (se_szr_class=1)
     nonszr_bool = se_szr_class == 0 # TODO extend this 5 sec before clinician onset,
     # should probably make a separate matlab variable
     #print('false+ %d' % np.sum(stim[nonszr_bool]))
     n_false_pos += np.sum(stim[nonszr_bool])
 
     if False:
+        # Plot szr class and hypothetical stimulations for this clip
         plt.figure(1)
         plt.clf()
         plt.plot(yhat_npz['max_yhat'],'b-')
@@ -183,9 +184,9 @@ print('%f of false positives/day' % (fp_per_hour*24))
 #     print('Mean(SD) latency of stim relative to clinician onset: %.1f (%.1f) seconds' % (mn_latency_sec, sd_latency_sec))
 
 # Save results to disk
-# outpath=os.path.join(path_dict['szr_ant_root'],'MODELS',model_name)
-# outfname=str(sub)+'_thresh_'+replace_periods(str(stim_thresh))+'_refract_'+replace_periods(str(refract_sec))+'_stim_results'
-# print('Saving results to %s' % os.path.join(outpath,outfname))
+outpath=os.path.join(path_dict['szr_ant_root'],'MODELS',model_name)
+outfname=str(sub)+'_thresh_'+replace_periods(str(stim_thresh))+'_refract_'+replace_periods(str(refract_sec))+'_stim_results'
+print('Saving results to %s' % os.path.join(outpath,outfname))
 # np.savez(os.path.join(outpath,outfname),
 #          stim_latency_sec=stim_latency_sec,
 #          stim_latency_hit=stim_latency_hit,
