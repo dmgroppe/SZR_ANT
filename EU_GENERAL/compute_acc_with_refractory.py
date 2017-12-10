@@ -208,6 +208,8 @@ print('%f of false positives/day' % (fp_per_hour*24))
 # plt.plot(xlim,[0, 0],'k:')
 # plt.show()
 
+np.savez('temp.npz',stim_lat=stim_lat,clin_bool=clin_bool,n_clin_szr=n_clin_szr)
+
 plt.figure(1)
 plt.clf()
 plt.boxplot(stim_lat[clin_bool])
