@@ -1,3 +1,14 @@
+# This function applies a classifier to all the clips of an epilepsiae patient & calculates:
+#  -hypothetical stimulations
+#  -# of seizures stimulated (both clinical and subclinical)
+#  -false positive rate (i.e., stimulations outside of clinical or subclinical szrs)
+#  -latency of closest stimulation to seizure onset
+#
+# Results are saved to the classifier's (i.e., model's) subdirectory
+#
+# Notes:
+#  -This saves results using refractory period in seconds. The AES version of the code used minutes. Thus you can tell them apart
+
 # Libraries
 import numpy as np
 import scipy.io as sio
@@ -48,9 +59,6 @@ else:
 # Accuracy metrics
 total_hrs = 0
 n_false_pos = 0
-n_true_pos = 0
-stim_latency_sec = list()
-stim_latency_hit = list()
 
 # Get list of clips from data_on_off_FR*.csv
 csv_path=os.path.join(path_dict['eu_meta'],'IEEG_ON_OFF')
@@ -151,12 +159,11 @@ for szr_id in range(n_szr):
     nearest_id = dg.find_nearest(stim_sec, onset_sec)
     # nearest_id=dg.find_nearest(stim_sec_np,onset_sec)
     stim_lat[szr_id] = onset_sec - stim_sec[nearest_id]
-
     #         temp_id = np.argmin(np.abs(np.asarray(stim_ids) - onset_id))
     #         closest_id = stim_ids[temp_id]
 
     # 2) see if stimulation happens SOMEwhere in the target window
-    # tim_bool=(stim_lat>=onset_sec) and (stim_lat<=offset_sec)
+    # stim_bool=(stim_lat>=onset_sec) and (stim_lat<=offset_sec)
     stim_bool = np.multiply(stim_sec_np >= onset_sec - 5, stim_sec_np <= offset_sec)
     if np.sum(stim_bool) > 0:
         szr_hit[szr_id] = 1
@@ -173,31 +180,21 @@ print('%d/%d subclinical szrs stimulated' % (np.sum(szr_hit[clin_bool==False]), 
 fp_per_hour = n_false_pos / total_hrs
 print('%f of false positives/hr' % fp_per_hour)
 print('%f of false positives/day' % (fp_per_hour*24))
-# if n_clin_szr == 0:
-#     print('No clinical szrs captured')
-#     sens = np.nan
-# else:
-#     sens = n_true_pos / n_clin_szr
-#     print('%d/%d clinical szrs, Sensitivity=%f' % (n_true_pos, n_clin_szr, sens))
-#     mn_latency_sec = np.mean(stim_latency_sec)
-#     sd_latency_sec = np.std(stim_latency_sec)
-#     print('Mean(SD) latency of stim relative to clinician onset: %.1f (%.1f) seconds' % (mn_latency_sec, sd_latency_sec))
 
 # Save results to disk
 outpath=os.path.join(path_dict['szr_ant_root'],'MODELS',model_name)
 outfname=str(sub)+'_thresh_'+replace_periods(str(stim_thresh))+'_refract_'+replace_periods(str(refract_sec))+'_stim_results'
 print('Saving results to %s' % os.path.join(outpath,outfname))
-# np.savez(os.path.join(outpath,outfname),
-#          stim_latency_sec=stim_latency_sec,
-#          stim_latency_hit=stim_latency_hit,
-#          sens=sens,
-#          n_clin_szr=n_clin_szr,
-#          n_true_pos=n_true_pos,
-#          total_hrs=total_hrs,
-#          n_false_pos=n_false_pos,
-#          fp_per_hour=fp_per_hour,
-#          stim_thresh=stim_thresh,
-#          refract_sec=refract_sec)
+np.savez(os.path.join(outpath,outfname),
+         stim_lat=stim_lat,
+         stim_sec=stim_sec,
+         clin_szr=clin_szr,
+         szr_hit=szr_hit,
+         total_hrs=total_hrs,
+         n_false_pos=n_false_pos,
+         fp_per_hour=fp_per_hour,
+         stim_thresh=stim_thresh,
+         refract_sec=refract_sec)
 
 plt.figure(1)
 plt.clf()
