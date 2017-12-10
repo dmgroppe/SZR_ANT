@@ -107,6 +107,7 @@ for hdr_ct, hdr_fname in enumerate(on_off_df['HeaderFname']):
 
     # Compute false positives
     se_szr_class = np.squeeze(label_mat['se_szr_class'])
+    print('Min se_szr_class: %f' % np.min(se_szr_class))
     # TODO make this also ignore subclinical szrs  !!!!!!
     nonszr_bool = se_szr_class == 0 # TODO extend this 5 sec before clinician onset,
     # should probably make a separate matlab variable
@@ -196,19 +197,6 @@ print('%f of false positives/day' % (fp_per_hour*24))
 #          fp_per_hour=fp_per_hour,
 #          stim_thresh=stim_thresh,
 #          refract_sec=refract_sec)
-
-# plt.figure(1)
-# plt.clf()
-# plt.boxplot(stim_lat[clin_bool])
-# plt.ylabel('Seconds')
-# plt.xticks([])
-# plt.title('Stim Latency relative to Clin Szr Onset')
-# xlim=[.85, 1.15]
-# plt.xlim(xlim)
-# plt.plot(xlim,[0, 0],'k:')
-# plt.show()
-
-# np.savez('temp.npz',stim_lat=stim_lat,clin_bool=clin_bool,n_clin_szr=n_clin_szr)
 
 plt.figure(1)
 plt.clf()
