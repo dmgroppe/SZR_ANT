@@ -202,9 +202,14 @@ for clip in clip_list:
     # Write to disk
     out_fname = clip + '_yhat'
     print('Saving yhat to %s' % os.path.join(out_path, out_fname))
-    np.savez(os.path.join(out_path, out_fname),
-             max_yhat=max_yhat,
-             yhat_soz_chans=yhat_soz_chans,
-             yhat_sec=temp_mat['se_time_sec'])  # note that time is relative to start of file (i.e., 0=first file tpt)
+    mat_dict={"max_yhat": max_yhat,
+             "yhat_soz_chans": yhat_soz_chans,
+             "yhat_sec": temp_mat['se_time_sec']}
+    sio.savemat(os.path.join(out_path, out_fname+'.mat'), mat_dict)  # note that time is relative to start of file (i.e., 0=first file tpt)
+    # np.savez(os.path.join(out_path, out_fname),
+    #          max_yhat=max_yhat,
+    #          yhat_soz_chans=yhat_soz_chans,
+    #          yhat_sec=temp_mat['se_time_sec'])  # note that time is relative to start of file (i.e., 0=first file tpt)
+
 
 print('Done.')

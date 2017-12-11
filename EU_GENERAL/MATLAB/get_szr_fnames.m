@@ -8,10 +8,13 @@ function cli_szr_info=get_szr_fnames(sub_id)
 %
 % Output:
 % cli_szr_info =  struct array with fields:
-%     clinical_fname
-%     clinical_onset_sec
-%     clinical_offset_sec
-%     clinical_szr_num
+%     clinical_fname=path and filename of raw ieeg clip
+%     clinical_onset_sec=onset of seizure in seconds relative to the start
+%                        of the clip
+%     clinical_offset_sec=offset of seizure in seconds relative to the end
+%                         of the clip
+%     clinical_szr_num=index of seizure in seizure csv file (e.g., ??)
+%     clinical_soz_chans=struct array of SOZ channels
 
 
 %% Load szr onset and offset times

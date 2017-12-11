@@ -19,6 +19,7 @@ import sys
 import ieeg_funcs as ief
 import dgFuncs as dg
 import matplotlib.pyplot as plt
+import scipy.io as sio
 
 def replace_periods(word):
     for letter in word:
@@ -155,10 +156,13 @@ for szr_id in range(n_szr):
     if szr_df['SzrType'][szr_id] == 'Clinical':
         clin_szr[szr_id] = 1
 
+    # print('Szr %d, %s, Onset %f  Offset %f sec' % (szr_id,szr_df['SzrType'][szr_id],onset_sec,offset_sec))
+    # exit()
+
     # 1) find the stimulation that is closest in time to seizure onset
     nearest_id = dg.find_nearest(stim_sec, onset_sec)
     # nearest_id=dg.find_nearest(stim_sec_np,onset_sec)
-    stim_lat[szr_id] = onset_sec - stim_sec[nearest_id]
+    stim_lat[szr_id] = stim_sec[nearest_id] - onset_sec
     #         temp_id = np.argmin(np.abs(np.asarray(stim_ids) - onset_id))
     #         closest_id = stim_ids[temp_id]
 
@@ -183,9 +187,11 @@ print('%f of false positives/day' % (fp_per_hour*24))
 
 # Save results to disk
 outpath=os.path.join(path_dict['szr_ant_root'],'MODELS',model_name)
-outfname=str(sub)+'_thresh_'+replace_periods(str(stim_thresh))+'_refract_'+replace_periods(str(refract_sec))+'_stim_results'
-print('Saving results to %s' % os.path.join(outpath,outfname))
-np.savez(os.path.join(outpath,outfname),
+if False:
+    # Save results as npz file
+    outfname=str(sub)+'_thresh_'+replace_periods(str(stim_thresh))+'_refract_'+replace_periods(str(refract_sec))+'_stim_results'
+    print('Saving results to %s' % os.path.join(outpath,outfname))
+    np.savez(os.path.join(outpath,outfname),
          stim_lat=stim_lat,
          stim_sec=stim_sec,
          clin_szr=clin_szr,
@@ -195,6 +201,22 @@ np.savez(os.path.join(outpath,outfname),
          fp_per_hour=fp_per_hour,
          stim_thresh=stim_thresh,
          refract_sec=refract_sec)
+else:
+    # Save results as mat file
+    outfname=str(sub)+'_thresh_'+replace_periods(str(stim_thresh))+'_refract_'+replace_periods(str(refract_sec))+'_stim_results.mat'
+    print('Saving results to %s' % os.path.join(outpath,outfname))
+    out_dict={"stim_lat": stim_lat,
+         "stim_sec": stim_sec,
+         "clin_szr": clin_szr,
+         "szr_hit": szr_hit,
+         "total_hrs": total_hrs,
+         "n_false_pos": n_false_pos,
+         "fp_per_hour": fp_per_hour,
+         "stim_thresh": stim_thresh,
+         "refract_sec": refract_sec}
+    sio.savemat(os.path.join(outpath,outfname),out_dict)
+
+
 
 plt.figure(1)
 plt.clf()

@@ -12,9 +12,9 @@ function file_info=get_fnames_and_szr_times(sub_id)
 % file_info =  struct array with fields:
 %               fname: '109600102_0007.head'
 %      file_onset_sec: [165x1 double]<-onset of the file in seconds
-%      relative to an arbitrary date
+%                      relative to an arbitrary date
 %     file_offset_sec: [165x1 double]<-offset of the file in seconds
-%      relative to an arbitrary date
+%                      relative to an arbitrary date
 %      file_onset_hrs: '2009-06-18 18:54:10.000'
 %        file_dur_sec: [165x1 double]
 %      clin_szr_onsets_sec: 0
@@ -22,15 +22,15 @@ function file_info=get_fnames_and_szr_times(sub_id)
 %          clin_szr_csv_id: 8
 %       sub_szr_onsets_sec: []
 %      sub_szr_offsets_sec: []
-%           sub_szr_csv_id: []
-%          
+%           sub_szr_csv_id: [] <-index of szr in sub's csv file (e.g.,
+%           szr_on_off_FR_862.csv)
 %      szr_onsets_sec: 1082<-onset of any seizures in seconds relative to
-%      the start of the file
+%           the start of the file
 %     szr_offsets_sec: 1119
 %
-% Note, this function used to be called get_fnames_and_szr_times2.m
-%
-% Note also that files in file_info are sorted according to time of
+% Notes: 
+% -this function used to be called get_fnames_and_szr_times2.m
+% -files in file_info are sorted according to time of
 % occurrence
 
 %% Load szr onset and offset times

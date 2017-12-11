@@ -10,7 +10,8 @@ else
     yhat_root='/home/dgroppe/GIT/SZR_ANT/MODELS/svmAesFinale_1_yhat/';
 end
 
-example_szr=4;
+example_szr=2;
+sec_cutoff=30; %show this much of the seizure clip
 % NOTE szr_num indices start at 0
 switch example_szr,
     case 1,
@@ -18,7 +19,6 @@ switch example_szr,
         ftr_fname='1096_HL3_HL4_szr6.mat';
         load(fullfile(ftr_root,sub,ftr_fname)); % includes se_ftrs
         %yhat_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/';
-
         load(fullfile(yhat_root,'1096_HL3_HL4_phat_szr6.mat')); % Test Patient 1, Exmple Szr 1
     case 2,
         %Example of a seizure with late stim latency
@@ -36,7 +36,6 @@ switch example_szr,
         szr_num=6;
         chan1='TRA1';
         chan2='TRA2';
-        sec_cutoff=30; %show this much of the seizure clip
     case 4,
         % Example of a missed szr
         sub=862; % Test patient 3
@@ -45,7 +44,6 @@ switch example_szr,
 %         chan2='IHB3';
         chan1='IHB3';
         chan2='IHB4';
-        sec_cutoff=30; %show this much of the seizure clip   
 end
 ftr_fname=sprintf('%d_%s_%s_szr%d.mat',sub,chan1,chan2,szr_num);
 fprintf('Loading %s\n',ftr_fname);
