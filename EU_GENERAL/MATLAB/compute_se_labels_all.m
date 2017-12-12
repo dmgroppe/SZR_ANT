@@ -6,8 +6,9 @@
 %sub_id=253;
 % sub_id=565;
 % sub_id=273; %done
-sub_id=264;
+%sub_id=264;
 %sub_id=862;
+sub_id=565;
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
@@ -52,8 +53,7 @@ for floop=1:n_files,
     ieeg=zeros(pat.a_n_samples,1);
     ieeg_time_sec_pre_decimate=[0:(length(ieeg)-1)]/Fs; % time relative to start of file
     
-    % TODO ?? modify code below to discriminate between clinical and
-    % subclinical szrs
+
     
     %% Compute ictal-class
     szr_class=zeros(1,length(ieeg)); % -1=subclinical szr, 1=clinical szr
@@ -64,6 +64,7 @@ for floop=1:n_files,
             onset_id=findTpt(file_info(floop).clin_szr_onsets_sec(sloop),ieeg_time_sec_pre_decimate);
             if ~isempty(file_info(floop).clin_szr_offsets_sec),
                 % Sadly, some szrs have marked onsets but not offsets
+                % When this happens make szr last until end of clip
                 offset_id=findTpt(file_info(floop).clin_szr_offsets_sec(sloop),ieeg_time_sec_pre_decimate);
             else
                 offset_id=length(ieeg);
@@ -79,6 +80,7 @@ for floop=1:n_files,
             onset_id=findTpt(file_info(floop).sub_szr_onsets_sec(sloop),ieeg_time_sec_pre_decimate);
             if ~isempty(file_info(floop).sub_szr_offsets_sec),
                 % Sadly, some szrs have marked onsets but not offsets
+                % When this happens make szr last until end of clip
                 offset_id=findTpt(file_info(floop).sub_szr_offsets_sec(sloop),ieeg_time_sec_pre_decimate);
             else
                 offset_id=length(ieeg);
@@ -139,7 +141,9 @@ for floop=1:n_files,
     fname_stem=file_info(floop).fname(1:temp_id-1);
     outfname=fullfile(outdir,sprintf('%d_y_%s',sub_id,fname_stem));
     fprintf('Saving szr features to %s\n',outfname);
-    save(outfname,'se_szr_class','se_time_sec','szr_class_dec','time_dec');
+    file_onset_sec=file_info(floop).file_onset_sec; % Onset of raw ieeg in seconds relative to anchor date (Jan 1, 2000 I think)
+    save(outfname,'se_szr_class','se_time_sec','szr_class_dec','time_dec', ...
+        'file_onset_sec');
     
 end
 

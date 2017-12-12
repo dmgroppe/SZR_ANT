@@ -4,9 +4,9 @@
 % sub_id=590;
 %sub_id=253;
 % sub_id=862;
-% sub_id=565;
+ sub_id=565;
 %sub_id=1125; % done
-sub_id=273;
+%sub_id=273;
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
@@ -91,20 +91,8 @@ if ~exist(outdir,'dir'),
 end
 
 %% Loop over SOZ electrodes
-clear soz_chans
-if sub_id==1096,
-    soz_chans{1,1}='HL3';
-    soz_chans{1,2}='HL4';
-else
-    soz_chans{1,1}='HR11';
-    soz_chans{1,2}='HR12';
-end
 for cloop=1:n_chan,
     fprintf('Working on chan %s-%s\n',soz_chans_bi{cloop,1},soz_chans_bi{cloop,1});
-    
-    % Figure out how many non-szr samples to draw from each file
-    n_nonszr_obs=ceil(n_tpt_ct(cloop)/n_files);
-    fprintf('Drawing %d random non-szr samples from each file.\n',n_nonszr_obs);
     
     nonszr_se_ftrs=[];
     % Loop over files
@@ -146,6 +134,8 @@ for cloop=1:n_chan,
                 onset_id=findTpt(file_info(floop).szr_onsets_sec(sloop),ieeg_time_sec_pre_decimate);
                 if ~isempty(file_info(floop).szr_offsets_sec),
                     % Sadly, some szrs have marked onsets but not offsets
+                    % When this happens all time points until end of file
+                    % are marked as szr
                     offset_id=findTpt(file_info(floop).szr_offsets_sec(sloop),ieeg_time_sec_pre_decimate);
                 else
                     offset_id=length(ieeg);
@@ -173,6 +163,8 @@ for cloop=1:n_chan,
             targ_win_dec=zeros(1,length(ieeg));
             szr_class_dec=zeros(1,length(ieeg));
             for tloop=1:length(ieeg),
+                % Downsample time, targ_wind, and szr_class with moving
+                % window
                 time_dec(tloop)=mean(ieeg_time_sec_pre_decimate([1:down_fact] ...
                     +(tloop-1)*down_fact));
                 targ_win_dec(tloop)=mean(targ_window([1:down_fact] ...
@@ -201,12 +193,13 @@ for cloop=1:n_chan,
         
         % Find mean time and class of moving windows
         se_time_sec=zeros(1,n_ftr_wind);
-        se_class=zeros(1,n_ftr_wind);
+        se_targ_class=zeros(1,n_ftr_wind);
         se_szr_class=zeros(1,n_ftr_wind);
         wind=1:wind_len;
         for a=1:n_ftr_wind,
+            % Moving window to downsample data
             se_time_sec(a)=mean(time_dec(wind));
-            se_class(a)=mean(targ_win_dec(wind));
+            se_targ_class(a)=mean(targ_win_dec(wind));
             se_szr_class(a)=mean(szr_class_dec(wind));
             wind=wind+wind_step;
         end
@@ -242,23 +235,9 @@ for cloop=1:n_chan,
         % Remove initial time points polluted by edge effects
         se_ftrs=se_ftrs(:,edge_pts:end);
         se_time_sec=se_time_sec(edge_pts:end);
-        se_class=se_class(edge_pts:end); % Whether or not time window is in my target time window for stimulation (extends a bit before clinician onset)
+        se_targ_class=se_targ_class(edge_pts:end); % Whether or not time window is in my target time window for stimulation (extends a bit before clinician onset)
         se_szr_class=se_szr_class(edge_pts:end); % Whether or not time window is within clinician defined onset-offset
         
-        % Get non-szr time window ids
-        %         non_szr_ids=find(se_class<0.5);
-        %         % Randomly select subset of non-szr features
-        %         use_non_szr_ids=non_szr_ids(randi(length(non_szr_ids),1,n_nonszr_obs));
-        %
-        %         if isempty(nonszr_se_ftrs),
-        %             %preallocate mem
-        %             nonszr_se_ftrs=zeros(n_ftrs,n_nonszr_obs*n_files);
-        %             nonszr_se_ftrs_time_sec=zeros(1,n_nonszr_obs*n_files);
-        %             source_fnames=cell(1,n_files);
-        %         end
-        %         nonszr_se_ftrs(:,[1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=se_ftrs(:,use_non_szr_ids);
-        %         nonszr_se_ftrs_time_sec([1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=se_time_sec(use_non_szr_ids);
-        %         source_fnames{floop}=full_data_fname;
         
         % Save results to disk
         temp_id=find(file_info(floop).fname=='.');
@@ -266,8 +245,10 @@ for cloop=1:n_chan,
         outfname=fullfile(outdir,sprintf('%d_%s_%s_%s',sub_id, ...
             soz_chans_bi{cloop,1},soz_chans_bi{cloop,2},fname_stem));
         fprintf('Saving szr features to %s\n',outfname);
+        file_onset_sec=file_info(floop).file_onset_sec; % Onset of raw ieeg in seconds relative to anchor date (Jan 1, 2000 I think)
         save(outfname,'se_szr_class','se_time_sec','se_ftrs', ...
-            'ftr_labels','se_class','ieeg','time_dec');
+            'ftr_labels','se_targ_class','ieeg','time_dec', ...
+            'file_onset_sec');
         
     end
     
