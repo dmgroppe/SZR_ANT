@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 ## Start of main function
 if len(sys.argv)==1:
-    print('Usage: plot_stim_results.py sub_list model_name')
+    print('Usage: plot_stim_results.py model_name sub_list plot_em')
     exit()
 if len(sys.argv)!=4:
     raise Exception('Error: plot_stim_results.py requires 3 arguments: model_name sub_list plot_em')

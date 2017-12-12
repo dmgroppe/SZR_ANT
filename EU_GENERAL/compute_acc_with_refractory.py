@@ -29,15 +29,16 @@ def replace_periods(word):
 
 ## Start of main function
 if len(sys.argv)==1:
-    print('Usage: compute_acc_with_refractory.py sub_id stim_thresh model_name')
+    print('Usage: compute_acc_with_refractory.py sub_id stim_thresh model_name plot_em')
     exit()
-if len(sys.argv)!=4:
-    raise Exception('Error: compute_acc_with_refractory.py requires 3 arguments: sub_id stim_thresh model_name')
+if len(sys.argv)!=5:
+    raise Exception('Error: compute_acc_with_refractory.py requires 3 arguments: sub_id stim_thresh model_name plot_em')
 
 # Import Parameters from command line
 sub = int(sys.argv[1])
 stim_thresh=float(sys.argv[2]) # threshold for triggering stimulation
 model_name=sys.argv[3]
+plot_em=sys.argv[4]
 
 Fs = 9.84615384615  # sampling rate of moving spectral energy window
 time_step=1/Fs
@@ -48,11 +49,10 @@ refract_tpt=np.round(Fs*refract_sec) #length of refractory period in time points
 
 
 # Get list of yhat files
-# TODO get these paths from get_path_dict()
 path_dict=ief.get_path_dict()
 if sys.platform=='linux':
     yhat_path = os.path.join('/home/dgroppe/EU_YHAT/',str(sub)+'_'+model_name)
-    label_path =os.path.join('/home/dgroppe/EU_Y/',str(sub)+'_all_labels') #TODO figure this out
+    label_path =os.path.join('/home/dgroppe/EU_Y/',str(sub)+'_all_labels')
 else:
     yhat_path = os.path.join('/Users/davidgroppe/ONGOING/EU_YHAT/',str(sub)+'_'+model_name)
     label_path =os.path.join('/Volumes/SgateOSExJnld/EU_TEMP/',str(sub)+'_all_labels')
@@ -217,20 +217,20 @@ else:
     sio.savemat(os.path.join(outpath,outfname),out_dict)
 
 
-
-plt.figure(1)
-plt.clf()
-plt.boxplot(stim_lat[clin_bool])
-plt.ylabel('Seconds')
-plt.xticks([])
-plt.title('Stim Latency relative to Clin Szr Onset')
-xlim=[.85, 1.15]
-plt.xlim(xlim)
-plt.plot(xlim,[0, 0],'k:')
-plt.xlim(xlim)
-mn_lat=np.mean(stim_lat[clin_bool])
-plt.plot([.95, 1.05],[mn_lat, mn_lat],'r-',linewidth=3)
-sd_lat=np.std(stim_lat[clin_bool])
-plt.plot([1, 1],[mn_lat-sd_lat, mn_lat+sd_lat],color='purple',linewidth=3)
-plt.plot(np.ones(n_clin_szr)+(np.random.rand(n_clin_szr)-0.5)/25,stim_lat[clin_bool],'b.')
-plt.show()
+if plot_em in ['True', 'true']:
+    plt.figure(1)
+    plt.clf()
+    plt.boxplot(stim_lat[clin_bool])
+    plt.ylabel('Seconds')
+    plt.xticks([])
+    plt.title('Stim Latency relative to Clin Szr Onset')
+    xlim=[.85, 1.15]
+    plt.xlim(xlim)
+    plt.plot(xlim,[0, 0],'k:')
+    plt.xlim(xlim)
+    mn_lat=np.mean(stim_lat[clin_bool])
+    plt.plot([.95, 1.05],[mn_lat, mn_lat],'r-',linewidth=3)
+    sd_lat=np.std(stim_lat[clin_bool])
+    plt.plot([1, 1],[mn_lat-sd_lat, mn_lat+sd_lat],color='purple',linewidth=3)
+    plt.plot(np.ones(n_clin_szr)+(np.random.rand(n_clin_szr)-0.5)/25,stim_lat[clin_bool],'b.')
+    plt.show()

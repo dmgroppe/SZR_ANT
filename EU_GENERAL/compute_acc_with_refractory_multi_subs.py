@@ -7,10 +7,10 @@ import numpy as np
 
 ## Start of main function
 if len(sys.argv)==1:
-    print('Usage: compute_acc_with_refractory.py model_name sub_list')
+    print('Usage: compute_acc_with_refractory_multi_subs.py model_name sub_list')
     exit()
 if len(sys.argv)!=3:
-    raise Exception('Error: compute_acc_with_refractory.py takes two arguments: model_name sub_list')
+    raise Exception('Error: compute_acc_with_refractory_multi_subs.py takes two arguments: model_name sub_list')
 
 model_name=sys.argv[1]
 print(model_name)
@@ -29,6 +29,6 @@ for raw_sub in temp:
 for sub in subs:
     for thresh in np.arange(0.2,0.7,0.1):
         #cmnd='python apply_saved_models_to_szr.py '+sub+' ' + model_name
-        cmnd = 'python compute_acc_with_refractory.py ' + sub + ' ' + str(thresh)+' '+ model_name
+        cmnd = 'python compute_acc_with_refractory.py ' + sub + ' ' + str(thresh)+' '+ model_name +' False'
         print('Running: %s' % cmnd)
         os.system(cmnd)
