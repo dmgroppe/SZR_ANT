@@ -8,6 +8,9 @@
 % onset) in blue
 % Bad channels according to files in ths directory
 % /home/dgroppe/GIT/SZR_ANT/EU_METADATA/BAD_CHANS are ignored
+%
+% Pics are saved to:
+%  SZR_ANT/EU_METADATA/SZR_FIGS/*
 
 %sub_id=1096;
 % sub_id=620;

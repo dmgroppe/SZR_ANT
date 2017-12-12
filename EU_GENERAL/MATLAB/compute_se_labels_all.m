@@ -1,14 +1,47 @@
-% sub_id=1096; %done
-% sub_id=1125; %done
+%% This script computes just the ictal and target windows for ALL 
+% of a patient's clips.  They are all output to a directory like
+% this: /home/dgroppe/EU_Y/264_all_labels'
+%
+% KEY VARIABLES
+% ** Voltage Data
+% ieeg: raw bipolar data
+% szr_class: 0=no szr, 1=szr (clinical or otherwise)
+% 
+% targ_window: same as szr class but extends 10 min before and after to deal with noise in onset/offset
+% definition
+% 
+% ieeg_time_sec_pre_decimate: time relative to start of file
+% 
+% 
+% ** Downsampled Data (256 Hz for all patients)
+% ieeg: raw bipolar data
+% time_dec: dowsample dtime
+% targ_wind_dec=downsampled version of targ_window
+% szr_class_dec=downsampled version of szr_class
+% 
+% 
+% ** Spectral Energy Features
+% n_ftr_wind: # of feature time pts (about 10 Hz srate)
+% se_time_sec: time relative to start of file
+% se_szr_class: 0=no szr, 1=szr
+% se_class: 0=no szr, 1=szr <-target windowfor classifier
+% se_ftrs: feature matrix (ftr x time)
+% ftr_labes: feature labels
+
+
+
+%% Choose Patient
+%sub_id=1096; % done
+%sub_id=1125; % done
 %sub_id=620;
 %sub_id=264;
 % sub_id=590;
 %sub_id=253;
 % sub_id=565;
 % sub_id=273; %done
-%sub_id=264;
-%sub_id=862;
-sub_id=565;
+%sub_id=264; %done
+%sub_id=862; %done
+sub_id=565; % DONE
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
@@ -57,6 +90,9 @@ for floop=1:n_files,
     
     %% Compute ictal-class
     szr_class=zeros(1,length(ieeg)); % -1=subclinical szr, 1=clinical szr
+    targ_window=zeros(1,length(ieeg)); % Same as szr class but extended 
+    % 5 seconds before onset to try to stimulate before onset
+    
     % Clinical Szrs
     if ~isempty(file_info(floop).clin_szr_onsets_sec),
         % There are szrs in this file (clinical and/or subclinical)
@@ -70,6 +106,11 @@ for floop=1:n_files,
                 offset_id=length(ieeg);
             end
             szr_class(onset_id:offset_id)=1;
+            targ_onset_id=onset_id-Fs*5; %extend 5 seconds in past to try to stimulate before onset
+            if targ_onset_id<1,
+                targ_onset_id=1;
+            end
+            targ_window(targ_onset_id:offset_id)=1;
         end
     end
     
@@ -86,6 +127,11 @@ for floop=1:n_files,
                 offset_id=length(ieeg);
             end
             szr_class(onset_id:offset_id)=-1;
+            targ_onset_id=onset_id-Fs*5; %extend 5 seconds in past to try to stimulate before onset
+            if targ_onset_id<1,
+                targ_onset_id=1;
+            end
+            targ_window(targ_onset_id:offset_id)=-1;
         end
     end
     
@@ -144,7 +190,6 @@ for floop=1:n_files,
     file_onset_sec=file_info(floop).file_onset_sec; % Onset of raw ieeg in seconds relative to anchor date (Jan 1, 2000 I think)
     save(outfname,'se_szr_class','se_time_sec','szr_class_dec','time_dec', ...
         'file_onset_sec');
-    
 end
 
 

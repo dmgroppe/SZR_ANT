@@ -1,4 +1,5 @@
 % Script for plotting pwr spectrum density produced by compute_psd_interictal.m
+% Useful for identifying bad channels
 
 sub=1096; %0.12=proportion of desired files actually sampled.
 sub=1125; %0.12=proportion of desired files actually sampled.
@@ -32,6 +33,7 @@ for cloop=1:length(h),
 end
 xlabel('Hz');
 ylabel('dB');
+title('Mean PSD');
 
 subplot(1,2,2);
 hold on;
@@ -46,4 +48,5 @@ for cloop=1:n_chan,
     end
 end
 axis tight;
+title('Mean PSD with Stderr');
 xlabel('Hz');

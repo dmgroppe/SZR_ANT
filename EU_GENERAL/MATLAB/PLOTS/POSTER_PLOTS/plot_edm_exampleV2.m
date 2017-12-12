@@ -1,3 +1,8 @@
+% I think this is the script I used to plot SE features both with and
+% without EDM for my posters. Not sure though. It's not running currently 
+% (I must have changed paths or filenames). No sure how this differs from
+% plot_edm_exampleV2.m
+
 %% Load data
 ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/';
 sub='1096';

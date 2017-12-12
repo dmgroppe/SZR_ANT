@@ -1,4 +1,5 @@
 % Plots balanced accuracy bar plots for CLAE poster
+
 %bal_acc=[0.868, 0.837, 0.836]; % train, valid, test
 bal_acc=[0.937, 0.836, 0.854]; % train, valid, test
 low_cis=[0.930, 0.747, 0.807];

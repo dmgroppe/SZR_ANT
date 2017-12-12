@@ -1,4 +1,14 @@
-%% Load data
+% This script makes plots of example szrs and classifier outputs that I
+% used for posters. It shows the raw EEG, SE features, classifier output
+% and clinician onset. 
+%
+% You need to manually enter which szr and channel you want to show
+%
+% apply_saved_model_to_szr.py needs to be run on that subject with the
+% desired classifier for this to work
+
+save_em=0;
+
 
 %% Load yhat
 %load('/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/genLogregSe_yhat/1096_HL1_HL2_phat_szr6.mat')
@@ -134,10 +144,13 @@ set(gca,'LineWidth',2);
 %'TickLength',[0.025 0.025]);
 set(gca, 'Layer','top')
 
-
+if save_em,
 out_fig_fname=sprintf('yhat_example_%d',example_szr);
 fprintf('Exporting fig 1 to %s\n',out_fig_fname);
 set(gcf,'paperpositionmode','auto');
 print(gcf,'-djpeg',out_fig_fname);
+else
+   fprintf('NOT saving plot to disk.\n'); 
+end
 
 disp('Done!');
