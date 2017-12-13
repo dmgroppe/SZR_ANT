@@ -162,8 +162,8 @@ for chan in soz_elec_names:
 
 # Loop over clips
 # for clip in clip_list[:1]:
-for clip in clip_list:
-    print('Working on clip %s' % clip)
+for clip_ct, clip in enumerate(clip_list):
+    print('Working on clip #%d: %s' % (clip_ct, clip))
     # Loop over SOZ electrodes
     for chan_ct, chan in enumerate(soz_elec_names):
         mono_chans = chan.split('-')
@@ -174,30 +174,35 @@ for clip in clip_list:
 
         # Estimate p(szr)
         raw_ftrs = temp_mat['se_ftrs']
-        # Z-score based on non-ictal means, SDs
-        dg.applyNormalize(raw_ftrs, mns_dict[chan], sds_dict[chan])
-        # Apply classifiers
-        for model_ct in range(n_models):
-            if model_type == 'svm':
-                tmp_yhat_va = models[model_ct].predict(raw_ftrs.T)
+        if raw_ftrs.shape[1]>0:
+            # Z-score based on non-ictal means, SDs
+            dg.applyNormalize(raw_ftrs, mns_dict[chan], sds_dict[chan])
+            # Apply classifiers
+            for model_ct in range(n_models):
+                if model_type == 'svm':
+                    tmp_yhat_va = models[model_ct].predict(raw_ftrs.T)
+                else:
+                    tmp_yhat_va = models[model_ct].predict_proba(raw_ftrs.T)[:, 1]
+                if model_ct == 0:
+                    yhat = np.zeros(tmp_yhat_va.shape)
+                yhat += tmp_yhat_va / n_models
+
+            # Smooth p(szr)
+            yhat_smooth = np.zeros(yhat.shape)
+            yhat_smooth[mv_wind_len - 1:] = dg.running_mean(yhat, mv_wind_len)
+
+            # Collect max(p(szr)) for each time window
+            if chan_ct == 0:
+                # first channel
+                max_yhat = np.copy(yhat_smooth)
+                yhat_soz_chans = np.zeros((n_chan, len(yhat_smooth)))
             else:
-                tmp_yhat_va = models[model_ct].predict_proba(raw_ftrs.T)[:, 1]
-            if model_ct == 0:
-                yhat = np.zeros(tmp_yhat_va.shape)
-            yhat += tmp_yhat_va / n_models
-
-        # Smooth p(szr)
-        yhat_smooth = np.zeros(yhat.shape)
-        yhat_smooth[mv_wind_len - 1:] = dg.running_mean(yhat, mv_wind_len)
-
-        # Collect max(p(szr)) for each time window
-        if chan_ct == 0:
-            # first channel
-            max_yhat = np.copy(yhat_smooth)
-            yhat_soz_chans = np.zeros((n_chan, len(yhat_smooth)))
-        else:
-            max_yhat = np.maximum(max_yhat, yhat_smooth)
-        yhat_soz_chans[chan_ct, :] = yhat_smooth
+                max_yhat = np.maximum(max_yhat, yhat_smooth)
+            yhat_soz_chans[chan_ct, :] = yhat_smooth
+    else:
+        # Clip is empty because it was too short to use EDM features
+        max_yhat=np.nan
+        yhat_soz_chans=np.nan
 
     # Write to disk
     out_fname = clip + '_yhat'
