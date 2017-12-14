@@ -80,9 +80,12 @@ for hdr_ct, hdr_fname in enumerate(on_off_df['HeaderFname']):
     root_fname=hdr_fname.split('.')[0]
 
     # Load classifier output for this clip
-    yhat_fname=root_fname+'_yhat.npz'
+    # yhat_fname=root_fname+'_yhat.npz'
     #print('Analyzing file %s' % yhat_fname)
-    yhat_npz = np.load(os.path.join(yhat_path, yhat_fname))
+    # yhat_npz = np.load(os.path.join(yhat_path, yhat_fname))
+    yhat_fname=root_fname+'_yhat.nmat'
+    #print('Analyzing file %s' % yhat_fname)
+    yhat_npz = sio.loadmat(os.path.join(yhat_path, yhat_fname))
     if np.isnan(yhat_npz['max_yhat'])==False:
         # File is long enough to have EDM features and classifier outputs
         n_wind = len(yhat_npz['max_yhat'])
