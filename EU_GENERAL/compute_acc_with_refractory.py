@@ -83,7 +83,7 @@ for hdr_ct, hdr_fname in enumerate(on_off_df['HeaderFname']):
     # yhat_fname=root_fname+'_yhat.npz'
     #print('Analyzing file %s' % yhat_fname)
     # yhat_npz = np.load(os.path.join(yhat_path, yhat_fname))
-    yhat_fname=root_fname+'_yhat.nmat'
+    yhat_fname=root_fname+'_yhat.mat'
     #print('Analyzing file %s' % yhat_fname)
     yhat_npz = sio.loadmat(os.path.join(yhat_path, yhat_fname))
     if np.isnan(yhat_npz['max_yhat'])==False:
