@@ -83,45 +83,47 @@ for hdr_ct, hdr_fname in enumerate(on_off_df['HeaderFname']):
     yhat_fname=root_fname+'_yhat.npz'
     #print('Analyzing file %s' % yhat_fname)
     yhat_npz = np.load(os.path.join(yhat_path, yhat_fname))
-    n_wind = len(yhat_npz['max_yhat'])
+    if np.isnan(yhat_npz['max_yhat'])==False:
+        # File is long enough to have EDM features and classifier outputs
+        n_wind = len(yhat_npz['max_yhat'])
 
-    # Compute # of seconds in file
-    file_dur_hr = n_wind / (Fs * 3600)
-    total_hrs += file_dur_hr
-    #print('total_hrs=%f' % total_hrs)
+        # Compute # of seconds in file
+        file_dur_hr = n_wind / (Fs * 3600)
+        total_hrs += file_dur_hr
+        #print('total_hrs=%f' % total_hrs)
 
-    # Load clinician labels for this clip
-    y_fname = str(sub) + '_y_' + root_fname + '.mat'
-    label_f = os.path.join(label_path, y_fname)
-    #print('Loading file %s' % y_fname)
-    label_mat = sio.loadmat(label_f)
+        # Load clinician labels for this clip
+        y_fname = str(sub) + '_y_' + root_fname + '.mat'
+        label_f = os.path.join(label_path, y_fname)
+        #print('Loading file %s' % y_fname)
+        label_mat = sio.loadmat(label_f)
 
-    time_ptr=on_off_df['StartSec'][hdr_ct]+edge_pts/Fs # First feature time point
-    # if first_hdr_file==True:
-    #     time_ptr=0 #set to start of first file
-    #     first_hdr_file==False
-
-
-    # Compute hypothetical stimulations with refractory periods
-    stim = np.zeros(n_wind)
-    for wind_ct, yhat in enumerate(yhat_npz['max_yhat']):
-        if wind_ct>0:
-            time_ptr+=time_step
-        if yhat > stim_thresh and ((time_ptr-last_stim) > refract_sec):
-            # Hypotheticaly stimulate
-            stim[wind_ct] = 1
-            stim_sec.append(time_ptr)
-            last_stim = time_ptr
+        time_ptr=on_off_df['StartSec'][hdr_ct]+edge_pts/Fs # First feature time point
+        # if first_hdr_file==True:
+        #     time_ptr=0 #set to start of first file
+        #     first_hdr_file==False
 
 
-    # Compute false positives
-    se_szr_class = np.squeeze(label_mat['se_szr_class'])
-    # print('Min se_szr_class: %f' % np.min(se_szr_class))
-    # Note, this ignores subclinical szrs (se_szr_class=-1) and clinical szrs (se_szr_class=1)
-    nonszr_bool = se_szr_class == 0 # TODO extend this 5 sec before clinician onset,
-    # should probably make a separate matlab variable
-    #print('false+ %d' % np.sum(stim[nonszr_bool]))
-    n_false_pos += np.sum(stim[nonszr_bool])
+        # Compute hypothetical stimulations with refractory periods
+        stim = np.zeros(n_wind)
+        for wind_ct, yhat in enumerate(yhat_npz['max_yhat']):
+            if wind_ct>0:
+                time_ptr+=time_step
+            if yhat > stim_thresh and ((time_ptr-last_stim) > refract_sec):
+                # Hypotheticaly stimulate
+                stim[wind_ct] = 1
+                stim_sec.append(time_ptr)
+                last_stim = time_ptr
+
+
+        # Compute false positives
+        se_szr_class = np.squeeze(label_mat['se_szr_class'])
+        # print('Min se_szr_class: %f' % np.min(se_szr_class))
+        # Note, this ignores subclinical szrs (se_szr_class=-1) and clinical szrs (se_szr_class=1)
+        nonszr_bool = se_szr_class == 0 # TODO extend this 5 sec before clinician onset,
+        # should probably make a separate matlab variable
+        #print('false+ %d' % np.sum(stim[nonszr_bool]))
+        n_false_pos += np.sum(stim[nonszr_bool])
 
     if False:
         # Plot szr class and hypothetical stimulations for this clip

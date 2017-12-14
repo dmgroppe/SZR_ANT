@@ -199,10 +199,10 @@ for clip_ct, clip in enumerate(clip_list):
             else:
                 max_yhat = np.maximum(max_yhat, yhat_smooth)
             yhat_soz_chans[chan_ct, :] = yhat_smooth
-    else:
-        # Clip is empty because it was too short to use EDM features
-        max_yhat=np.nan
-        yhat_soz_chans=np.nan
+        else:
+            # Clip is empty because it was too short to use EDM features
+            max_yhat=np.nan
+            yhat_soz_chans=np.nan
 
     # Write to disk
     out_fname = clip + '_yhat'
