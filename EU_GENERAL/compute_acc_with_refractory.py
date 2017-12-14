@@ -86,7 +86,7 @@ for hdr_ct, hdr_fname in enumerate(on_off_df['HeaderFname']):
     yhat_fname=root_fname+'_yhat.mat'
     print('Analyzing file %s' % yhat_fname)
     yhat_npz = sio.loadmat(os.path.join(yhat_path, yhat_fname))
-    print(len(yhat_npz['max_yhat']))
+    print(yhat_npz['max_yhat'].shape)
     if np.isnan(yhat_npz['max_yhat'])==False:
         # File is long enough to have EDM features and classifier outputs
         n_wind = len(yhat_npz['max_yhat'])
