@@ -129,6 +129,8 @@ for elec in soz_elec_names:
         print('Loading %s' % szr_f)
         temp_ftrs = sio.loadmat(os.path.join(ftr_path, szr_f))
         raw_ftrs = temp_ftrs['se_ftrs']
+
+
         # Z-score based on non-ictal means, SDs
         dg.applyNormalize(raw_ftrs, temp_mns, temp_sds)
 

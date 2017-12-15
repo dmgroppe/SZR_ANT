@@ -74,9 +74,26 @@ edge_pts=1178 # number of initial time points skipped due to EDM edge effects
 clin_szr_ct=0
 # first_hdr_file=True
 stim_sec=list()
-last_stim = on_off_df['StartSec'][0]-refract_sec-1 # initialize so that stimulation can begin at start of first clip
-for hdr_ct, hdr_fname in enumerate(on_off_df['HeaderFname']):
+#DataFrame.sort_values(by, axis=0, ascending=True, inplace=False
+on_off_df.sort_values(by=['StartSec'], axis=0, ascending=True, inplace=True)
+#on_off_df=on_off_df.sort_values(by=['StartSec'],axis=0,ascending=True,inplace=False)
+last_stim = on_off_df['StartSec'].iloc[0]-refract_sec-1 # initialize so that stimulation can begin at start of first clip
+n_clips=on_off_df.shape[0]
+# print(last_stim)
+# print(on_off_df['StartSec'][0])
+# print(on_off_df['StartSec'].iloc[0])
+# print(np.min(on_off_df['StartSec']))
+# print(np.max(on_off_df['StartSec']))
+# print(on_off_df.head())
+# plt.figure(1)
+# plt.clf()
+# plt.plot(on_off_df['StartSec'])
+# plt.show()
+# exit()
+#for hdr_ct, hdr_fname in enumerate(on_off_df['HeaderFname']):
+for hdr_ct in range(n_clips):
     # Note that the files should already be sorted in chronological order in on_off_df
+    hdr_fname=on_off_df['HeaderFname'].iloc[hdr_ct]
     root_fname=hdr_fname.split('.')[0]
 
     # Load classifier output for this clip
@@ -86,10 +103,9 @@ for hdr_ct, hdr_fname in enumerate(on_off_df['HeaderFname']):
     yhat_fname=root_fname+'_yhat.mat'
     print('Analyzing file %s' % yhat_fname)
     yhat_npz = sio.loadmat(os.path.join(yhat_path, yhat_fname))
-    print(yhat_npz['max_yhat'].shape)
     if np.isnan(yhat_npz['max_yhat'][0,0])==False:
         # File is long enough to have EDM features and classifier outputs
-        n_wind = len(yhat_npz['max_yhat'])
+        n_wind=yhat_npz['max_yhat'].shape[1]
 
         # Compute # of seconds in file
         file_dur_hr = n_wind / (Fs * 3600)
@@ -102,7 +118,7 @@ for hdr_ct, hdr_fname in enumerate(on_off_df['HeaderFname']):
         #print('Loading file %s' % y_fname)
         label_mat = sio.loadmat(label_f)
 
-        time_ptr=on_off_df['StartSec'][hdr_ct]+edge_pts/Fs # First feature time point
+        time_ptr=on_off_df['StartSec'].iloc[hdr_ct]+edge_pts/Fs # First feature time point
         # if first_hdr_file==True:
         #     time_ptr=0 #set to start of first file
         #     first_hdr_file==False
@@ -110,7 +126,7 @@ for hdr_ct, hdr_fname in enumerate(on_off_df['HeaderFname']):
 
         # Compute hypothetical stimulations with refractory periods
         stim = np.zeros(n_wind)
-        for wind_ct, yhat in enumerate(yhat_npz['max_yhat']):
+        for wind_ct, yhat in enumerate(yhat_npz['max_yhat'][0,:]):
             if wind_ct>0:
                 time_ptr+=time_step
             if yhat > stim_thresh and ((time_ptr-last_stim) > refract_sec):
