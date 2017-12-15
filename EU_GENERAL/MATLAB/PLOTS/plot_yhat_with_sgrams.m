@@ -17,7 +17,7 @@ function plot_yhat_with_sgrams(sub,model_name,szr_num,chan)
 % It is useful for seeing what features pickup and miss
 %
 % Note, you need to first run apply_saved_models_to_szr.py on the patient
-% with the model
+% with the model. This does NOT require running model on continuous data.
 
 %% Load raw data and spectrogram of raw data
 % sub=1096;

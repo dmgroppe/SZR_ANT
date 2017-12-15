@@ -1,11 +1,9 @@
-function plot_a_clinical_szr_bipolar(sub_id,szr_id,start_sec,stop_sec,model_name)
-%function plot_a_clinical_szr_bipolar(sub_id,szr_id,start_sec,stop_sec,mode_name)
+function plot_target_bipolar(sub_id,szr_id,model_name)
+%function plot_target_bipolar(sub_id,szr_id,mode_name)
 %
 % Required Inputs:
 %  sub_id - the subject numeric id (e.g., 970)
 %  szr_id - the szr id (1=the first clinical szr)
-%  start_sec - the number of seconds before onset to plot
-%  stop_sec - the number of seconds after offset to plot
 %
 % Optional Inputs:
 %  model_name - the name of the classifier whose results you would like to
@@ -14,8 +12,8 @@ function plot_a_clinical_szr_bipolar(sub_id,szr_id,start_sec,stop_sec,model_name
 %               be produced.
 %
 % Examples:
-%   plot_a_clinical_szr_bipolar(970,8,30,5);
-%   plot_a_clinical_szr_bipolar(1125,1,60,5,'svmAesFinale_1');
+%   plot_target_bipolar(970,8);
+%   plot_target_bipolar(1125,1,'svmAesFinale_1');
 %
 % This script imports a single clinical szr from a patient and plots them 
 % with onset, offset, SOZ channels, and target window on them.
@@ -28,7 +26,7 @@ function plot_a_clinical_szr_bipolar(sub_id,szr_id,start_sec,stop_sec,model_name
 % Bad channels according to files in ths directory
 % /home/dgroppe/GIT/SZR_ANT/EU_METADATA/BAD_CHANS are ignored
 
-if nargin<5,
+if nargin<3,
     plot_yhat=0; 
 else
    plot_yhat=1; 
@@ -83,10 +81,17 @@ on_off=csv2Cell(on_off_csv_fname,',',1);
 %%
 if szr_id>n_szrs,
    error('szr_id needs to be <= n_szrs which is %d',n_szrs); 
-elseif szr_id<1,
-    error('szr_id needs to be > 0');
+else
+   fprintf('Plotting all szrs.\n');
 end
-for sloop=szr_id:szr_id,
+if szr_id<1,
+    start_szr_id=1;
+    stop_szr_id=n_szrs;
+else
+   start_szr_id=szr_id;
+   stop_szr_id=szr_id;
+end
+for sloop=start_szr_id:stop_szr_id,
     fprintf('Importing szr #%d\n',sloop);
    
     % Find onset and offset of file
@@ -129,6 +134,7 @@ for sloop=szr_id:szr_id,
     
     
     %% Import data
+    start_sec=5;
     preonset_tpts=Fs*start_sec; % preonset baseline
     clip_onset_tpt=fszr_onset_tpt-preonset_tpts; %time pt at which to START data import
     if clip_onset_tpt<1,
@@ -136,6 +142,7 @@ for sloop=szr_id:szr_id,
     end
     
     % Get time pt at which to STOP data import
+    stop_sec=0;
     postonset_tpts=Fs*stop_sec; % postonset window to show
     clip_offset_tpt=fszr_offset_tpt+postonset_tpts;
     if clip_offset_tpt>pat.a_n_samples,
@@ -173,9 +180,9 @@ for sloop=szr_id:szr_id,
     ieeg_tpt=size(ieeg,2);
     onset_id=min(find(clip_szr_class>0));
     if ~plot_yhat,
-      figure(sloop); clf;
+      figure;
     else
-       figure(sloop); clf;
+       figure;
        ax1=axes('position',[0.1300 0.1700 0.7750 0.770]);
     end
     onset_chans=cli_szr_info(sloop).clinical_soz_chans;
@@ -234,30 +241,31 @@ for sloop=szr_id:szr_id,
   
     % Plot model output and stimulations if requested
     if plot_yhat,
-        yhat_dir=sprintf('/home/dgroppe/EU_YHAT/%d_%s/',sub_id,model_name);
-        yhat_fname=fullfile(yhat_dir,[raw_stem '_yhat.mat']);
-        load(yhat_fname);
-        %112500102_0000_yhat.mat')
+        yhat_dir=sprintf('/home/dgroppe/GIT/SZR_ANT/MODELS/%s_yhat/',model_name);
+        yhat_files=dir(fullfile(yhat_dir,sprintf('%d*szr%d.mat',sub_id,sloop-1)));
+        n_onset_chan=length(yhat_files);
+        if n_onset_chan>0,
+        for yhat_loop=1:n_onset_chan,
+            fprintf('Loading %s\n',yhat_files(yhat_loop).name);
+            load(fullfile(yhat_dir,yhat_files(yhat_loop).name));
+            if yhat_loop==1,
+                yhat_max=yhat;
+            else
+                yhat_max=max(yhat,yhat_max);
+            end
+        end
+        
+        % Loop over SOZ channels and collect max y_hat values
+        %yhat_dir=sprintf('/home/dgroppe/EU_YHAT/%d_%s/',sub_id,model_name);
+%         yhat_fname=fullfile(yhat_dir,[raw_stem '_yhat.mat']);
+%         load(yhat_fname);
         
        ax2=axes('position',[0.1300 0.1 0.7750 0.06]);
-       yhat_sec=yhat_sec-cli_szr_info(sloop).clinical_onset_sec; % make t=0, szr onset
+       yhat_sec=-5+[1:length(yhat_max)]/9.84615384615; % make t=0, szr onset
        %plot(yhat_sec,max(yhat_soz_chans,[],1));
-       h=area(yhat_sec,max(yhat_soz_chans,[],1));
+       h=area(yhat_sec,yhat_max);
        set(h,'facecolor',[1 1 1]*0.5,'edgecolor','k');
        hold on;
-       
-       % Load hypothetical stimulations
-       stim_path=fullfile('/home/dgroppe/GIT/SZR_ANT/MODELS/',model_name);
-       load(fullfile(stim_path,sprintf('%d_thresh_0-5_refract_30_stim_results.mat', ...
-           sub_id)),'stim_sec');
-       % Plot any hypothetical stimulations in this time window
-       stim_sec=stim_sec-clip_onset_sec-cli_szr_info(sloop).clinical_onset_sec;
-       stim_sec_ids=find( ((stim_sec)>=xlim(1)).* ((stim_sec)<=xlim(2)));
-       if isempty(stim_sec_ids)
-           fprintf('No stimulations in this time window.\n');
-       else
-           plot(stim_sec(stim_sec_ids),0.5,'r*');
-       end
        
        set(gca,'xlim',xlim,'ylim',[0, 1]);
        plot(xlim,[0.5, 0.5],'r--');
@@ -265,6 +273,8 @@ for sloop=szr_id:szr_id,
        linkaxes([ax1, ax2],'x');
        
        ylabel('p(stim)');
+       
+        end
     end
   
     fprintf('Done with szr %d/%d\n',sloop,n_szrs);

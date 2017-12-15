@@ -31,17 +31,19 @@
 
 
 %% Choose Patient
-%sub_id=1096; % done
-%sub_id=1125; % done
+%sub_id=1096; % 
+%sub_id=1125; %
 %sub_id=620;
 %sub_id=264;
 % sub_id=590;
 %sub_id=253;
 % sub_id=565;
-% sub_id=273; %done
-%sub_id=264; %done
-%sub_id=862; %done
-sub_id=565; % DONE
+% sub_id=273; %
+%sub_id=264; %
+%sub_id=862; % DONE (redone after bad szrs removed)
+sub_id=922; % redoing (after long szr relabelled as subclinical)
+%sub_id=565; % 
+%sub_id=115; % done
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
