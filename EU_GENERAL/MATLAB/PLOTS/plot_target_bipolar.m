@@ -3,7 +3,8 @@ function plot_target_bipolar(sub_id,szr_id,model_name)
 %
 % Required Inputs:
 %  sub_id - the subject numeric id (e.g., 970)
-%  szr_id - the szr id (1=the first clinical szr)
+%  szr_id - the szr id (1=the first clinical szr); if szr_id<1, all
+%           clinical szrs are plot
 %
 % Optional Inputs:
 %  model_name - the name of the classifier whose results you would like to
@@ -18,13 +19,16 @@ function plot_target_bipolar(sub_id,szr_id,model_name)
 % This script imports a single clinical szr from a patient and plots them 
 % with onset, offset, SOZ channels, and target window on them.
 % This script uses bipolar montages
-% It starts plotting 15 seconds before clinician onset until 5 sec after the 
+% It starts plotting 5 seconds before clinician onset unti the 
 % end of the seizure 
 % It plots clinician onset and offset in red
-% It plots borders of an early onset wind (5 sec before to 10 sec after
-% onset) in blue
-% Bad channels according to files in ths directory
+% 
+% Bad channels according to files in this directory are ignored
 % /home/dgroppe/GIT/SZR_ANT/EU_METADATA/BAD_CHANS are ignored
+%
+% Note, this function only requires that apply_saved_models_to_szr.py be
+% run on the subject to show classifier outputs (i.e., the classifier does
+% not have to be run on the full data)
 
 if nargin<3,
     plot_yhat=0; 
@@ -257,22 +261,25 @@ for sloop=start_szr_id:stop_szr_id,
         
         % Loop over SOZ channels and collect max y_hat values
         %yhat_dir=sprintf('/home/dgroppe/EU_YHAT/%d_%s/',sub_id,model_name);
-%         yhat_fname=fullfile(yhat_dir,[raw_stem '_yhat.mat']);
-%         load(yhat_fname);
-        
-       ax2=axes('position',[0.1300 0.1 0.7750 0.06]);
-       yhat_sec=-5+[1:length(yhat_max)]/9.84615384615; % make t=0, szr onset
-       %plot(yhat_sec,max(yhat_soz_chans,[],1));
-       h=area(yhat_sec,yhat_max);
-       set(h,'facecolor',[1 1 1]*0.5,'edgecolor','k');
-       hold on;
-       
-       set(gca,'xlim',xlim,'ylim',[0, 1]);
-       plot(xlim,[0.5, 0.5],'r--');
-       xlabel('Seconds');
-       linkaxes([ax1, ax2],'x');
-       
-       ylabel('p(stim)');
+        %         yhat_fname=fullfile(yhat_dir,[raw_stem '_yhat.mat']);
+        %         load(yhat_fname);
+        if sum(isnan(yhat_max))==0,
+            ax2=axes('position',[0.1300 0.1 0.7750 0.06]);
+            yhat_sec=-5+[1:length(yhat_max)]/9.84615384615; % make t=0, szr onset
+            %plot(yhat_sec,max(yhat_soz_chans,[],1));
+            h=area(yhat_sec,yhat_max);
+            set(h,'facecolor',[1 1 1]*0.5,'edgecolor','k');
+            hold on;
+            
+            set(gca,'xlim',xlim,'ylim',[0, 1]);
+            plot(xlim,[0.5, 0.5],'r--');
+            xlabel('Seconds');
+            linkaxes([ax1, ax2],'x');
+            
+            ylabel('p(stim)');
+        else
+            fprintf('Classifier output is nan for this szr (must be too close to clip onset)\n');
+        end
        
         end
     end
