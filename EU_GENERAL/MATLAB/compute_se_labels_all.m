@@ -41,9 +41,13 @@
 % sub_id=273; %
 %sub_id=264; %
 %sub_id=862; % DONE (redone after bad szrs removed)
-sub_id=922; % redoing (after long szr relabelled as subclinical)
+%sub_id=922; % redone (after long szr relabelled as subclinical)
 %sub_id=565; % 
 %sub_id=115; % done
+
+subs=[115, 264, 273, 862, 1125];
+
+for sub_id=subs,
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
@@ -193,7 +197,7 @@ for floop=1:n_files,
     save(outfname,'se_szr_class','se_time_sec','szr_class_dec','time_dec', ...
         'file_onset_sec');
 end
-
+end
 
 disp('Done!!');
 

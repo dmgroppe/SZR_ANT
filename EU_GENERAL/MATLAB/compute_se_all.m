@@ -32,12 +32,13 @@
 
 %% Define sub
 %sub_id=1096; % need to redo
-%sub_id=264; % need to redo
+sub_id=264; % need to redo
 % sub_id=862; %need to redo
-sub_id=565; % new train sub
-%sub_id=1125; % need to redo
-%sub_id=273; % need to redo
+%sub_id=565; % new train sub
+%sub_id=1125; % redone
+%sub_id=273; % redone
 %sub_id=115; % new test sub (done)
+%sub_id=862; %redone
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
