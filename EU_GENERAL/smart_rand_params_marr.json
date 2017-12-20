@@ -1,5 +1,5 @@
 {"model_type": "logreg",
-"model_name": "genLogregSe",
+"model_name": "lregKdsampSeAes8",
 "n_rand_params": 1,
 "equal_sub_wts": "True",
 "patience": 0,

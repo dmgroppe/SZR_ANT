@@ -1,0 +1,8 @@
+{"model_type": "logreg",
+"model_name": "lregSeAes8_nokdsamp",
+"gam": -3,
+"C": 10000,
+"patience": 2,
+"equal_sub_wts": "True",
+"use_ftrs": ["SE"]}
+

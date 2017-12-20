@@ -1,8 +1,8 @@
-{"model_type": "logreg",
-"model_name": "gen14_logreg_se_ewts",
-"gam": 0.079550,
-"C": 1,
-"patience": 0,
+{"model_type": "svm",
+"model_name": "svmKdsampSeAes8",
+"gam": -4.5,
+"C": 10,
+"patience": 1,
 "equal_sub_wts": "True",
 "use_ftrs": ["SE"]}
 
