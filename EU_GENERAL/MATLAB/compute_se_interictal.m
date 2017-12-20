@@ -1,3 +1,35 @@
+%% This script computes the spectral energy (SE) features with EDM for a 
+% patient's non-ictal clips. A subset of the data are output to a file for
+% classifier training. They are all output to a directory like this:
+% /SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/1096/1096_HL2_HL3_non.mat
+%
+%% KEY VARIABLES
+% ** Voltage Data
+% ieeg: raw bipolar data
+% szr_class: 0=no szr, 1=clinical szr, -1=subclinical szr
+% 
+% targ_window: same as szr class but extends 10 min before and after to deal with noise in onset/offset
+% definition
+% 
+% ieeg_time_sec_pre_decimate: time relative to start of file
+% 
+% 
+% ** Downsampled Data (256 Hz for all patients)
+% ieeg: raw bipolar data
+% time_dec: dowsample dtime
+% targ_wind_dec=downsampled version of targ_window
+% szr_class_dec=downsampled version of szr_class
+% 
+% 
+% ** Spectral Energy Features
+% n_ftr_wind: # of feature time pts (about 10 Hz srate)
+% se_time_sec: time relative to start of file
+% se_szr_class: 0=no szr, 1=szr
+% se_class: 0=no szr, 1=szr <-target windowfor classifier
+% se_ftrs: feature matrix (ftr x time)
+% ftr_labes: feature labels
+
+
 %sub_id=1096; % DONE
 %sub_id=620; % DONE
 %sub_id=264; % DONE
@@ -135,7 +167,7 @@ for cloop=1:n_chan,
         ieeg_time_sec_pre_decimate=[0:(length(ieeg)-1)]/Fs; % time relative to start of file
         clear ieeg_temp1 ieeg_temp2;
         
-                % Compute ictal-class
+        % Compute ictal-class
         szr_class=zeros(1,length(ieeg));
         targ_window=zeros(1,length(ieeg)); % Same as szr class but extended
         % 5 seconds before onset to try to stimulate before onset

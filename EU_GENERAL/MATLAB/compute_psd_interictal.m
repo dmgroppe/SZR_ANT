@@ -21,6 +21,7 @@ do_subs=[922, 970];
 %do_subs=970;
 do_subs=[115];
 do_subs=[442];
+do_subs=1096;
 
 for sub_id=do_subs,
     
@@ -72,6 +73,7 @@ for sub_id=do_subs,
         fprintf('# of samples=%d\n',(pat.a_n_samples));
         
         for cloop=1:n_chan,
+            % If first channel for this clip, compute ictal labels
             fprintf('Channel %d/%d\n',cloop,n_chan);
             fprintf('Working on chan %s-%s\n',bipolar_labels{cloop,1},bipolar_labels{cloop,1});
             % Import entire clip (typically 1 hour long)
@@ -86,35 +88,55 @@ for sub_id=do_subs,
             clear ieeg_temp1 ieeg_temp2;
             
             if cloop==1,
-                % Compute ictal-class
-                szr_class=zeros(1,length(ieeg));
-                targ_window=zeros(1,length(ieeg)); % Same as szr class but extended 10 seconds before and after to
-                % deal with noise in onset/offset definition
-                if ~isempty(file_info(floop).szr_onsets_sec),
+                %% Compute ictal-class
+                szr_class=zeros(1,length(ieeg)); % -1=subclinical szr, 1=clinical szr
+                targ_window=zeros(1,length(ieeg)); % Same as szr class but extended
+                % 5 seconds before onset to try to stimulate before onset
+                
+                % Clinical Szrs
+                if ~isempty(file_info(floop).clin_szr_onsets_sec),
                     % There are szrs in this file (clinical and/or subclinical)
-                    for sloop=1:length(file_info(floop).szr_onsets_sec),
-                        onset_id=findTpt(file_info(floop).szr_onsets_sec(sloop),ieeg_time_sec_pre_decimate);
-                        if ~isempty(file_info(floop).szr_offsets_sec),
+                    for sloop=1:length(file_info(floop).clin_szr_onsets_sec),
+                        onset_id=findTpt(file_info(floop).clin_szr_onsets_sec(sloop),ieeg_time_sec_pre_decimate);
+                        if ~isempty(file_info(floop).clin_szr_offsets_sec),
                             % Sadly, some szrs have marked onsets but not offsets
-                            offset_id=findTpt(file_info(floop).szr_offsets_sec(sloop),ieeg_time_sec_pre_decimate);
+                            % When this happens make szr last until end of clip
+                            offset_id=findTpt(file_info(floop).clin_szr_offsets_sec(sloop),ieeg_time_sec_pre_decimate);
                         else
                             offset_id=length(ieeg);
                         end
                         szr_class(onset_id:offset_id)=1;
-                        targ_onset_id=onset_id-Fs*10; %extend 10 seconds in past
+                        targ_onset_id=onset_id-Fs*5; %extend 5 seconds in past to try to stimulate before onset
                         if targ_onset_id<1,
                             targ_onset_id=1;
                         end
-                        targ_offset_id=offset_id+Fs*10; %extend 10 seconds in future
-                        if targ_offset_id>length(ieeg),
-                            targ_offset_id=length(ieeg);
+                        targ_window(targ_onset_id:offset_id)=1;
+                    end
+                end
+                
+                % Subclinical Szrs
+                if ~isempty(file_info(floop).sub_szr_onsets_sec),
+                    % There are szrs in this file (clinical and/or subclinical)
+                    for sloop=1:length(file_info(floop).sub_szr_onsets_sec),
+                        onset_id=findTpt(file_info(floop).sub_szr_onsets_sec(sloop),ieeg_time_sec_pre_decimate);
+                        if ~isempty(file_info(floop).sub_szr_offsets_sec),
+                            % Sadly, some szrs have marked onsets but not offsets
+                            % When this happens make szr last until end of clip
+                            offset_id=findTpt(file_info(floop).sub_szr_offsets_sec(sloop),ieeg_time_sec_pre_decimate);
+                        else
+                            offset_id=length(ieeg);
                         end
-                        targ_window(targ_onset_id:targ_offset_id)=1;
+                        szr_class(onset_id:offset_id)=-1;
+                        targ_onset_id=onset_id-Fs*5; %extend 5 seconds in past to try to stimulate before onset
+                        if targ_onset_id<1,
+                            targ_onset_id=1;
+                        end
+                        targ_window(targ_onset_id:offset_id)=-1;
                     end
                 end
             end
-            
-            % Downsample if necessary
+                
+                %% Downsample if necessary
             if Fs>256,
                 % Downsample data to 256 Hz
                 down_fact=round(Fs/256);

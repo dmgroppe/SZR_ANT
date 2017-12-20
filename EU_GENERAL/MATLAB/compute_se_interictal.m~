@@ -1,9 +1,7 @@
-%% This script computes the spectral energy (SE) features with EDM for a
-% random subset of a patient's data. These values are used for z-scoring
-% labeled data for training.
-% They are all output to a directory like this:
-%  SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/1096/1096_HL2_HL3_subsamp.mat
-% 
+%% This script computes the spectral energy (SE) features with EDM for a 
+% patient's non-ictal clips. A subset of the data o They are all output
+% to a directory like this: /home/dgroppe/EU_SE_FTRS/273_all
+%
 %
 %% KEY VARIABLES
 % ** Voltage Data
@@ -29,35 +27,31 @@
 % se_szr_class: 0=no szr, 1=szr
 % se_class: 0=no szr, 1=szr <-target windowfor classifier
 % se_ftrs: feature matrix (ftr x time)
-% ftr_labels: feature labels
+% ftr_labes: feature labels
 
 
-% DONE
-% 264, 273, 565, 590, 1096, 1125
-%sub_id=620; 
+%sub_id=1096; % DONE
+%sub_id=620; % DONE
 %sub_id=264; % DONE
-% sub_id=590; 
-% sub_id=862;
-% sub_id=565; 
-%sub_id=253; 
+% sub_id=590; % DONE
+% sub_id=862;% DONE
+% sub_id=565; % DONE
+%sub_id=253; % DONE
 %sub_id=273; % DONE
 %sub_id=1125; % DONE
-%sub_id=1077; 
+%sub_id=1077; %DONE
+%sub_id=922; %DONE
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
 else
     root_dir='/home/dgroppe/GIT/SZR_ANT/';
 end
-% DONE subs=[253, 620, 862, 1077];
-% DONE subs=[958, 970];
-% DONE subs=[922];
-% DONE subs=[264];
-subs=[115];
-subs=442;
-subs=[862];
-%subs=922; %DONE
 
+subs=[922, 958, 970]; % DONE
+subs=264; % DONE
+subs=115; %DONE
+subs=442;
 
 for sub_id=subs,
 
@@ -93,6 +87,7 @@ for lag_loop=1:n_lags,
         ftr_labels{temp_ct}=sprintf('%s_Lag_%d',band_labels{band_loop},edm_lags(lag_loop));
     end
 end
+
 
 %% Load bad chans and ignore them
 badchan_fname=fullfile(root_dir,'EU_METADATA','BAD_CHANS',sprintf('bad_chans_%d.txt',sub_id));
@@ -135,26 +130,23 @@ n_files=length(file_info);
 
 
 %% Loop over SOZ electrodes
-%for cloop=1:1,
-for cloop=1:n_chan, 
+for cloop=1:n_chan,
     fprintf('Working on chan %s-%s\n',soz_chans_bi{cloop,1},soz_chans_bi{cloop,1});
     
     % Figure out how many non-szr samples to draw from each file
-    n_subsamp_files=round(n_files/2); % only sample for the first half of files since in
-    % practice we will only have files from beginning of patient stay to
-    % estimate normalization
-    n_subsamp_obs=ceil(n_tpt_ct(cloop)/n_subsamp_files);
-    fprintf('Drawing %d random samples (szr and non-szr) from each file.\n',n_subsamp_obs);
+    n_nonszr_obs=ceil(n_tpt_ct(cloop)/n_files);
+    fprintf('Drawing %d random non-szr samples from each file.\n',n_nonszr_obs);
     
-    subsamp_se_ftrs=[];
-    % Loop over first half of files
-    for floop=1:n_subsamp_files,
+    nonszr_se_ftrs=[];
+    % Loop over files
+    %for floop=1:1, PICKUP ?? start at n_files=25
+    for floop=1:n_files,
         % Compute features
         
         % Read header
         full_data_fname=get_data_fullfname(sub_id,file_info(floop).fname);
         fprintf('Channel %d/%d\n',cloop,n_chan);
-        fprintf('Loading file %d/%d %s\n',floop,n_subsamp_files,file_info(floop).fname);
+        fprintf('Loading file %d/%d %s\n',floop,n_files,file_info(floop).fname);
         pat=bin_file(full_data_fname);
         Fs=pat.a_samp_freq;
         if isempty(Fs),
@@ -219,7 +211,34 @@ for cloop=1:n_chan,
                 end
                 targ_window(targ_onset_id:offset_id)=-1;
             end
-        end    
+        end 
+        % Compute ictal-class
+%         szr_class=zeros(1,length(ieeg));
+%         targ_window=zeros(1,length(ieeg)); % Same as szr class but extended 10 seconds before and after to
+%         % deal with noise in onset/offset definition
+%         if ~isempty(file_info(floop).szr_onsets_sec),
+%             % There are szrs in this file (clinical and/or subclinical)
+%             for sloop=1:length(file_info(floop).szr_onsets_sec),
+%                 onset_id=findTpt(file_info(floop).szr_onsets_sec(sloop),ieeg_time_sec_pre_decimate);
+%                 if ~isempty(file_info(floop).szr_offsets_sec),
+%                     % Sadly, some szrs have marked onsets but not offsets
+%                     offset_id=findTpt(file_info(floop).szr_offsets_sec(sloop),ieeg_time_sec_pre_decimate);
+%                 else
+%                     offset_id=length(ieeg);
+%                 end
+%                 szr_class(onset_id:offset_id)=1;
+%                 targ_onset_id=onset_id-Fs*10; %extend 10 seconds in past
+%                 if targ_onset_id<1,
+%                     targ_onset_id=1;
+%                 end
+%                 targ_offset_id=offset_id+Fs*10; %extend 10 seconds in future
+%                 if targ_offset_id>length(ieeg),
+%                     targ_offset_id=length(ieeg);
+%                 end
+%                 targ_window(targ_onset_id:targ_offset_id)=1;
+%             end
+%         end
+        
         
         % Downsample if necessary
         if Fs>256,
@@ -302,57 +321,42 @@ for cloop=1:n_chan,
         se_class=se_class(edge_pts:end);
         se_szr_class=se_szr_class(edge_pts:end);
         
-        if isempty(subsamp_se_ftrs),
+        if isempty(nonszr_se_ftrs),
             %preallocate mem, first time adding data
-            subsamp_se_ftrs=zeros(n_ftrs,n_subsamp_obs*n_subsamp_files);
-            subsamp_se_ftrs_time_sec=zeros(1,n_subsamp_obs*n_subsamp_files);
-            source_fnames=cell(1,n_subsamp_files);
-            subsamp_szr_class=zeros(1,n_subsamp_obs*n_subsamp_files);
-            subsamp_targ_class=zeros(1,n_subsamp_obs*n_subsamp_files);
+            nonszr_se_ftrs=zeros(n_ftrs,n_nonszr_obs*n_files);
+            nonszr_se_ftrs_time_sec=zeros(1,n_nonszr_obs*n_files);
+            source_fnames=cell(1,n_files);
         end
         
         % Get non-szr time window ids
-        n_post_edge_ftr_wind=length(se_class);
-%         temp_time_ids=1:n_post_edge_ftr_wind;
-        % Randomly select subset of features (both szr and non szr
-        if n_post_edge_ftr_wind>=n_subsamp_obs,
-            subsamp_ids=randi(n_post_edge_ftr_wind,1,n_subsamp_obs);
-            subsamp_se_ftrs(:,[1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=se_ftrs(:,subsamp_ids);
-            subsamp_se_ftrs_time_sec([1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=se_time_sec(subsamp_ids);
-            subsamp_szr_class([1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=se_szr_class(subsamp_ids);
-            subsamp_targ_class([1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=se_class(subsamp_ids);
+        non_szr_ids=find(se_class<0.5);
+        % Randomly select subset of non-szr features
+        if length(non_szr_ids)==0,
+            nonszr_se_ftrs(:,[1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=NaN;
+            nonszr_se_ftrs_time_sec([1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=NaN;
         else
-            % Not enought data points in file, fill with NaN values
-            subsamp_se_ftrs(:,[1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=NaN;
-            subsamp_se_ftrs_time_sec([1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=NaN;
-            subsamp_szr_class([1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=NaN;
-            subsamp_targ_class([1:n_subsamp_obs]+(floop-1)*n_subsamp_obs)=NaN;
+            use_non_szr_ids=non_szr_ids(randi(length(non_szr_ids),1,n_nonszr_obs));
+            nonszr_se_ftrs(:,[1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=se_ftrs(:,use_non_szr_ids);
+            nonszr_se_ftrs_time_sec([1:n_nonszr_obs]+(floop-1)*n_nonszr_obs)=se_time_sec(use_non_szr_ids);
+            source_fnames{floop}=full_data_fname;
         end
-        source_fnames{floop}=full_data_fname;
 
         
     end
     
-    %% Remove any nan values
-    non_nan_ids=find(~isnan(subsamp_se_ftrs_time_sec));
-    subsamp_se_ftrs=subsamp_se_ftrs(:,non_nan_ids);
-    subsamp_se_ftrs_time_sec=subsamp_se_ftrs_time_sec(non_nan_ids);
-    subsamp_szr_class=subsamp_szr_class(non_nan_ids);
-    subsamp_targ_class=subsamp_targ_class(non_nan_ids);
-    
-    %% Save results to disk
+    % Save results to disk
     outdir=fullfile(root_dir,'EU_GENERAL','EU_GENERAL_FTRS','SE',num2str(sub_id));
     if ~exist(outdir,'dir'),
         mkdir(outdir);
     end
-    outfname=fullfile(outdir,sprintf('%d_%s_%s_subsamp',sub_id, ...
+    outfname=fullfile(outdir,sprintf('%d_%s_%s_non',sub_id, ...
         soz_chans_bi{cloop,1},soz_chans_bi{cloop,2}));
     fprintf('Saving szr features to %s\n',outfname);
-%     non_nan_ids=find(~isnan(subsamp_se_ftrs_time_sec));
-%     subsamp_se_ftrs_time_sec=subsamp_se_ftrs_time_sec(non_nan_ids);
-%     subsamp_se_ftrs=subsamp_se_ftrs(:,non_nan_ids);
-    save(outfname,'subsamp_se_ftrs','subsamp_se_ftrs_time_sec','source_fnames', ...
-        'ftr_labels','subsamp_szr_class','subsamp_targ_class');
+    non_nan_ids=find(~isnan(nonszr_se_ftrs_time_sec));
+    nonszr_se_ftrs_time_sec=nonszr_se_ftrs_time_sec(non_nan_ids);
+    nonszr_se_ftrs=nonszr_se_ftrs(:,non_nan_ids);
+    save(outfname,'nonszr_se_ftrs','nonszr_se_ftrs_time_sec','source_fnames', ...
+        'ftr_labels');
 end
 
 
