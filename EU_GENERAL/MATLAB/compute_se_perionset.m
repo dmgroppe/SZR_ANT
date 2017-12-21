@@ -1,3 +1,34 @@
+%% This script computes the spectral energy (SE) features with EDM for just
+% a patient's clinical szrs. They are all output
+% to a directory like this: SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/1096/1096_HL2_HL3_szr0.mat
+% 
+%
+%% KEY VARIABLES
+% ** Voltage Data
+% ieeg: raw bipolar data
+% szr_class: 0=no szr, 1=clinical szr, -1=subclinical szr
+% 
+% targ_window: same as szr class but extends 10 min before and after to deal with noise in onset/offset
+% definition
+% 
+% ieeg_time_sec_pre_decimate: time relative to start of file
+% 
+% 
+% ** Downsampled Data (256 Hz for all patients)
+% ieeg: raw bipolar data
+% time_dec: dowsample dtime
+% targ_wind_dec=downsampled version of targ_window
+% szr_class_dec=downsampled version of szr_class
+% 
+% 
+% ** Spectral Energy Features
+% n_ftr_wind: # of feature time pts (about 10 Hz srate)
+% se_time_sec: time relative to start of file
+% se_szr_class: 0=no szr, 1=szr
+% se_class: 0=no szr, 1=szr <-target windowfor classifier
+% se_ftrs: feature matrix (ftr x time)
+% ftr_labels: feature labels
+
 %sub_id=1096; %DONE
 % sub_id=620; %DONE
 %sub_id=264; % DONE
@@ -11,11 +42,12 @@
 % sub_id=958;  %DONE
 % sub_id=970; %DONE
 % sub_id=922; %DONE
-subs=[253, 264, 590, 620, 862, 1077, 1096, 1125, 958, 970, 922];
-%subs=[273, 565]; % DONE
-subs=[115]; % DONE
-subs=[862]; % REDONE (bad szrs removed)
-subs=[922]; % REDOING (long szr relabelled as subclinical)
+% subs=[253, 264, 590, 620, 862, 1077, 1096, 1125, 958, 970, 922];
+% %subs=[273, 565]; % DONE
+% subs=[115]; % DONE
+% subs=[862]; % REDONE (bad szrs removed)
+% subs=[922]; % REDOING (long szr relabelled as subclinical)
+subs=1096;
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';

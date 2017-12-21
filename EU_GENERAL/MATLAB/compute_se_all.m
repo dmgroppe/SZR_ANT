@@ -6,7 +6,7 @@
 %% KEY VARIABLES
 % ** Voltage Data
 % ieeg: raw bipolar data
-% szr_class: 0=no szr, 1=szr (clinical or otherwise)
+% szr_class: 0=no szr, 1=clinical szr, -1=subclinical szr
 % 
 % targ_window: same as szr class but extends 10 min before and after to deal with noise in onset/offset
 % definition
@@ -27,7 +27,7 @@
 % se_szr_class: 0=no szr, 1=szr
 % se_class: 0=no szr, 1=szr <-target windowfor classifier
 % se_ftrs: feature matrix (ftr x time)
-% ftr_labes: feature labels
+% ftr_labels: feature labels
 
 
 %% Define sub

@@ -32,6 +32,7 @@ model_dir=os.path.join(path_dict['szr_ant_root'],'MODELS')
 C_srch=list()
 valid_bal_acc_srch=list()
 train_bal_acc_srch=list()
+nsvec_srch=list()
 model_names_srch=list()
 gamma_srch=list()
 for f in os.listdir(model_dir):
@@ -47,6 +48,10 @@ for f in os.listdir(model_dir):
             gamma_srch=gamma_srch+list(temp['tried_gamma'])
             valid_bal_acc_srch=valid_bal_acc_srch+list(temp['tried_valid_acc'])
             train_bal_acc_srch=train_bal_acc_srch+list(temp['tried_train_acc'])
+            if 'tried_train_nsvec' in temp.keys():
+                nsvec_srch=nsvec_srch+list(temp['tried_train_nsvec'])
+            else:
+                nsvec_srch = nsvec_srch + list(np.zeros(len(temp['tried_valid_acc'])))
             model_names_srch=model_names_srch+[f for a in range(len(temp['tried_C']))]
 
 mx_id=np.argmax(valid_bal_acc_srch)
@@ -55,15 +60,39 @@ print('Best Validation Accuracy: %f' % valid_bal_acc_srch[mx_id])
 print('Best Training Accuracy: %f' % train_bal_acc_srch[mx_id])
 print('Using C=%f, gam=%f' % (C_srch[mx_id],gamma_srch[mx_id]))
 print('Best model name is %s' % model_names_srch[mx_id])
+print()
 
-C_bool=np.asarray(C_srch)>5**10
+# Find best performance given limited # of support vectors
+# Number of support vectors allowed:  200 support vectors with 125 dimensions
+# Right now I have 30 dimensions so I can have 295 support vectors
+#C_bool=np.asarray(C_srch)>5**10
+nsvec_bool=np.asarray(nsvec_srch)>295 # 295 is max # of support vectors
 valid_bacc_lim=np.copy(valid_bal_acc_srch)
-valid_bacc_lim[C_bool]=0
+valid_bacc_lim[nsvec_bool]=0
 lim_mx_id=np.argmax(valid_bacc_lim)
-print('Best Validation Accuracy C<5**10: %f' % valid_bacc_lim[lim_mx_id])
-print('Best Training Accuracy: %f' % train_bal_acc_srch[lim_mx_id])
-print('Using C=%f, gam=%f (C<5**10)' % (C_srch[lim_mx_id],gamma_srch[lim_mx_id]))
-print('Best model name is %s (C<5**10)' % model_names_srch[lim_mx_id])
+# print('Best Validation Accuracy C<5**10: %f' % valid_bacc_lim[lim_mx_id])
+# print('Best Training Accuracy: %f' % train_bal_acc_srch[lim_mx_id])
+# print('Using C=%f, gam=%f (C<5**10)' % (C_srch[lim_mx_id],gamma_srch[lim_mx_id]))
+# print('Best model name is %s (C<5**10)' % model_names_srch[lim_mx_id])
+print('Best Validation Accuracy (limited # of svecs): %f' % valid_bacc_lim[lim_mx_id])
+print('Best Training Accuracy: %f (limited # of svecs)' % train_bal_acc_srch[lim_mx_id])
+print('Using C=%f, gam=%f, nsvec=%d' % (C_srch[lim_mx_id],gamma_srch[lim_mx_id],nsvec_srch[lim_mx_id]))
+print('Best model name is %s (limited # of svecs)' % model_names_srch[lim_mx_id])
+
+
+# Plot # of support vectors as a Function of Hyperparameters
+if len(nsvec_srch)>0:
+    plt.figure(2)
+    plt.clf()
+    #plt.scatter(np.arange(len(vbacc_ray)),vbacc_ray,c=vbacc_ray)
+    plt.scatter(np.log10(C_srch),np.log10(gamma_srch),c=nsvec_srch,cmap='plasma',s=32)
+    plt.plot(np.log10(C_srch[mx_id]),np.log10(gamma_srch[mx_id]),'k.')
+    plt.plot(np.log10(C_srch[lim_mx_id]),np.log10(gamma_srch[lim_mx_id]),'g*')
+    plt.xlabel('log10(C)')
+    plt.ylabel('log10(Gamma)')
+    cbar=plt.colorbar()
+    cbar.set_label('# of Support Vectors', rotation=90)
+    plt.show()
 
 # Plot Accuracy as a Function of Hyperparameters
 plt.figure(1)
