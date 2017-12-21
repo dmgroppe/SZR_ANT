@@ -62,8 +62,11 @@ print('Using C=%f, gam=%f' % (C_srch[mx_id],gamma_srch[mx_id]))
 print('Best model name is %s' % model_names_srch[mx_id])
 print()
 
+# Find best performance given limited # of support vectors
+# Number of support vectors allowed:  200 support vectors with 125 dimensions
+# Right now I have 30 dimensions so I can have 295 support vectors
 #C_bool=np.asarray(C_srch)>5**10
-nsvec_bool=np.asarray(nsvec_srch)>295
+nsvec_bool=np.asarray(nsvec_srch)>295 # 295 is max # of support vectors
 valid_bacc_lim=np.copy(valid_bal_acc_srch)
 valid_bacc_lim[nsvec_bool]=0
 lim_mx_id=np.argmax(valid_bacc_lim)

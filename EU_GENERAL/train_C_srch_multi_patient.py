@@ -163,6 +163,7 @@ tried_C=list()
 tried_gamma=list()
 tried_train_acc=list()
 tried_valid_acc=list()
+tried_train_nsvec=list()
 
 for rand_ct in range(n_rand_params):
     C=C_vals[rand_ct]  # Start with C=1 and then change it according to train-testing error dif
@@ -184,6 +185,7 @@ for rand_ct in range(n_rand_params):
         temp_valid_sens = np.zeros(n_train_subs)
         temp_valid_spec = np.zeros(n_train_subs)
         temp_valid_bacc = np.zeros(n_train_subs)
+        temp_nsvec = np.zeros(n_train_subs)
         for left_out_ct, left_out_id in enumerate(uni_subs):
             print('Left out sub %d (FR_%d) of %d' % (left_out_ct+1,left_out_id,n_train_subs))
             left_in_ids=np.setdiff1d(uni_subs,left_out_id)
@@ -223,14 +225,13 @@ for rand_ct in range(n_rand_params):
                 temp_train_sens[left_out_ct]+=temp_sens/(n_train_subs-1)
                 temp_train_spec[left_out_ct]+=temp_spec/(n_train_subs-1)
 
-            # temp_train_bacc[left_out_ct], temp_train_sens[left_out_ct ], temp_train_spec[left_out_ct ] = ief.perf_msrs(
-            #     szr_class[train_bool],
-            #     class_hat[train_bool])
+            # Compute performance on validation data
             temp_valid_bacc[left_out_ct], temp_valid_sens[left_out_ct], temp_valid_spec[left_out_ct] = ief.perf_msrs(
                 szr_class[train_bool==False],
                 class_hat[train_bool==False])
-            # print('Bal Acc (Train/Valid): %.3f/%3f ' % (temp_train_bacc[left_out_ct ],temp_valid_bacc[left_out_ct]))
-            # exit()
+            if model_type == 'svm' or model_type == 'lsvm':
+                # Record the number of support vectors
+                temp_nsvec[left_out_ct] = np.sum(model.n_support_)
 
         mn_temp_valid_bacc=np.mean(temp_valid_bacc)
         mn_temp_train_bacc = np.mean(temp_train_bacc)
@@ -240,6 +241,7 @@ for rand_ct in range(n_rand_params):
         tried_gamma.append(gam)
         tried_train_acc.append(mn_temp_train_bacc)
         tried_valid_acc.append(mn_temp_valid_bacc)
+        tried_train_nsvec.append(np.mean(temp_nsvec))
 
         if mn_temp_valid_bacc>best_vbal_acc_this_gam:
             best_vbal_acc_this_gam=mn_temp_valid_bacc
@@ -366,6 +368,7 @@ for rand_ct in range(n_rand_params):
          tried_gamma=tried_gamma,
          tried_train_acc=tried_train_acc,
          tried_valid_acc=tried_valid_acc,
+         tried_train_nsvec=tried_train_nsvec,
          best_valid_bal_acc=best_valid_bal_acc,
          best_train_bal_acc=best_train_bal_acc,
          best_C = best_C,

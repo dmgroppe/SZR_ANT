@@ -1,8 +1,8 @@
-{"model_type": "logreg",
-"model_name": "temp",
+{"model_type": "svm",
+"model_name": "tempEqWtSvm",
 "gam": -2,
-"C": -1,
-"patience": 0,
+"C": -100,
+"patience": 1,
 "equal_sub_wts": "True",
 "use_ftrs": ["SE"]}
 

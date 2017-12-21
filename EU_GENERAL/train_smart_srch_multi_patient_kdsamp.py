@@ -263,7 +263,6 @@ for rand_ct in range(n_rand_params):
                 # Record the number of support vectors
                 temp_nsvec[left_out_ct]=np.sum(model.n_support_)
 
-
         mn_temp_valid_bacc=np.mean(temp_valid_bacc)
         mn_temp_train_bacc = np.mean(temp_train_bacc)
 

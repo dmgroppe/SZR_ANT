@@ -169,6 +169,13 @@ else:
     model.fit(ftrs, szr_class)
     #model.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code
 
+# Figure out # of support vectors (if an svm)
+if model_type == 'svm' or model_type == 'lsvm':
+    # Record the number of support vectors
+    nsvec = np.sum(model.n_support_)
+else:
+    nsvec = 0
+
 # make predictions from training and validation data
 class_hat = model.predict(ftrs)
 # Compute performance on training data
@@ -182,6 +189,7 @@ print('Using C=%.2E and gam=%.2E' % (C,gam))
 print('Model name: {}'.format(model_name))
 print('Features used: {}'.format(use_ftrs))
 print('Equal subject wts={}'.format(equal_sub_wts))
+print('# of support vectors: %d' % nsvec)
 
 out_model_fname = os.path.join(model_path, 'classify_models_srch.pkl')
 print('Saving model as %s' % out_model_fname)
@@ -197,6 +205,7 @@ np.savez(out_metrics_fname,
          train_spec=train_spec,
          train_bacc=train_bacc,
          train_subs_list=train_subs_list,
+         nsvec=nsvec,
          C=C,
          gam=gam,
          use_ftrs=use_ftrs)

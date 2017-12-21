@@ -1,7 +1,7 @@
-{"model_type": "logreg",
-"model_name": "logregFinale",
+{"model_type": "svm",
+"model_name": "tempSvmFinale",
 "equal_sub_wts": "True",
-"gamma": 0.001,
-"C": 1,
+"gamma": 0.000013,
+"C": 77370059581996.750000,
 "use_ftrs": ["SE"]}
 
