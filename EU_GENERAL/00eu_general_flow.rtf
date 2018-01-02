@@ -82,6 +82,9 @@ Run export_train_features.py to get
 \f0\b0\fs20 \cf2 \cb3 \CocoaLigature0 \
 Then run: kmeans_dsamp_per_sub.py\
 \
+Run plot_scaling.py to figure out how to scale data \
+\
+\
 ***** Use LOOCV to search hyperparameters (and create ensemble?)\
 1) To try random gamma values use:\
 $python train_smart_srch_multi_patient.py smart_rand_params_lappy.json \
@@ -126,6 +129,10 @@ python apply_saved_model_to_all_clips.py 1096 genLogregSe_1\
 4) Summarize and visualize results over a list of subs\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
 
-\f2\fs24 \cf0 \cb1 \CocoaLigature1 plot_stim_results.py 
-\f0\fs20 \cf2 \cb3 \CocoaLigature0 \
+\f2\fs24 \cf0 \cb1 \CocoaLigature1 plot_stim_results.py \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs20 \cf2 \cb3 \CocoaLigature0 python derive_norm_params.py \
+\
+TODO comment all the above files\
 }
