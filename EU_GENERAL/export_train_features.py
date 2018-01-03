@@ -86,12 +86,9 @@ path_dict=ief.get_path_dict()
 train_sub_fname='train_subsAES.txt'
 print('Importing training subject list: %s' % train_sub_fname)
 use_subs_df=pd.read_csv(train_sub_fname,header=None,na_filter=False)
-#test_sub_list=['NA']
-test_sub_list=['1096']
 train_subs_list=[]
 for sub in use_subs_df.iloc[:,0]:
-    if not sub in test_sub_list:
-        train_subs_list.append(sub)
+    train_subs_list.append(sub)
         
 print('Training subs: {}'.format(train_subs_list))
 
@@ -111,6 +108,10 @@ print('Total # of szr time windows: %d ' % n_szr_wind)
 print('Total # of non-szr time windows: %d ' % n_non_wind)
 print('Total # of time windows: %d ' % n_wind)
 # print('Total # of files: %d' % f_ct)
+
+if n_dim==0:
+    print('Error: ftr_dim=0. You might be missing some *non* or *szr* files for a patient')
+    exit()
 
 # Load training/validation data into a single matrix
 ftrs, szr_class, sub_id=eu.import_data(ftr_info_dict['grand_szr_fnames'], ftr_info_dict['grand_non_fnames'],
