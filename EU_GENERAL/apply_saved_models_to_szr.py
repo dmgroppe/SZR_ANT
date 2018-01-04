@@ -129,18 +129,24 @@ for elec in soz_elec_names:
         print('Loading %s' % szr_f)
         temp_ftrs = sio.loadmat(os.path.join(ftr_path, szr_f))
         raw_ftrs = temp_ftrs['se_ftrs']
+        #print(raw_ftrs.shape)
+        #exit()
+        if raw_ftrs.shape[1]>0:
+            # Szr may be empty if it is short and occurs at the start of a file
+            # Z-score based on non-ictal means, SDs
+            dg.applyNormalize(raw_ftrs, temp_mns, temp_sds)
 
+            # Apply classifiers
+            for model_ct in range(n_models):
+                #tmp_yhat_va = models[model_ct].predict_proba(raw_ftrs.T)[:, 1]
+                tmp_yhat_va = models[model_ct].predict(raw_ftrs.T)
+                if model_ct == 0:
+                    yhat = np.zeros(tmp_yhat_va.shape)
+                yhat += tmp_yhat_va / n_models
+        else:
+            print('No features for this szr!')
+            yhat=np.nan
 
-        # Z-score based on non-ictal means, SDs
-        dg.applyNormalize(raw_ftrs, temp_mns, temp_sds)
-
-        # Apply classifiers
-        for model_ct in range(n_models):
-            #tmp_yhat_va = models[model_ct].predict_proba(raw_ftrs.T)[:, 1]
-            tmp_yhat_va = models[model_ct].predict(raw_ftrs.T)
-            if model_ct == 0:
-                yhat = np.zeros(tmp_yhat_va.shape)
-            yhat += tmp_yhat_va / n_models
         out_fname = str(sub) + '_' + uni_chans[0] + '_' + uni_chans[1] + '_phat_' + szr_f.split('_')[-1]
         print('Saving file as %s' % os.path.join(yhat_dir, out_fname))
         sio.savemat(os.path.join(yhat_dir, out_fname), mdict={'yhat': yhat,

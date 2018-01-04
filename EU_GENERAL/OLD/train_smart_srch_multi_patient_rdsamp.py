@@ -27,10 +27,13 @@ import json
 
 ## Start of main function
 if len(sys.argv)==1:
-    print('Usage: train_smart_srch_multi_patient.py srch_params.json')
+    print('Usage: train_smart_srch_multi_patient_rdsamp.py srch_params.json')
     exit()
 if len(sys.argv)!=2:
-    raise Exception('Error: train_smart_srch_multi_patient.py requires 1 argument: srch_params.json')
+    raise Exception('Error: train_smart_srch_multi_rdsamp.py requires 1 argument: srch_params.json')
+
+print('This code no longer works because I removed the downsampling functionality of euGenFuncs. (Dec 21, 2017)')
+exit()
 
 # Import Parameters from json file
 param_fname=sys.argv[1]
@@ -93,7 +96,8 @@ print('Training subs: {}'.format(train_subs_list))
 # ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/'
 ftr_root=path_dict['eu_gen_ftrs']
 ftr='SE'
-ftr_info_dict=eu.data_size_and_fnames(train_subs_list, ftr_root, ftr, dsamp_pcnt)
+#ftr_info_dict=eu.data_size_and_fnames(train_subs_list, ftr_root, ftr)
+ftr_info_dict=eu.data_size_and_fnames(train_subs_list, ftr_root, ftr, dsamp_pcnt) # code prior to Dec 21, 2017
 #ftrs_tr, targ_labels_tr=eu.import_data(szr_fnames_tr, non_fnames_tr, n_szr_wind_tr, n_non_wind_tr, ftr_dim)
 
 n_dim=ftr_info_dict['ftr_dim']
@@ -163,6 +167,7 @@ tried_C=list()
 tried_gamma=list()
 tried_train_acc=list()
 tried_valid_acc=list()
+tried_train_nsvec=list()
 
 for rand_ct in range(n_rand_params):
     # Re-Load random subsampling of training/validation data into a single matrix
@@ -189,6 +194,7 @@ for rand_ct in range(n_rand_params):
         temp_valid_sens = np.zeros(n_train_subs)
         temp_valid_spec = np.zeros(n_train_subs)
         temp_valid_bacc = np.zeros(n_train_subs)
+        temp_nsvec = np.zeros(n_train_subs)
         for left_out_ct, left_out_id in enumerate(uni_subs):
             print('Left out sub %d (FR_%d) of %d' % (left_out_ct+1,left_out_id,n_train_subs))
             left_in_ids=np.setdiff1d(uni_subs,left_out_id)
@@ -234,8 +240,9 @@ for rand_ct in range(n_rand_params):
             temp_valid_bacc[left_out_ct], temp_valid_sens[left_out_ct], temp_valid_spec[left_out_ct] = ief.perf_msrs(
                 szr_class[train_bool==False],
                 class_hat[train_bool==False])
-            # print('Bal Acc (Train/Valid): %.3f/%3f ' % (temp_train_bacc[left_out_ct ],temp_valid_bacc[left_out_ct]))
-            # exit()
+            if model_type == 'svm' or model_type=='lsvm':
+                # Record the number of support vectors
+                temp_nsvec[left_out_ct]=np.sum(model.n_support_)
 
         mn_temp_valid_bacc=np.mean(temp_valid_bacc)
         mn_temp_train_bacc = np.mean(temp_train_bacc)
@@ -245,6 +252,7 @@ for rand_ct in range(n_rand_params):
         tried_gamma.append(gam)
         tried_train_acc.append(mn_temp_train_bacc)
         tried_valid_acc.append(mn_temp_valid_bacc)
+        tried_train_nsvec.append(np.mean(temp_nsvec))
 
         if mn_temp_valid_bacc>best_vbal_acc_this_gam:
             best_vbal_acc_this_gam=mn_temp_valid_bacc
@@ -370,6 +378,7 @@ for rand_ct in range(n_rand_params):
          tried_gamma=tried_gamma,
          tried_train_acc=tried_train_acc,
          tried_valid_acc=tried_valid_acc,
+         tried_train_nsvec=tried_train_nsvec,
          best_valid_bal_acc=best_valid_bal_acc,
          best_train_bal_acc=best_train_bal_acc,
          equal_sub_wts=equal_sub_wts,

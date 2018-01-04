@@ -56,12 +56,18 @@ use_ftrs=['SE'] #TODO import this from json file
 # n_rand_params=int(params['n_rand_params'])
 # print('# of random initial hyperparameters to try %d' % n_rand_params)
 n_rand_params=1
-gamma_vals=params['gam']
+#gamma_vals=params['gam'] # code used prior to Dec 21, 2017
+gamma_vals=10**float(params['gam'])
 print('Gamma value: %f' % gamma_vals)
-ini_C=params['C']
-print('Initial C value: %f' % ini_C)
+ini_C=10**float(params['C'])
+print('C=%.2E' % ini_C)
+#ini_C=params['C'] # code used prior to Dec 21, 2017
+#print('Initial C value: %f' % ini_C) # code used prior to Dec 21, 2017
 patience=int(params['patience'])
 print('# of steps to wait when performance no longer increases %d' % patience)
+
+
+
 
 # Find if there any existing models of this name
 # If so, grab the number of model an increment that number by 1 to get new model name
