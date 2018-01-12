@@ -98,7 +98,7 @@ fprintf('# of bad chans: %d\n',length(badchans));
 %% Load list of channels to use for computing PLV for each electrode
 plvchan_fname=fullfile(root_dir,'EU_METADATA','PLV_CHANS',sprintf('%d_plv.csv',sub_id));
 plvchans=csv2Cell(plvchan_fname,',',1);
-
+n_plv_pairs=size(plvchans,2)-1;
 
 %% Get channel labels
 bipolar_labels=derive_bipolar_pairs(sub_id);
@@ -244,7 +244,7 @@ for cloop=1:size(soz_chans_bi,1),
       
             
             %% Import entire clip of SOZ chan (bipolar data)
-            [ieeg, time_dec, targ_raw_ieeg, targ_win_dec, szr_class_dec]=import_eu_clip(pat,soz_chans_bi{cloop,1},soz_chans_bi{cloop,2}, ...
+            [ieeg, time_dec, targ_raw_ieeg, targ_raw_ieeg_sec, targ_win_dec, szr_class_dec]=import_eu_clip(pat,soz_chans_bi{cloop,1},soz_chans_bi{cloop,2}, ...
                 targ_window,szr_class,Fs,sgramCfg);
       
             
@@ -279,7 +279,7 @@ for cloop=1:size(soz_chans_bi,1),
                 wind=wind+wind_step;
             end
             
-            % Compute features with EDM for all data
+            % Compute SE features with EDM for all data
             se_ftrs=zeros(n_lags*n_bands,n_ftr_wind);
 
             % Compute SE raw feature without any smoothing
@@ -292,8 +292,6 @@ for cloop=1:size(soz_chans_bi,1),
                 % Compute moving window hilbert transform
                 [se_ftrs(bloop,:), hilb_ifreq]=bp_hilb_mag(bp_ieeg,n_ftr_wind,wind_len,wind_step);
             end
-            
-            
             
             % Set initial value of all features
             se_ftrs(:,1)=repmat(se_ftrs(1:n_bands,1),n_lags,1);
@@ -310,8 +308,61 @@ for cloop=1:size(soz_chans_bi,1),
                 end
             end
             
+            % Preallocate memory for PLV features with EDM
+            plv_ftrs=zeros(n_lags*n_bands,n_ftr_wind);
+            hilb_pcos=zeros(n_lags*n_bands,n_ftr_wind);
+            hilb_psin=zeros(n_lags*n_bands,n_ftr_wind);
+            
+            % Get list of 7 other electrodes to compute plv with
+            seed_chan=sprintf('%s-%s',soz_chans_bi{cloop,1},soz_chans_bi{cloop,2});
+            plv_row_id=findStrInCell(seed_chan,plvchans(:,1));
+            
+            % Compute PLV features without any smoothing
+            for other_chan=1:n_plv_pairs,
+                fprintf('Computing PLV with chan %d of %d\n',other_chan,n_plv_pairs);
+                pair_chan_bi=plvchans{plv_row_id,other_chan+1};
+                dash_id=find(pair_chan_bi=='-');
+                pair_chan1=pair_chan_bi(1:dash_id-1);
+                pair_chan2=pair_chan_bi(dash_id+1:end);
+                
+                % Data from pair chan
+                ieeg_pair=import_eu_clip(pat,pair_chan1,pair_chan2,targ_window,szr_class,Fs,sgramCfg);
+                
+                for bloop=1:n_bands,
+                    % Apply causal butterworth filter to seed channel
+                    bp_ieeg=butterfilt4_causalEU(ieeg,256,[bands(bloop,1) bands(bloop,2)],0);
+                    
+                    % Apply causal butterworth filter to pair channel
+                    bp_ieeg_pair=butterfilt4_causalEU(ieeg_pair,256,[bands(bloop,1) bands(bloop,2)],0);
+                    
+                    % Compute PLV via moving window hilbert transform
+                    [hilb_pcos(bloop,:), hilb_psin(bloop,:)]=bp_hilb_plv(bp_ieeg, bp_ieeg_pair, ...
+                        n_ftr_wind,wind_len,wind_step);
+                end
+                
+                % Apply EDM smoothing
+                % Set initial value of all features
+                hilb_pcos(:,1)=repmat(hilb_pcos(1:n_bands,1),n_lags,1);
+                hilb_psin(:,1)=repmat(hilb_psin(1:n_bands,1),n_lags,1);
+                
+                fprintf('Applying EDM smoothing to PLV cos & sin...\n');
+                ftr_ids=1:n_bands;
+                base_ftr_ids=1:n_bands;
+                for edm_loop=2:n_lags,
+                    ftr_ids=ftr_ids+n_bands;
+                    now_wt=1/(2^edm_lags(edm_loop));
+                    for t=2:n_ftr_wind,
+                        hilb_pcos(ftr_ids,t)=now_wt*hilb_pcos(base_ftr_ids,t)+(1-now_wt)*hilb_pcos(ftr_ids,t-1);
+                        hilb_psin(ftr_ids,t)=now_wt*hilb_psin(base_ftr_ids,t)+(1-now_wt)*hilb_psin(ftr_ids,t-1);
+                    end
+                end
+                plv_ftrs=plv_ftrs+sqrt(hilb_pcos.*hilb_pcos+hilb_psin.*hilb_psin)/n_plv_pairs;
+            end
+            
+            
             % Remove initial time points polluted by edge effects
             se_ftrs=se_ftrs(:,edge_pts:end);
+            plv_ftrs=plv_ftrs(:,edge_pts:end);
             se_time_sec=se_time_sec(edge_pts:end);
             se_class=se_class(edge_pts:end);
             se_szr_class=se_szr_class(edge_pts:end);
@@ -319,27 +370,33 @@ for cloop=1:size(soz_chans_bi,1),
             if 0,
                 % Code for checking results
                 se_ftrs_z=zscore(se_ftrs')'; %z-score
+                plv_ftrs_z=zscore(plv_ftrs')'; %z-score
                 
                 figure(1); clf();
-                ax1=subplot(311);
+                ax1=subplot(411);
                 %imagesc(se_ftrs_z);
                 h=plot(se_time_sec,se_ftrs_z);
                 title(sprintf('%s-%s, Szr%d',soz_chans_bi{cloop,1},soz_chans_bi{cloop,2},sloop));
                 
-                ax2=subplot(312); plot(se_time_sec,se_class,'--b'); hold on;
+                ax2=subplot(412); plot(se_time_sec,se_class,'--b'); hold on;
                 plot(se_time_sec,se_szr_class,'r-');
                 axis tight;
                 
-                ax3=subplot(313);
+                ax3=subplot(413);
+                plot(se_time_sec,plv_ftrs_z);
+                axis tight;
+                
+                ax4=subplot(414);
                 plot(time_dec,ieeg);
                 axis tight;
                 
-                linkaxes([ax1 ax2 ax3],'x');
+                linkaxes([ax1 ax2 ax3 ax4],'x');
             end
             
             %% Grab only features during target window
             se_targ_ids=find(se_class>=0.5);
             se_ftrs=se_ftrs(:,se_targ_ids);
+            plv_ftrs=plv_ftrs(:,se_targ_ids);
             se_time_sec=se_time_sec(se_targ_ids);
             se_class=se_class(se_targ_ids);
             se_szr_class=se_szr_class(se_targ_ids);
@@ -360,10 +417,9 @@ for cloop=1:size(soz_chans_bi,1),
                 cli_szr_info(sloop).clinical_szr_num));
             szr_fname=cli_szr_info(sloop).clinical_fname;
             fprintf('Saving szr features to %s\n',outfname);
-            save(outfname,'se_ftrs','se_time_sec','se_szr_class', ...
+            save(outfname,'se_ftrs','se_time_sec','se_szr_class','plv_ftrs', ...
                 'ftr_labels','szr_fname','targ_raw_ieeg','targ_raw_ieeg_sec', ...
                 'sgram_S','sgram_t','sgram_f');
-            disp('there');
         end
         
     end

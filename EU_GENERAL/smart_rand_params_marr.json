@@ -1,7 +1,7 @@
-{"model_type": "logreg",
-"model_name": "lregKdsampSeAes8",
+{"model_type": "svm",
+"model_name": "tempSvm",
 "n_rand_params": 1,
 "equal_sub_wts": "True",
-"patience": 0,
+"patience": 1,
 "use_ftrs": ["SE"]}
 

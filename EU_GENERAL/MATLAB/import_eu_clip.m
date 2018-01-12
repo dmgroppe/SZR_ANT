@@ -1,4 +1,4 @@
-function [ieeg, time_dec, targ_raw_ieeg, targ_win_dec, szr_class_dec]=import_eu_clip(pat,chan1,chan2,targ_window,szr_class,Fs,sgramCfg);
+function [ieeg, time_dec, targ_raw_ieeg, targ_raw_ieeg_sec, targ_win_dec, szr_class_dec]=import_eu_clip(pat,chan1,chan2,targ_window,szr_class,Fs,sgramCfg);
 
 % Import entire clip (typically 1 hour long)
 %             ieeg_labels=cell(n_chan,1);

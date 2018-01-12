@@ -1,6 +1,6 @@
 {"model_type": "svm",
-"model_name": "svmKdsampSeAes8",
-"gam": -4.5,
+"model_name": "rngLimitSvm",
+"gam": 2,
 "C": 10,
 "patience": 1,
 "equal_sub_wts": "True",

@@ -1,7 +1,7 @@
 {"model_type": "svm",
-"model_name": "svmAesFinale",
+"model_name": "svmRenorm",
 "equal_sub_wts": "True",
-"gamma": 0.000010,
-"C": 5000000,
+"gamma": 10,
+"C": 10000000,
 "use_ftrs": ["SE"]}
 
