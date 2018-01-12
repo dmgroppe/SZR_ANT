@@ -77,6 +77,7 @@ bands=[0 4; 4 8; 8 13; 13 30; 30 50; 70 100];
 band_labels={'DeltaMag','ThetaMag','AlphaMag','BetaMag','GammaMag','HGammaMag'};
 n_bands=length(bands);
 
+
 %% Derive feature labels
 n_ftrs=n_bands*n_lags;
 ftr_labels=cell(n_ftrs,1);

@@ -1,4 +1,5 @@
 # Read seizure onsets from "all szrs" html file and output them to a dataframe which is saved via pickle to disk.
+# in this location: SZR_ANT/EU_METADATA/SZR_TIMES/szr_on_off_FR*
 # The dataframe columns are:
 # 'SzrType'=clinical/subclinical
 # 'SzrOnsetSec'=onset in seconds from Jan. 1, 2000
