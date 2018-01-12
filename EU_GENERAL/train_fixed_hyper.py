@@ -29,10 +29,10 @@ import json
 
 ## Start of main function
 if len(sys.argv)==1:
-    print('Usage: train_smart_srch_multi_patient_kdsamp.py srch_params.json')
+    print('Usage: train_fixed_hyper.py srch_params.json')
     exit()
 if len(sys.argv)!=2:
-    raise Exception('Error: train_smart_srch_multi_kdsamp.py requires 1 argument: srch_params.json')
+    raise Exception('Error: train_fixed_hyper.py requires 1 argument: srch_params.json')
 
 # Import Parameters from json file
 param_fname=sys.argv[1]
@@ -50,10 +50,15 @@ if params['equal_sub_wts']=="False":
 else:
     equal_sub_wts = True
 print('Weight subjects equally={}'.format(equal_sub_wts))
-gam=float(params['gamma'])
-print('Gamma=%f' % gam)
-C=float(params['C'])
-print('C=%f' % C)
+# Code used prior to Dec 21, 2017
+# gam=float(params['gamma'])
+# print('Gamma=%f' % gam)
+# C=float(params['C'])
+# print('C=%f' % C)
+gam=10**float(params['gamma'])
+print('Gamma value: %f' % gam)
+C=10**float(params['C'])
+print('C=%.2E' % C)
 
 # if params['ictal_wind']=='small':
 #     small_ictal_wind=True
@@ -144,6 +149,13 @@ else:
     model.fit(ftrs, szr_class)
     #model.fit(ftrs[sub_id == 0, :], szr_class[sub_id == 0]) # min training data to test code
 
+# Figure out # of support vectors (if an svm)
+if model_type == 'svm' or model_type == 'lsvm':
+    # Record the number of support vectors
+    nsvec = np.sum(model.n_support_)
+else:
+    nsvec = 0
+
 # make predictions from training and validation data
 class_hat = model.predict(ftrs)
 # Compute performance on training data
@@ -157,6 +169,7 @@ print('Using C=%.2E and gam=%.2E' % (C,gam))
 print('Model name: {}'.format(model_name))
 print('Features used: {}'.format(use_ftrs))
 print('Equal subject wts={}'.format(equal_sub_wts))
+print('# of support vectors: %d' % nsvec)
 
 out_model_fname = os.path.join(model_path, 'classify_models_srch.pkl')
 print('Saving model as %s' % out_model_fname)
@@ -172,6 +185,7 @@ np.savez(out_metrics_fname,
          train_spec=train_spec,
          train_bacc=train_bacc,
          train_subs_list=train_subs_list,
+         nsvec=nsvec,
          C=C,
          gam=gam,
          use_ftrs=use_ftrs)
