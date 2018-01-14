@@ -1,5 +1,6 @@
 sub_id=1096;
 sub_id=1077;
+sub_id=1125;
 
 % Import electrode coordinates
 xyz_fname=sprintf('/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/ELEC_COORD/elec_coord_%d.csv', ...
