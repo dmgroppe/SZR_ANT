@@ -4,6 +4,8 @@ sub_id=1125;
 sub_id=862;
 sub_id=253;
 sub_id=620;
+sub_id=565;
+sub_id=273;
 
 % Import electrode coordinates
 if ismac,
