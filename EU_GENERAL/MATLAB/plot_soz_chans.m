@@ -76,3 +76,6 @@ for a=1:n_bad_chans,
         [elec_xyz(chan1_id,3) elec_xyz(chan2_id,3)],'r-');
     set(h,'linewidth',3);
 end
+
+disp('Bad channels are represented with red bars.');
+disp('SOZ channels are blue circles.');
