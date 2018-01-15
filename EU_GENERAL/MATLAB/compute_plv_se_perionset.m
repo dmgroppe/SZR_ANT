@@ -35,7 +35,7 @@
 %sub_id=264; % DONE
 % sub_id=590; % DONE
 %sub_id=253; % DONE
- subs=862; % DONE
+% subs=862; % DONE*
 % sub_id=565; %DONE
 % sub_id=273; % DONE
 %subs=1125; % DONE*
@@ -48,6 +48,7 @@
 % subs=[115]; % DONE
 % subs=[862]; % REDONE (bad szrs removed)
 % subs=[922]; % REDOING (long szr relabelled as subclinical)
+subs=253;
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
