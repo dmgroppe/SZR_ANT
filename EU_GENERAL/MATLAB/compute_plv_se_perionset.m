@@ -29,16 +29,17 @@
 % se_ftrs: feature matrix (ftr x time)
 % ftr_labels: feature labels
 
-%sub_id=1096; %DONE
+%*=PLV done
+%sub_id=1096; %DONE*
 % sub_id=620; %DONE
 %sub_id=264; % DONE
 % sub_id=590; % DONE
 %sub_id=253; % DONE
-% sub_id=862; % DONE
+ subs=862; % DONE
 % sub_id=565; %DONE
 % sub_id=273; % DONE
-% sub_id=1125; % DONE
-% sub_id=1077; %DONE
+%subs=1125; % DONE*
+% subs=1077; %DONE*
 % sub_id=958;  %DONE
 % sub_id=970; %DONE
 % sub_id=922; %DONE
@@ -47,7 +48,6 @@
 % subs=[115]; % DONE
 % subs=[862]; % REDONE (bad szrs removed)
 % subs=[922]; % REDOING (long szr relabelled as subclinical)
-subs=1096;
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';

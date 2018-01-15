@@ -2,10 +2,16 @@ sub_id=1096;
 sub_id=1077;
 sub_id=1125;
 sub_id=862;
+sub_id=253;
 
 % Import electrode coordinates
-xyz_fname=sprintf('/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/ELEC_COORD/elec_coord_%d.csv', ...
-    sub_id);
+if ismac,
+    root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT';
+else
+    root_dir='/home/dgroppe/GIT/SZR_ANT';
+end
+xyz_fname=sprintf('%s/EU_METADATA/ELEC_COORD/elec_coord_%d.csv', ...
+    root_dir,sub_id);
 xyz_csv=csv2Cell(xyz_fname,',',1);
 
 n_elec=size(xyz_csv,1);
@@ -25,8 +31,8 @@ end
 
 
 %% Load list of SOZ channels
-soz_fname=sprintf('/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/SOZ_CHANS/%d_bi_soz_chans.txt', ...
-    sub_id);
+soz_fname=sprintf('%s/EU_METADATA/SOZ_CHANS/%d_bi_soz_chans.txt', ...
+    root_dir,sub_id);
 soz_bi_csv=csv2Cell(soz_fname);
 n_soz=length(soz_bi_csv);
 fprintf('# of SOZ chans: %d\n',n_soz);
@@ -45,8 +51,8 @@ soz_mono=unique(soz_mono);
 
 
 %% Load list of bad channels
-bad_fname=sprintf('/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/BAD_CHANS/bad_chans_%d.txt', ...
-    sub_id);
+bad_fname=sprintf('%s/EU_METADATA/BAD_CHANS/bad_chans_%d.txt', ...
+    root_dir,sub_id);
 bad_chans=csv2Cell(bad_fname);
 n_bad_chans=length(bad_chans);
 fprintf('%d bad chans\n',n_bad_chans);
