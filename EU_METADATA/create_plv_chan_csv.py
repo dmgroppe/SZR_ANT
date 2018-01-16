@@ -33,9 +33,9 @@ print('Creating file %s' % out_fname)
 fid = open(out_fname,'w')
 
 fid.write('Seed,')
-for a in range(1,n_coi-1):
-    fid.write(' Pair%d,' %a)
-fid.write(' Pair%d\n' % (n_coi-1))
+for a in range(1,8):
+    fid.write('Pair%d,' %a)
+fid.write('\n')
 
 
 print('# of channels of interest: %d' % n_coi)
@@ -47,7 +47,7 @@ if n_coi==8:
         for b in range(n_coi):
             if a!=b:
                 ct+=1
-                fid.write(' %s' % coi_df.iloc[b,0])
+                fid.write('%s' % coi_df.iloc[b,0])
                 if ct<7:
                     fid.write(',')
         fid.write('\n')
@@ -81,16 +81,16 @@ else:
         bi_chan = soz_df.iloc[soz_ct][0]
         print(bi_chan)
         mono_chans = bi_chan.split('-')
-        chan1_id = False
-        chan2_id = False
+        chan1_id = -1
+        chan2_id = -1
         for chan_ct in range(n_xyz):
             if xyz_df.iloc[chan_ct, 0] == mono_chans[0]:
                 chan1_id = chan_ct
             if xyz_df.iloc[chan_ct, 0] == mono_chans[1]:
                 chan2_id = chan_ct
-        if chan1_id == False:
+        if chan1_id < 0:
             print('Error: could not find coords for chan %s' % mono_chans[0])
-        if chan2_id == False:
+        if chan2_id < 0:
             print('Error: could not find coords for chan %s' % mono_chans[1])
         chan_abs_sum = np.zeros(2)
         for dim_ct in range(3):
@@ -114,10 +114,10 @@ else:
         sort_ids = np.argsort(dst)
 
         # Output closest 8 (first one will be the channel with itself)
-        fid.write('%s, ' % soz_df.iloc[seed_ct][0])
+        fid.write('%s,' % soz_df.iloc[seed_ct][0])
         for a in range(1, 8):
             if a<7:
-                fid.write('%s, ' % soz_df.iloc[sort_ids[a]][0])
+                fid.write('%s,' % soz_df.iloc[sort_ids[a]][0])
             else:
                 fid.write('%s\n' % soz_df.iloc[sort_ids[a]][0])
     fid.close()
