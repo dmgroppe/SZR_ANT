@@ -41,7 +41,8 @@ print(npz.keys())
 
 #downsample_fact=10 # used for AES
 downsample_fact=150 # used for search 1
-downsample_fact=1000 # used for seach 2
+downsample_fact=1000 # used for search 2
+downsample_fact=500 # used for search 3
 #sub_list=npz['train_subs_list'][:2]
 # sub_list=npz['train_subs_list']
 print('Downsampling factor=%d' % downsample_fact)
