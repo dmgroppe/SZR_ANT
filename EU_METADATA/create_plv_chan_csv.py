@@ -1,3 +1,7 @@
+""" This script creates a csv file that indicates for each seed channel (row 1) the other 7 channels that
+should be used for computing PLV. If only 8 channels are of interest, the problem is easy. If there are more than 8
+channels, then the script selects the closest 7 to each seed channel."""
+
 import pandas as pd
 import os
 import ieeg_funcs as ief

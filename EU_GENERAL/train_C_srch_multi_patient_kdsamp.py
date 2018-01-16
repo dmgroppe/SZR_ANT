@@ -252,9 +252,10 @@ for C_loop in range(10): # Note max # of C values to try is 10
     else:
         steps_since_best+=1
 
-    C_change=np.abs(mn_temp_train_bacc-mn_temp_valid_bacc)*20
-    if C_change<2:
-        C_change=2
+    C_change=10 #TODO change back to code below after grid search done
+    # C_change=np.abs(mn_temp_train_bacc-mn_temp_valid_bacc)*20
+    # if C_change<2:
+    #     C_change=2
     print('C_change=%f' % C_change)
     n_train_steps += 1
 

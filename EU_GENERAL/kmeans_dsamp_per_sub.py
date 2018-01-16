@@ -38,9 +38,10 @@ ftr_fname='train_ftrs_aes.npz'
 npz=np.load(ftr_fname)
 print(npz.keys())
 
-# downsample_fact=1000
+
 #downsample_fact=10 # used for AES
-downsample_fact=150
+downsample_fact=150 # used for search 1
+downsample_fact=1000 # used for seach 2
 #sub_list=npz['train_subs_list'][:2]
 # sub_list=npz['train_subs_list']
 print('Downsampling factor=%d' % downsample_fact)
