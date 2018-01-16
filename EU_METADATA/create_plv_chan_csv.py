@@ -53,8 +53,74 @@ if n_coi==8:
         fid.write('\n')
     fid.close()
 else:
-    pass
-    # TODO: If more than 8, find the closest 8 other channels and use those as plv channels
+    #If more than 8, find the closest 8 other channels and use those as plv channels
+
+    # Import list of SOZ channels
+    soz_fname = '/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/SOZ_CHANS/'+sub_id+'_bi_soz_chans.txt'
+    soz_df = pd.read_csv(soz_fname, header=None)
+    soz_df.head()
+    n_soz = soz_df.shape[0]
+    print('# of soz chans %d' % n_soz)
+
+    # Import electrode coordinates
+    xyz_fname='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/ELEC_COORD/elec_coord_'+sub_id+'.csv'
+    xyz_df=pd.read_csv(xyz_fname)
+    print(xyz_df.head())
+    n_xyz=xyz_df.shape[0]
+
+    # Check for missing coordinates and replace with 0
+    for row_ct in range(n_xyz):
+        if xyz_df.iloc[row_ct,4]=='-':
+            print('Chan %s, Replacing missing coords with 0 0 0' % xyz_df.iloc[row_ct,0])
+            for a in range(3):
+                xyz_df.iloc[row_ct,4+a]='0'
+
+    # Create coordinates for bipolar channels
+    xyz_bi = np.zeros((n_soz, 3))
+    for soz_ct in range(n_soz):
+        bi_chan = soz_df.iloc[soz_ct][0]
+        print(bi_chan)
+        mono_chans = bi_chan.split('-')
+        chan1_id = False
+        chan2_id = False
+        for chan_ct in range(n_xyz):
+            if xyz_df.iloc[chan_ct, 0] == mono_chans[0]:
+                chan1_id = chan_ct
+            if xyz_df.iloc[chan_ct, 0] == mono_chans[1]:
+                chan2_id = chan_ct
+        if chan1_id == False:
+            print('Error: could not find coords for chan %s' % mono_chans[0])
+        if chan2_id == False:
+            print('Error: could not find coords for chan %s' % mono_chans[1])
+        chan_abs_sum = np.zeros(2)
+        for dim_ct in range(3):
+            chan_abs_sum[0] += np.abs(float(xyz_df.iloc[chan1_id, dim_ct + 4]))
+            chan_abs_sum[1] += np.abs(float(xyz_df.iloc[chan2_id, dim_ct + 4]))
+            xyz_bi[soz_ct, dim_ct] = (float(xyz_df.iloc[chan1_id, dim_ct + 4]) + float(
+                xyz_df.iloc[chan2_id, dim_ct + 4])) / 2
+        for a in range(2):
+            if chan_abs_sum[a] == 0:
+                print('WARNING: Coords for %s are bogus' % mono_chans[a])
+
+    # For each SOZ channel find 7 closest other SOZ channels
+    for seed_ct in range(n_soz):
+        # For this channel measure distance will all other SOZ channels
+        dst = np.zeros(n_soz)
+        for soz_ct in range(n_soz):
+            dif = xyz_bi[seed_ct, :] - xyz_bi[soz_ct, :]
+            dst[soz_ct] = np.sqrt(np.sum(dif ** 2))
+
+        # Sort by distance
+        sort_ids = np.argsort(dst)
+
+        # Output closest 8 (first one will be the channel with itself)
+        fid.write('%s, ' % soz_df.iloc[seed_ct][0])
+        for a in range(1, 8):
+            if a<7:
+                fid.write('%s, ' % soz_df.iloc[sort_ids[a]][0])
+            else:
+                fid.write('%s\n' % soz_df.iloc[sort_ids[a]][0])
+    fid.close()
 
 print('Done.')
 
