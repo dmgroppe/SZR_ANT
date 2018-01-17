@@ -31,13 +31,10 @@
 
 %*=PLV done
 %sub_id=1096; %DONE*
-% sub_id=620; %DONE
-%sub_id=264; % DONE
+subs=264; % DONE*
 % sub_id=590; % DONE
 %sub_id=253; % DONE
 % subs=862; % DONE*
-% sub_id=565; %DONE
-% sub_id=273; % DONE
 %subs=1125; % DONE*
 % subs=1077; %DONE*
 % sub_id=958;  %DONE
@@ -48,7 +45,9 @@
 % subs=[115]; % DONE
 % subs=[862]; % REDONE (bad szrs removed)
 % subs=[922]; % REDOING (long szr relabelled as subclinical)
-subs=253;
+%subs=253; % DONE*
+%subs=[273, 565, 620]; % DONE *
+subs=[590, 958, 970]; %DONE *
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';

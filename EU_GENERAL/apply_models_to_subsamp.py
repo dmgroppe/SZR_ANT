@@ -67,7 +67,7 @@ ftrs, szr_class, sub_id=eu.import_data(ftr_info_dict['grand_szr_fnames'], ftr_in
                                        ftr_info_dict['szr_file_subs'],ftr_info_dict['non_file_subs'],
                                        n_szr_wind, n_non_wind, n_dim)
 
-
+# TODO rm np.savez('tempftrs.npz',ftrs=ftrs)
 # Set sample weights to weight each subject (and preictal/ictal equally:
 uni_subs = np.unique(sub_id)
 n_subs = len(uni_subs)

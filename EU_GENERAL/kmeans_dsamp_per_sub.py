@@ -1,3 +1,7 @@
+""" This function loads the subsampled data in train_ftrs_aes.npz, extracts all the samples from a particular
+   subject and then:
+   -applies kmeans to reduce the sample size to n_obs/downsample_fact
+   -saves the downsampled data to disk with a name like kdownsampled_1096.npz """
 # Libraries
 import numpy as np
 # import scipy.io as sio
@@ -43,6 +47,7 @@ print(npz.keys())
 downsample_fact=150 # used for search 1
 downsample_fact=1000 # used for search 2
 downsample_fact=500 # used for search 3
+downsample_fact=1 #used for search 4, bug checking
 #sub_list=npz['train_subs_list'][:2]
 # sub_list=npz['train_subs_list']
 print('Downsampling factor=%d' % downsample_fact)
@@ -67,28 +72,44 @@ dsamp_wts=np.zeros(n_downsamp_obs)
 
 obs_ct=0
 print('Working on sub %d' % sub)
-# Cluster ictal observations
-print('Clustering ictal observations')
-ictal_bool=np.multiply(npz['sub_id']==sub,npz['szr_class']==1)
-ictal_kclusters, k, n_obs_per_clust=kmeans_downsample(npz['ftrs'][ictal_bool,:],downsample_fact)
+ictal_bool = np.multiply(npz['sub_id'] == sub, npz['szr_class'] == 1)
+if downsample_fact>1:
+    # Cluster ictal observations
+    print('Clustering ictal observations')
+    ictal_kclusters, k, n_obs_per_clust=kmeans_downsample(npz['ftrs'][ictal_bool,:],downsample_fact)
+else:
+    ictal_obs=npz['ftrs'][ictal_bool,:]
+    k=n_ictal
+    n_obs_per_clust=np.ones(n_ictal)
 obs_ct_stop=obs_ct+k
 sub_ids_dsamp[obs_ct:obs_ct_stop]=sub
-ftrs_dsamp[obs_ct:obs_ct_stop,:]=ictal_kclusters.cluster_centers_
+if downsample_fact>1:
+    ftrs_dsamp[obs_ct:obs_ct_stop,:]=ictal_kclusters.cluster_centers_
+else:
+    ftrs_dsamp[obs_ct:obs_ct_stop, :]=ictal_obs
 szr_class_dsamp[obs_ct:obs_ct_stop]=1
 dsamp_wts[obs_ct:obs_ct_stop]=n_obs_per_clust/(2*np.sum(n_obs_per_clust))
 obs_ct+=k
-    
-# Cluster non-ictal observations
-print('Clustering NONictal observations')
-nonictal_bool=np.multiply(npz['sub_id']==sub,npz['szr_class']==0)
-nonictal_kclusters, k, n_obs_per_clust=kmeans_downsample(npz['ftrs'][nonictal_bool,:],downsample_fact)
+
+nonictal_bool = np.multiply(npz['sub_id'] == sub, npz['szr_class'] == 0)
+if downsample_fact>1:
+    # Cluster non-ictal observations
+    print('Clustering NONictal observations')
+    nonictal_kclusters, k, n_obs_per_clust=kmeans_downsample(npz['ftrs'][nonictal_bool,:],downsample_fact)
+else:
+    nonictal_obs=npz['ftrs'][nonictal_bool,:]
+    k=n_nonictal
+    n_obs_per_clust=np.ones(n_nonictal)
 obs_ct_stop=obs_ct+k
 sub_ids_dsamp[obs_ct:obs_ct_stop]=sub
-ftrs_dsamp[obs_ct:obs_ct_stop,:]=nonictal_kclusters.cluster_centers_
+if downsample_fact>1:
+    ftrs_dsamp[obs_ct:obs_ct_stop,:]=nonictal_kclusters.cluster_centers_
+else:
+    ftrs_dsamp[obs_ct:obs_ct_stop, :] = nonictal_obs
 szr_class_dsamp[obs_ct:obs_ct_stop]=0
 dsamp_wts[obs_ct:obs_ct_stop]=n_obs_per_clust/(2*np.sum(n_obs_per_clust))
 obs_ct+=k
-    
+
 print('Done')
 
 # Save results to disk

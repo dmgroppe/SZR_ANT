@@ -288,7 +288,7 @@ for rand_ct in range(n_rand_params):
         # C_change=np.abs(mn_temp_train_bacc-mn_temp_valid_bacc)*20
         # if C_change<2:
         #     C_change=2
-        C_change = 2
+        C_change = 10
         print('C_change=%f' % C_change)
         n_train_steps[rand_ct] += 1
 
