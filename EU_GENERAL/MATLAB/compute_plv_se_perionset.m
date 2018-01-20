@@ -8,8 +8,8 @@
 % ieeg: raw bipolar data
 % szr_class: 0=no szr, 1=clinical szr, -1=subclinical szr
 % 
-% targ_window: same as szr class but extends 10 min before and after to deal with noise in onset/offset
-% definition
+% targ_window: same as szr class but extends 5 sec min before clinician
+% onset to try to trigger stim as early as possible
 % 
 % ieeg_time_sec_pre_decimate: time relative to start of file
 % 
@@ -176,7 +176,7 @@ clear good_chan_ids
 
 %% SGRAM Params
 sgramCfg=[];
-sgramCfg.Fs=256;
+sgramCfg.Fs=256; % Sampling rate of downsampled data
 sgramCfg.T=2; %1 second window
 sgramCfg.K=3; % # of tapers
 sgramCfg.fpass=[0 .4*sgramCfg.Fs];
@@ -211,7 +211,7 @@ for cloop=1:size(soz_chans_bi,1),
             fprintf('# of samples=%d\n',(pat.a_n_samples));
             
             
-            %%
+            %% Figure out when szr starts/stops
             fszr_onset_tpt=round(Fs*cli_szr_info(sloop).clinical_onset_sec);
             fszr_offset_tpt=round(Fs*cli_szr_info(sloop).clinical_offset_sec);
             fprintf('Szr onset tpt %d\n',fszr_onset_tpt);
@@ -228,7 +228,8 @@ for cloop=1:size(soz_chans_bi,1),
                 targ_onset_tpt=1;
             end
             
-            % Identify target window offset for classifier=clinician offset
+            % Identify target window offset for classifier (same as
+            % clinician offset)
             targ_offset_tpt=fszr_offset_tpt;
             if targ_offset_tpt>pat.a_n_samples,
                 targ_offset_tpt=pat.a_n_samples;
@@ -236,11 +237,11 @@ for cloop=1:size(soz_chans_bi,1),
             targ_window(targ_onset_tpt:targ_offset_tpt)=1;
             
             %%
-            preonset_tpts=Fs*15; % 15 second preonset baseline
-            clip_onset_tpt=fszr_onset_tpt-preonset_tpts; %time pt at which to START data import
-            if clip_onset_tpt<1,
-                clip_onset_tpt=1;
-            end
+   %         preonset_tpts=Fs*15; % 15 second preonset baseline
+%             clip_onset_tpt=fszr_onset_tpt-preonset_tpts; %time pt at which to START data import
+%             if clip_onset_tpt<1,
+%                 clip_onset_tpt=1;
+%             end
       
             
             %% Import entire clip of SOZ chan (bipolar data)
@@ -293,10 +294,10 @@ for cloop=1:size(soz_chans_bi,1),
                 [se_ftrs(bloop,:), hilb_ifreq]=bp_hilb_mag(bp_ieeg,n_ftr_wind,wind_len,wind_step);
             end
             
-            % Set initial value of all features
+            % Set initial value of SE features
             se_ftrs(:,1)=repmat(se_ftrs(1:n_bands,1),n_lags,1);
             
-            % Apply EDM smoothing
+            % Apply EDM smoothing to SE features
             fprintf('Applying EDM smoothing...\n');
             ftr_ids=1:n_bands;
             base_ftr_ids=1:n_bands;
