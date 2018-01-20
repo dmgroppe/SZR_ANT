@@ -54,6 +54,7 @@ import json
 # else:
 #     raise Exception('ictal_wind needs to be "small" or "max"')
 use_ftrs=['SE'] #TODO import this from json file
+bnded=True
 # n_rand_params=int(params['n_rand_params'])
 # print('# of random initial hyperparameters to try %d' % n_rand_params)
 # n_rand_params=1
@@ -116,7 +117,11 @@ if n_dim==0:
 # Load training/validation data into a single matrix
 ftrs, szr_class, sub_id=eu.import_data(ftr_info_dict['grand_szr_fnames'], ftr_info_dict['grand_non_fnames'],
                                        ftr_info_dict['szr_file_subs'],ftr_info_dict['non_file_subs'],
-                                       n_szr_wind, n_non_wind, n_dim)
+                                       n_szr_wind, n_non_wind, n_dim, dsamp_pcnt=1, bnded=bnded)
 
-print('Saving training features (and associated metadata) to train_ftrs_aes.npz')
-np.savez('train_ftrs_aes.npz',ftrs=ftrs,szr_class=szr_class,sub_id=sub_id,train_subs_list=train_subs_list)
+if bnded==True:
+    out_fname='train_ftrs_bnded.npz'
+else:
+    out_fname='train_ftrs_unbnded.npz'
+print('Saving training features (and associated metadata) to %s' % out_fname)
+np.savez(out_fname,ftrs=ftrs,szr_class=szr_class,sub_id=sub_id,train_subs_list=train_subs_list,bnded=bnded)
