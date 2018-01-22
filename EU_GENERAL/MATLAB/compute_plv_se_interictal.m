@@ -180,6 +180,7 @@ for sub_id=subs,
             %fprintf('# of monopolar chans %d\n',pat.a_n_chan);
             n_samp=pat.a_n_samples;
             fprintf('# of samples=%d\n',n_samp);
+            ieeg_time_sec_pre_decimate=[0:(n_samp-1)]/Fs; % time relative to start of file
             
             %% Compute ictal-class
             szr_class=zeros(1,n_samp);
