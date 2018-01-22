@@ -79,6 +79,14 @@ print('Best Training Accuracy: %f (limited # of svecs)' % train_bal_acc_srch[lim
 print('Using C=%f, gam=%f, nsvec=%d' % (C_srch[lim_mx_id],gamma_srch[lim_mx_id],nsvec_srch[lim_mx_id]))
 print('Best model name is %s (limited # of svecs)' % model_names_srch[lim_mx_id])
 
+min_nsv_id=np.argmin(nsvec_srch)
+print()
+print('Smallest # of svecs: %f' % nsvec_srch[min_nsv_id])
+print('Validation Accuracy: %f' % valid_bacc_lim[min_nsv_id])
+print('Training Accuracy: %f' % train_bal_acc_srch[min_nsv_id])
+print('Using C=%f, gam=%f, nsvec=%d' % (C_srch[min_nsv_id],gamma_srch[min_nsv_id]))
+print('Corresponding model name is %s' % model_names_srch[min_nsv_id])
+
 
 # Plot # of support vectors as a Function of Hyperparameters
 if len(nsvec_srch)>0:
