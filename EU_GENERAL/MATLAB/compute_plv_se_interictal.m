@@ -148,19 +148,23 @@ for sub_id=subs,
     file_info=get_fnames_and_szr_times(sub_id);
     n_files=length(file_info);
     
+    %% File sampling interval
+    % if fsi=1; some observations are taken from every file, if fsi=2,
+    % observations are only taken from every other file, etc..
+    fsi=10;
     
     %% Loop over SOZ electrodes
     for cloop=1:n_chan,
         fprintf('Working on chan %s-%s\n',soz_chans_bi{cloop,1},soz_chans_bi{cloop,1});
         
         % Figure out how many non-szr samples to draw from each file
-        n_nonszr_obs=ceil(n_tpt_ct(cloop)/n_files);
+        n_nonszr_obs=ceil(fsi*n_tpt_ct(cloop)/n_files);
         fprintf('Drawing %d random non-szr samples from each file.\n',n_nonszr_obs);
         
         nonszr_se_ftrs=[];
         % Loop over files
         %for floop=1:1, PICKUP ?? start at n_files=25
-        for floop=1:n_files,
+        for floop=1:fsi:n_files,
             % Compute features
             
             % Read header
