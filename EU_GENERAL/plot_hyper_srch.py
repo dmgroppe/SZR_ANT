@@ -87,7 +87,7 @@ print()
 print('Smallest # of svecs: %f' % nsvec_srch[min_nsv_id])
 print('Validation Accuracy: %f' % valid_bacc_lim[min_nsv_id])
 print('Training Accuracy: %f' % train_bal_acc_srch[min_nsv_id])
-print('Using C=%f, gam=%f, nsvec=%d' % (C_srch[min_nsv_id],gamma_srch[min_nsv_id]))
+print('Using C=%f, gam=%f' % (C_srch[min_nsv_id],gamma_srch[min_nsv_id]))
 print('Corresponding model name is %s' % model_names_srch[min_nsv_id])
 
 
