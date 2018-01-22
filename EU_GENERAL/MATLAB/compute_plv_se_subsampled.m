@@ -58,6 +58,7 @@ subs=442;
 subs=[862];
 %subs=922; %DONE
 subs=1096;
+%subs=[1077, 1096, 970, 253, 565, 590, 620, 958];
 
 for sub_id=subs,
     
