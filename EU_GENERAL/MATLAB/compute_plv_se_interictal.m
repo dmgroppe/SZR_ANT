@@ -164,13 +164,14 @@ for sub_id=subs,
         nonszr_se_ftrs=[];
         % Loop over files
         %for floop=1:1, PICKUP ?? start at n_files=25
-        for floop=1:fsi:n_files,
+        for floop=1:round(n_files/fsi),
+        %for floop=1:fsi:n_files,
             % Compute features
             
             % Read header
-            full_data_fname=get_data_fullfname(sub_id,file_info(floop).fname);
+            full_data_fname=get_data_fullfname(sub_id,file_info(1+(floop-1)*fsi).fname);
             fprintf('Channel %d/%d\n',cloop,n_chan);
-            fprintf('Loading file %d/%d %s\n',floop,n_files,file_info(floop).fname);
+            fprintf('Loading file %d/%d %s\n',floop,n_files,file_info(1+(floop-1)*fsi).fname);
             pat=bin_file(full_data_fname);
             Fs=pat.a_samp_freq;
             if isempty(Fs),
@@ -187,14 +188,14 @@ for sub_id=subs,
             targ_window=zeros(1,n_samp); % Same as szr class but extended
             % 5 seconds before onset to try to stimulate before onset
             % Clinical Szrs
-            if ~isempty(file_info(floop).clin_szr_onsets_sec),
+            if ~isempty(file_info(1+(floop-1)*fsi).clin_szr_onsets_sec),
                 % There are szrs in this file (clinical and/or subclinical)
-                for sloop=1:length(file_info(floop).clin_szr_onsets_sec),
-                    onset_id=findTpt(file_info(floop).clin_szr_onsets_sec(sloop),ieeg_time_sec_pre_decimate);
-                    if ~isempty(file_info(floop).clin_szr_offsets_sec),
+                for sloop=1:length(file_info(1+(floop-1)*fsi).clin_szr_onsets_sec),
+                    onset_id=findTpt(file_info(1+(floop-1)*fsi).clin_szr_onsets_sec(sloop),ieeg_time_sec_pre_decimate);
+                    if ~isempty(file_info(1+(floop-1)*fsi).clin_szr_offsets_sec),
                         % Sadly, some szrs have marked onsets but not offsets
                         % When this happens make szr last until end of clip
-                        offset_id=findTpt(file_info(floop).clin_szr_offsets_sec(sloop),ieeg_time_sec_pre_decimate);
+                        offset_id=findTpt(file_info(1+(floop-1)*fsi).clin_szr_offsets_sec(sloop),ieeg_time_sec_pre_decimate);
                     else
                         offset_id=n_samp;
                     end
@@ -208,14 +209,14 @@ for sub_id=subs,
             end
             
             %% Subclinical Szrs
-            if ~isempty(file_info(floop).sub_szr_onsets_sec),
+            if ~isempty(file_info(1+(floop-1)*fsi).sub_szr_onsets_sec),
                 % There are szrs in this file (clinical and/or subclinical)
-                for sloop=1:length(file_info(floop).sub_szr_onsets_sec),
-                    onset_id=findTpt(file_info(floop).sub_szr_onsets_sec(sloop),ieeg_time_sec_pre_decimate);
-                    if ~isempty(file_info(floop).sub_szr_offsets_sec),
+                for sloop=1:length(file_info(1+(floop-1)*fsi).sub_szr_onsets_sec),
+                    onset_id=findTpt(file_info(1+(floop-1)*fsi).sub_szr_onsets_sec(sloop),ieeg_time_sec_pre_decimate);
+                    if ~isempty(file_info(1+(floop-1)*fsi).sub_szr_offsets_sec),
                         % Sadly, some szrs have marked onsets but not offsets
                         % When this happens make szr last until end of clip
-                        offset_id=findTpt(file_info(floop).sub_szr_offsets_sec(sloop),ieeg_time_sec_pre_decimate);
+                        offset_id=findTpt(file_info(1+(floop-1)*fsi).sub_szr_offsets_sec(sloop),ieeg_time_sec_pre_decimate);
                     else
                         offset_id=n_samp;
                     end
