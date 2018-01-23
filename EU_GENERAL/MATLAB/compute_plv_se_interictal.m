@@ -162,16 +162,17 @@ for sub_id=subs,
         fprintf('Drawing %d random non-szr samples from each file.\n',n_nonszr_obs);
         
         nonszr_se_ftrs=[];
+        n_sampled_files=round(n_files/fsi);
         % Loop over files
         %for floop=1:1, PICKUP ?? start at n_files=25
-        for floop=1:round(n_files/fsi),
+        for floop=1:n_sampled_files,
         %for floop=1:fsi:n_files,
             % Compute features
             
             % Read header
             full_data_fname=get_data_fullfname(sub_id,file_info(1+(floop-1)*fsi).fname);
             fprintf('Channel %d/%d\n',cloop,n_chan);
-            fprintf('Loading file %d/%d %s\n',floop,n_files,file_info(1+(floop-1)*fsi).fname);
+            fprintf('Loading file %d/%d %s\n',floop,n_sampled_files,file_info(1+(floop-1)*fsi).fname);
             pat=bin_file(full_data_fname);
             Fs=pat.a_samp_freq;
             if isempty(Fs),
@@ -387,10 +388,10 @@ for sub_id=subs,
             %% Collect a random subsample of ftrs from non-szr time periods
             if isempty(nonszr_se_ftrs),
                 %preallocate mem, first time adding data
-                nonszr_se_ftrs=zeros(n_ftrs,n_nonszr_obs*n_files);
-                nonszr_plv_ftrs=zeros(n_ftrs,n_nonszr_obs*n_files);
-                nonszr_se_ftrs_time_sec=zeros(1,n_nonszr_obs*n_files);
-                source_fnames=cell(1,n_files);
+                nonszr_se_ftrs=zeros(n_ftrs,n_nonszr_obs*n_sampled_files)*NaN;
+                nonszr_plv_ftrs=zeros(n_ftrs,n_nonszr_obs*n_sampled_files)*NaN;
+                nonszr_se_ftrs_time_sec=zeros(1,n_nonszr_obs*n_sampled_files)*NaN;
+                source_fnames=cell(1,n_sampled_files);
             end
             
             % Get non-szr time window ids
