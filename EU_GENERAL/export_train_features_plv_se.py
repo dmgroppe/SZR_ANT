@@ -53,7 +53,7 @@ import json
 #     small_ictal_wind=False
 # else:
 #     raise Exception('ictal_wind needs to be "small" or "max"')
-ftr='SE+PLV' #TODO import this from json file
+ftr='PLV_SE' #TODO import this from json file
 bnded=True
 # n_rand_params=int(params['n_rand_params'])
 # print('# of random initial hyperparameters to try %d' % n_rand_params)
@@ -112,8 +112,6 @@ print('Total # of time windows: %d ' % n_wind)
 if n_dim==0:
     print('Error: ftr_dim=0. You might be missing some *non* or *szr* files for a patient')
     exit()
-
-exit() # ??
 
 # Load training/validation data into a single matrix
 ftrs, szr_class, sub_id=eu.import_data(ftr_info_dict['grand_szr_fnames'], ftr_info_dict['grand_non_fnames'],

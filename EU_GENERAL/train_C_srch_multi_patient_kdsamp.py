@@ -54,7 +54,8 @@ print('Weight subjects equally={}'.format(equal_sub_wts))
 #     small_ictal_wind=False
 # else:
 #     raise Exception('ictal_wind needs to be "small" or "max"')
-use_ftrs=['SE'] #TODO import this from json file
+#use_ftrs=['SE'] #TODO import this from json file
+use_ftrs=ftr_types
 patience=int(params['patience'])
 print('# of steps to wait when performance no longer increases %d' % patience)
 gam=10**float(params['gam'])
@@ -92,7 +93,7 @@ print('Training subs: {}'.format(train_subs_list))
 # ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/'
 #ftr_root=path_dict['eu_gen_ftrs']
 ftr_root=os.path.join(path_dict['szr_ant_root'],'EU_GENERAL','KDOWNSAMP')
-ftr='SE'
+#ftr='SE'
 
 n_wind=0
 for sub in train_subs_list:
