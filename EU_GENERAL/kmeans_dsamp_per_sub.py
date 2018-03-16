@@ -38,7 +38,7 @@ sub=int(sys.argv[1])
 
 # Load raw ftrs
 #ftr_fname='/Users/davidgroppe/Desktop/train_ftrs_aes.npz'
-ftr_fname='train_ftrs_bnded.npz'
+ftr_fname='train_ftrs_unbnded.npz'
 print("loading data from %s" % ftr_fname)
 npz=np.load(ftr_fname)
 print(npz.keys())
