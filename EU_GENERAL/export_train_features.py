@@ -54,7 +54,7 @@ import json
 # else:
 #     raise Exception('ictal_wind needs to be "small" or "max"')
 use_ftrs=['SE'] #TODO import this from json file
-bnded=True
+bnded=False
 # n_rand_params=int(params['n_rand_params'])
 # print('# of random initial hyperparameters to try %d' % n_rand_params)
 # n_rand_params=1

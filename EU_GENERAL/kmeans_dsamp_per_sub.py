@@ -39,14 +39,15 @@ sub=int(sys.argv[1])
 # Load raw ftrs
 #ftr_fname='/Users/davidgroppe/Desktop/train_ftrs_aes.npz'
 ftr_fname='train_ftrs_bnded.npz'
+print("loading data from %s" % ftr_fname)
 npz=np.load(ftr_fname)
 print(npz.keys())
 
 
-downsample_fact=10 # used for AES
+#downsample_fact=10 # used for AES
 #downsample_fact=150 # used for search 1
 #downsample_fact=1000 # used for search 2
-#downsample_fact=500 # used for search 3
+downsample_fact=500 # used for search 3
 #downsample_fact=1 #used for search 4, bug checking
 #downsample_fact=750
 #sub_list=npz['train_subs_list'][:2]

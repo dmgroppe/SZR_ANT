@@ -1,6 +1,7 @@
 % Plots balanced accuracy bar plots for CLAE poster
 
 %bal_acc=[0.868, 0.837, 0.836]; % train, valid, test
+% AES results
 bal_acc=[0.937, 0.836, 0.854]; % train, valid, test
 low_cis=[0.930, 0.747, 0.807];
 hi_cis=[0.944, 0.925, 0.901];
@@ -41,4 +42,8 @@ for a=1:3,
 end
 set(gca,'xtick',[],'ylim',[0.5, 1],'ytick',[0.5:.1:1], ...
     'fontsize',32,'xlim',[0.5, 3.5]);
-print(gcf,'-depsc','bal_acc');
+if 0,
+    print(gcf,'-depsc','bal_acc');
+else
+    fprintf('Not printing figure\n');
+end
