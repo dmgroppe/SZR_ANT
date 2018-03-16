@@ -20,10 +20,10 @@ import json
 
 ## Start of main function
 if len(sys.argv)==1:
-    print('Usage: apply_models_to_subsamp.py model_name sub_list.txt')
+    print('Usage: apply_models_to_subsamp.py model_name sub_list.txt ftr')
     exit()
-if len(sys.argv)!=3:
-    raise Exception('Error: apply_models_to_subsamp.py requires 2 arguments: model_name sub_list.txt')
+if len(sys.argv)!=4:
+    raise Exception('Error: apply_models_to_subsamp.py requires 3 arguments: model_name sub_list.txt ftr')
 
 # Import Parameters from command line
 model_name=sys.argv[1]
@@ -37,6 +37,8 @@ for raw_sub in temp:
 print('Subs are {}'.format(subs))
 path_dict=ief.get_path_dict()
 
+ftr=sys.argv[3]
+print('Features are %s' % ftr)
 
 # Load model
 model_root=model_path=os.path.join(path_dict['szr_ant_root'],'MODELS')
@@ -49,7 +51,7 @@ print('# of models in ensemble= %d' % n_models)
 # Import Data
 # use_ftrs=['SE'] #TODO import this from model
 ftr_root=path_dict['eu_gen_ftrs']
-ftr='SE'
+#ftr='SE'
 ftr_info_dict=eu.data_size_and_fnames(subs, ftr_root, ftr)
 
 n_dim=ftr_info_dict['ftr_dim']
@@ -61,6 +63,7 @@ print('Total # of szr time windows: %d ' % n_szr_wind)
 print('Total # of non-szr time windows: %d ' % n_non_wind)
 print('Total # of time windows: %d ' % n_wind)
 # print('Total # of files: %d' % f_ct)
+
 
 # Load training/validation data into a single matrix
 ftrs, szr_class, sub_id=eu.import_data(ftr_info_dict['grand_szr_fnames'], ftr_info_dict['grand_non_fnames'],

@@ -10,13 +10,14 @@ import sys
 
 ## Start of main function
 if len(sys.argv)==1:
-    print('Usage: plt_hyper_srch.py model_stem')
+    print('Usage: plt_hyper_srch.py model_stem max_n_svs')
     exit()
-if len(sys.argv)!=2:
-    raise Exception('Error: plt_hyper_srch.py requires 1 argument: model_stem')
+if len(sys.argv)!=3:
+    raise Exception('Error: plt_hyper_srch.py requires 2 arguments: model_stem max_n_svs')
 
 # Import Parameters from json file
 model_stem=sys.argv[1]
+max_n_svs=int(sys.argv[2]) # the max number of support vectors
 
 path_dict=ief.get_path_dict()
 print(path_dict.keys())
@@ -66,7 +67,7 @@ print()
 # Number of support vectors allowed:  200 support vectors with 125 dimensions
 # Right now I have 30 dimensions so I can have 295 support vectors
 #C_bool=np.asarray(C_srch)>5**10
-nsvec_bool=np.asarray(nsvec_srch)>295 # 295 is max # of support vectors with 30d features
+nsvec_bool=np.asarray(nsvec_srch)>max_n_svs # 295 is max # of support vectors with 30d features
 valid_bacc_lim=np.copy(valid_bal_acc_srch)
 valid_bacc_lim[nsvec_bool]=0
 lim_mx_id=np.argmax(valid_bacc_lim)
