@@ -48,6 +48,7 @@ subs=264; % DONE*
 %subs=253; % DONE*
 %subs=[273, 565, 620]; % DONE *
 subs=[590, 958, 970]; %DONE *
+subs=1096; % DONE *
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';

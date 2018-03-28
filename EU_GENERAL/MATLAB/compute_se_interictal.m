@@ -41,6 +41,11 @@
 %sub_id=1125; % DONE
 %sub_id=1077; %DONE
 %sub_id=922; %DONE
+subs=[922, 958, 970]; % DONE
+subs=264; % DONE
+subs=115; %DONE
+subs=442; %DONE
+subs=1096;
 
 if ismac,
     root_dir='/Users/davidgroppe/PycharmProjects/SZR_ANT/';
@@ -48,10 +53,6 @@ else
     root_dir='/home/dgroppe/GIT/SZR_ANT/';
 end
 
-subs=[922, 958, 970]; % DONE
-subs=264; % DONE
-subs=115; %DONE
-subs=442;
 
 for sub_id=subs,
 

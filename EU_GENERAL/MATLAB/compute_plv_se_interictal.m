@@ -4,6 +4,10 @@
 % directory like this:
 % /SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/PLV_SE/1096/1096_HL2_HL3_non.mat
 %
+% NOTE: a key difference between this and compute_se_interictal.m is that
+% only a subset of interictal files are sampled from (as determined by the
+% parameter fsi). This is because PLV takes so long to compute.
+%
 %% KEY VARIABLES
 % ** Voltage Data
 % ieeg: raw bipolar data
@@ -49,10 +53,13 @@ else
     root_dir='/home/dgroppe/GIT/SZR_ANT/';
 end
 
-subs=[922, 958, 970]; % DONE
-subs=264; % DONE
-subs=115; %DONE
-subs=442;
+subs=[970, 253, 565, 590, 620, 958];
+%subs=264;
+subs=[273, 862, 1125];
+%subs=115;
+%subs=442;
+%subs=1096; % DONE
+%subs=1077; % DONE took 5.8 hrs
 subs=1096;
 
 for sub_id=subs,
