@@ -42,7 +42,9 @@ print('Model name is %s' % model_name)
 model_type=params['model_type']
 print('Model type is %s' % model_type)
 ftr_types=params['use_ftrs']
-print('Features being used: {}'.format(ftr_types))
+print('Features ostensibly being used: {}'.format(ftr_types))
+data_dir=params['data_dir']
+print('Data will be grabbed from: {}'.format(data_dir))
 if params['equal_sub_wts']=="False":
     equal_sub_wts=False
 else:
@@ -92,7 +94,7 @@ print('Training subs: {}'.format(train_subs_list))
 
 # ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/'
 #ftr_root=path_dict['eu_gen_ftrs']
-ftr_root=os.path.join(path_dict['szr_ant_root'],'EU_GENERAL','KDOWNSAMP')
+ftr_root=os.path.join(path_dict['szr_ant_root'],'EU_GENERAL',data_dir)
 #ftr='SE'
 
 n_wind=0

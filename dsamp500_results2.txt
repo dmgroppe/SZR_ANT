@@ -1,0 +1,33 @@
+TRAINING DATA, KDSAMPED
+
+Training data balanced accuracy: 0.954527
+Training data sensitivity: 0.952965
+Training data specificity: 0.956088
+Using C=8.64E+10 and gam=5.40E-02
+Model name: svmDsamp500
+Features used: ['SE']
+Equal subject wts=True
+# of support vectors: 233
+Saving model as /home/dgroppe/GIT/SZR_ANT/MODELS/svmDsamp500_3/classify_models_srch.pkl
+Metrics save to: /home/dgroppe/GIT/SZR_ANT/MODELS/svmDsamp500_3/classify_metrics_srch.npz
+
+
+TRAINING DATA, NO-KDSAMP
+
+AUC=0.650717
+Mean across subs:
+Mean (95p CI) bacc: 0.687178 (0.662376-0.711980)
+Mean (95p CI) spec: 0.653651 (0.626121-0.681181)
+Mean (95p CI) sens: 0.720705 (0.664185-0.777226)
+Mean (95p CI) AUC: 0.687178 (0.662376-0.711980)
+
+
+
+TESTING DATA, NO-KDSAMPE
+AUC=0.692969
+Mean across subs:
+Mean (95p CI) bacc: 0.697274 (0.660696-0.733852)
+Mean (95p CI) spec: 0.671532 (0.638334-0.704730)
+Mean (95p CI) sens: 0.723016 (0.670535-0.775498)
+Mean (95p CI) AUC: 0.697274 (0.660696-0.733852)
+

@@ -1,7 +1,7 @@
 {"model_type": "svm",
-"model_name": "rngLimitSvm",
-"gam": 2,
-"C": 10,
+"model_name": "bndedSvmDsamp750",
+"gam": 0.5,
+"C": 12,
 "patience": 1,
 "equal_sub_wts": "True",
 "use_ftrs": ["SE"]}

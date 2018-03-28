@@ -1,8 +1,9 @@
 {"model_type": "svm",
-"model_name": "tempEqWtSvm",
-"gam": -2,
-"C": -100,
-"patience": 1,
+"model_name": "plvSeSvmDsamp500",
+"gam": -7,
+"C": 10,
+"patience": 0,
 "equal_sub_wts": "True",
-"use_ftrs": ["SE"]}
+"data_dir": "KDOWNSAMP_PLV_SE_UNBOUNDED_500", 
+"use_ftrs": ["PLV_SE"]}
 

@@ -1,7 +1,7 @@
 {"model_type": "svm",
-"model_name": "svmRenorm",
+"model_name": "svmDsamp500",
 "equal_sub_wts": "True",
-"gamma": 10,
-"C": 10000000,
+"gamma": 0.054010,
+"C": 86384047828.470001,
 "use_ftrs": ["SE"]}
 

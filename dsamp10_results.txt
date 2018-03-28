@@ -1,0 +1,32 @@
+Total # of observations 74258
+Total # of features 30
+Sum samp wts=8.000000
+# of subs=8
+Done!
+Training data balanced accuracy: 0.905298
+Training data sensitivity: 0.914048
+Training data specificity: 0.896547
+Using C=1.00E+08 and gam=1.00E-01
+Model name: svmDsamp10
+Features used: ['SE']
+Equal subject wts=True
+# of support vectors: 19967
+Saving model as /home/dgroppe/GIT/SZR_ANT/MODELS/svmDsamp10_1/classify_models_srch.pkl
+Metrics save to: /home/dgroppe/GIT/SZR_ANT/MODELS/svmDsamp10_1/classify_metrics_srch.npz
+
+%% SUBSAMPLED TRAINING DATA (no KDOWNSAMPS)
+AUC=0.923099
+Mean across subs:
+Mean (95p CI) bacc: 0.904133 (0.864760-0.943506)
+Mean (95p CI) spec: 0.965546 (0.946141-0.984951)
+Mean (95p CI) sens: 0.842721 (0.758971-0.926470)
+Mean (95p CI) AUC: 0.904133 (0.864760-0.943506)
+
+%% SUBSAMPLED VALIDATION DATA (no KDOWNSAMP)
+AUC=0.841478
+Mean across subs:
+Mean (95p CI) bacc: 0.858964 (0.831590-0.886339)
+Mean (95p CI) spec: 0.965266 (0.942627-0.987906)
+Mean (95p CI) sens: 0.752662 (0.719973-0.785351)
+Mean (95p CI) AUC: 0.858964 (0.831590-0.886339)
+
