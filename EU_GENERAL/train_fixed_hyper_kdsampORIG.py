@@ -26,46 +26,31 @@ import json
 
 ## Start of main function
 if len(sys.argv)==1:
-    print('Usage: train_fixed_hyper_kdsamp.py cv_model_fname new_model_name')
+    print('Usage: train_smart_srch_multi_patient_kdsamp.py srch_params.json')
     exit()
-if len(sys.argv)!=3:
-    raise Exception('Error: train_fixed_hyper_kdsamp.py requires 1 argument: cv_model_fname new_model_name')
+if len(sys.argv)!=2:
+    raise Exception('Error: train_smart_srch_multi_kdsamp.py requires 1 argument: srch_params.json')
 
 # Import Parameters from json file
-cv_model_fname=sys.argv[1]
-print('Importing model parameters from the best model in %s' % cv_model_fname)
-new_model_fname = sys.argv[2]
-print('New model will be saved by %s' % new_model_fname)
-
-
-# ftr_types=params['use_ftrs']
-# print('Features being used: {}'.format(ftr_types))
-
-path_dict=ief.get_path_dict()
-model_root=os.path.join(path_dict['szr_ant_root'],'MODELS')
-in_fname=os.path.join(model_root,cv_model_fname,'classify_metrics_srch.npz')
-cv_results=np.load(in_fname)
-print(cv_results.keys())
-
-# pkl=pickle.load(open(os.path.join(model_root,cv_model_fname,'classify_models_srch.pkl'),'rb'))
-# print(type(pkl[0]))
-# if type(pkl[0])=='sklearn.svm.classes.SVC':
-#     model_type = 'svm'
-# else:
-#     model_type = 'logreg'
+param_fname=sys.argv[1]
+print('Importing model parameters from %s' % param_fname)
+with open(param_fname) as param_file:
+    params=json.load(param_file)
+model_name=params['model_name']
+print('Model name is %s' % model_name)
+model_type=params['model_type']
 print('Model type is %s' % model_type)
-
-gam=cv_results['best_gam']
-print('Gamma=%f' % gam)
-C=cv_results['best_C']
-print('C=%f' % C)
-equal_sub_wts=cv_results['equal_sub_wts']
+ftr_types=params['use_ftrs']
+print('Features being used: {}'.format(ftr_types))
+if params['equal_sub_wts']=="False":
+    equal_sub_wts=False
+else:
+    equal_sub_wts = True
 print('Weight subjects equally={}'.format(equal_sub_wts))
-
-
-exit()
-
-
+gam=float(params['gamma'])
+print('Gamma=%f' % gam)
+C=float(params['C'])
+print('C=%f' % C)
 
 # if params['ictal_wind']=='small':
 #     small_ictal_wind=True
@@ -78,8 +63,8 @@ use_ftrs=['SE'] #TODO import this from json file
 
 # Find if there any existing models of this name
 # If so, grab the number of model an increment that number by 1 to get new model name
-
-model_path=os.path.join(path_dict['szr_ant_root'],'MODELS')
+path_dict=ief.get_path_dict()
+model_root=model_path=os.path.join(path_dict['szr_ant_root'],'MODELS')
 model_num=1
 for f in os.listdir(model_root):
     if os.path.isdir(os.path.join(model_root,f)):
