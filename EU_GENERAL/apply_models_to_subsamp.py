@@ -48,6 +48,10 @@ models=pickle.load(open(model_fname,'rb'))
 n_models=len(models)
 print('# of models in ensemble= %d' % n_models)
 
+sub_type=sys.argv[2].split('_')[0]+'.npz'
+out_fname=os.path.join(model_root,model_name,'apply_models_to_subsamp_'+sub_type)
+print('Saving results to %s' % out_fname)
+
 # Import Data
 # use_ftrs=['SE'] #TODO import this from model
 ftr_root=path_dict['eu_gen_ftrs']
@@ -90,7 +94,7 @@ wt_subs_equally=False
 
 # Apply ensemble of models on validation data
 for model_ct in range(n_models):
-    print('Working on model %d of %d' % (model_ct,n_models))
+    print('Working on model %d of %d' % (model_ct+1,n_models))
     tmp_yhat = models[model_ct].predict(ftrs)
     print(tmp_yhat.shape)
     #tmp_yhat = models[model_ct].predict(ftrs)[:, 1]
@@ -138,3 +142,11 @@ m, low, hi=dg.mean_and_cis(sens_by_sub)
 print('Mean (95p CI) sens: %f (%f-%f)' % (m,low,hi))
 m, low, hi=dg.mean_and_cis(auc_by_sub)
 print('Mean (95p CI) AUC: %f (%f-%f)' % (m,low,hi))
+
+np.savez(out_fname,
+         subs=subs,
+         n_models=n_models,
+         bacc_by_sub=bacc_by_sub,
+         spec_by_sub=spec_by_sub,
+         sens_by_sub=sens_by_sub,
+         auc_by_sub=auc_by_sub)

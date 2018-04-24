@@ -97,6 +97,8 @@ print('Training subs: {}'.format(train_subs_list))
 ftr_root=os.path.join(path_dict['szr_ant_root'],'EU_GENERAL',data_dir)
 #ftr='SE'
 
+# Figure out how much downsampled data there is to pre-allocate memory
+print('DOWNSAMPLED DATA:')
 n_wind=0
 for sub in train_subs_list:
     in_fname='kdownsampled_'+str(sub)+'.npz'
@@ -123,6 +125,7 @@ for sub in train_subs_list:
     dsamp_wts[obs_ct:obs_ct+n_obs_this_sub]=npz['dsamp_wts']
     obs_ct+=n_obs_this_sub
 
+
 # Set sample weights to weight each subject (and preictal/ictal equally):
 uni_subs=np.unique(sub_id)
 n_train_subs = len(uni_subs)
@@ -136,6 +139,32 @@ n_train_subs = len(uni_subs)
 samp_wts=dsamp_wts
 print('Sum samp wts=%f' % np.sum(samp_wts))
 print('# of subs=%d' % n_train_subs)
+
+# TODO Load non-downsample data
+# ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/'
+ftr_root_full=path_dict['eu_gen_ftrs']
+ftr='SE' # TODO fix path
+ftr_info_dict=eu.data_size_and_fnames(train_subs_list, ftr_root_full, ftr)
+print('NON-DOWNSAMPLED DATA')
+n_dim_full=ftr_info_dict['ftr_dim']
+n_non_wind_full=ftr_info_dict['grand_n_non_wind']
+n_szr_wind_full=ftr_info_dict['grand_n_szr_wind']
+n_wind_full=n_non_wind_full+n_szr_wind_full
+print('Total # of dimensions: %d ' % n_dim_full)
+print('Total # of szr time windows: %d ' % n_szr_wind_full)
+print('Total # of non-szr time windows: %d ' % n_non_wind_full)
+print('Total # of time windows: %d ' % n_wind_full)
+# print('Total # of files: %d' % f_ct)
+
+# Load training/validation data into a single matrix
+ftrs_full, szr_class_full, sub_id_full=eu.import_data(ftr_info_dict['grand_szr_fnames'], ftr_info_dict['grand_non_fnames'],
+                                       ftr_info_dict['szr_file_subs'],ftr_info_dict['non_file_subs'],
+                                       n_szr_wind_full, n_non_wind_full, n_dim_full)
+
+# TODO
+# print(np.unique(sub_id_full))
+# print(np.unique(sub_id))
+# exit()
 
 # LOOCV on training data
 #gamma defines how much influence a single training example has. The larger gamma is, the closer other examples must be to be affected.
@@ -172,6 +201,7 @@ for C_loop in range(10): # Note max # of C values to try is 10
     temp_nsvec = np.zeros(n_train_subs)
     for left_out_ct, left_out_id in enumerate(uni_subs):
         print('Left out sub %d (FR_%d) of %d' % (left_out_ct+1,left_out_id,n_train_subs))
+
         left_in_ids=np.setdiff1d(uni_subs,left_out_id)
         #rbf_svc = svm.SVC(kernel='rbf', gamma=0.7, C=C).fit(ftrs.T, szr_class)
         if 'model' in locals():
@@ -199,25 +229,40 @@ for C_loop in range(10): # Note max # of C values to try is 10
         temp_models[left_out_ct]=model
 
         # make predictions from training and validation data
-        class_hat = model.predict(ftrs)
+        class_hat = model.predict(ftrs_full)
         # Compute performance on training data
         for temp_sub in left_in_ids:
-            sub_bool=sub_id==temp_sub
-            temp_bacc, temp_sens, temp_spec= ief.perf_msrs(szr_class[sub_bool], class_hat[sub_bool])
-            temp_train_bacc[left_out_ct]+=temp_bacc/(n_train_subs-1)
-            temp_train_sens[left_out_ct]+=temp_sens/(n_train_subs-1)
-            temp_train_spec[left_out_ct]+=temp_spec/(n_train_subs-1)
-        # temp_train_bacc[left_out_ct], temp_train_sens[left_out_ct ], temp_train_spec[left_out_ct ] = ief.perf_msrs(
-        #     szr_class[train_bool],
-        #     class_hat[train_bool])
+            sub_bool = sub_id_full == temp_sub
+            temp_bacc, temp_sens, temp_spec = ief.perf_msrs(szr_class_full[sub_bool], class_hat[sub_bool])
+            temp_train_bacc[left_out_ct] += temp_bacc / (n_train_subs - 1)
+            temp_train_sens[left_out_ct] += temp_sens / (n_train_subs - 1)
+            temp_train_spec[left_out_ct] += temp_spec / (n_train_subs - 1)
 
         # Compute performance on validation data
+        train_bool_full = sub_id_full != left_out_id
         temp_valid_bacc[left_out_ct], temp_valid_sens[left_out_ct], temp_valid_spec[left_out_ct] = ief.perf_msrs(
-            szr_class[train_bool==False],
-            class_hat[train_bool==False])
+            szr_class_full[train_bool_full == False],
+            class_hat[train_bool_full == False])
         if model_type == 'svm' or model_type == 'lsvm':
             # Record the number of support vectors
             temp_nsvec[left_out_ct] = np.sum(model.n_support_)
+
+        # make predictions from training and validation data
+        #class_hat = model.predict(ftrs)
+        # Compute performance on training data
+        # for temp_sub in left_in_ids:
+        #     sub_bool=sub_id==temp_sub
+        #     temp_bacc, temp_sens, temp_spec= ief.perf_msrs(szr_class[sub_bool], class_hat[sub_bool])
+        #     temp_train_bacc[left_out_ct]+=temp_bacc/(n_train_subs-1)
+        #     temp_train_sens[left_out_ct]+=temp_sens/(n_train_subs-1)
+        #     temp_train_spec[left_out_ct]+=temp_spec/(n_train_subs-1)
+        # # Compute performance on validation data
+        # temp_valid_bacc[left_out_ct], temp_valid_sens[left_out_ct], temp_valid_spec[left_out_ct] = ief.perf_msrs(
+        #     szr_class[train_bool==False],
+        #     class_hat[train_bool==False])
+        # if model_type == 'svm' or model_type == 'lsvm':
+        #     # Record the number of support vectors
+        #     temp_nsvec[left_out_ct] = np.sum(model.n_support_)
 
     mn_temp_valid_bacc=np.mean(temp_valid_bacc)
     mn_temp_train_bacc = np.mean(temp_train_bacc)

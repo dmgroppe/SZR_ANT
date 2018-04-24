@@ -1,13 +1,7 @@
 # Fits a classifier on ALL training subjects using a fixed set of hyperparameters
-# Parameters are fed in via a json file like this:
-# {"model_type": "logreg",
-# "model_name": "genLogregSeLog10",
-# "n_rand_params": 1,
-# "C": 1,
-# "gamma": .001,
-# "use_ftrs": ["SE"]}
+# Parameters are read from the best parameters of cross-validation model. For example:
 #
-# TODO: currently code only works with one feature. Need to add others.
+#
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -26,10 +20,10 @@ import json
 
 ## Start of main function
 if len(sys.argv)==1:
-    print('Usage: train_fixed_hyper_kdsamp.py cv_model_fname new_model_name')
+    print('Usage: train_fixed_hyper_kdsamp.py cv_model_fname new_model_fname')
     exit()
 if len(sys.argv)!=3:
-    raise Exception('Error: train_fixed_hyper_kdsamp.py requires 1 argument: cv_model_fname new_model_name')
+    raise Exception('Error: train_fixed_hyper_kdsamp.py requires 1 argument: cv_model_fname new_model_fname')
 
 # Import Parameters from json file
 cv_model_fname=sys.argv[1]
@@ -38,7 +32,7 @@ new_model_fname = sys.argv[2]
 print('New model will be saved by %s' % new_model_fname)
 
 
-# ftr_types=params['use_ftrs']
+# ftr_types=params['ftr_types']
 # print('Features being used: {}'.format(ftr_types))
 
 path_dict=ief.get_path_dict()
@@ -53,6 +47,7 @@ print(cv_results.keys())
 #     model_type = 'svm'
 # else:
 #     model_type = 'logreg'
+model_type=cv_results['model_type']
 print('Model type is %s' % model_type)
 
 gam=cv_results['best_gam']
@@ -62,10 +57,11 @@ print('C=%f' % C)
 equal_sub_wts=cv_results['equal_sub_wts']
 print('Weight subjects equally={}'.format(equal_sub_wts))
 
+ftr_types=cv_results['ftr_types']
+print('Model type is %s' % ftr_types)
 
-exit()
-
-
+data_dir=np.array_str(cv_results['data_dir'])
+print('Data will be imported from %s' % data_dir)
 
 # if params['ictal_wind']=='small':
 #     small_ictal_wind=True
@@ -73,7 +69,7 @@ exit()
 #     small_ictal_wind=False
 # else:
 #     raise Exception('ictal_wind needs to be "small" or "max"')
-use_ftrs=['SE'] #TODO import this from json file
+# ftr_types=['SE'] #TODO import this from json file
 
 
 # Find if there any existing models of this name
@@ -84,11 +80,11 @@ model_num=1
 for f in os.listdir(model_root):
     if os.path.isdir(os.path.join(model_root,f)):
         spltf=f.split('_')
-        if spltf[0]==model_name:
+        if spltf[0]==new_model_fname:
            temp_model_num=int(spltf[1])
            if temp_model_num>=model_num:
                model_num=temp_model_num+1
-model_path=os.path.join(model_root,model_name+'_'+str(model_num))
+model_path=os.path.join(model_root,new_model_fname+'_'+str(model_num))
 print('Model will be stored to %s' % model_path)
 if os.path.exists(model_path)==False:
     os.mkdir(model_path)
@@ -105,7 +101,8 @@ print('Training subs: {}'.format(train_subs_list))
 
 # ftr_root='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_GENERAL/EU_GENERAL_FTRS/SE/'
 #ftr_root=path_dict['eu_gen_ftrs']
-ftr_root=os.path.join(path_dict['szr_ant_root'],'EU_GENERAL','KDOWNSAMP')
+#ftr_root=os.path.join(path_dict['szr_ant_root'],'EU_GENERAL','KDOWNSAMP')
+ftr_root=os.path.join(path_dict['szr_ant_root'],'EU_GENERAL',data_dir)
 ftr='SE'
 
 n_wind=0
@@ -201,8 +198,8 @@ print('Training data balanced accuracy: %f' % train_bacc)
 print('Training data sensitivity: %f' % train_sens)
 print('Training data specificity: %f' % train_spec)
 print('Using C=%.2E and gam=%.2E' % (C,gam))
-print('Model name: {}'.format(model_name))
-print('Features used: {}'.format(use_ftrs))
+print('Model name: {}'.format(new_model_fname))
+print('Features used: {}'.format(ftr_types))
 print('Equal subject wts={}'.format(equal_sub_wts))
 print('# of support vectors: %d' % nsvec)
 
@@ -223,6 +220,6 @@ np.savez(out_metrics_fname,
          nsvec=nsvec,
          C=C,
          gam=gam,
-         use_ftrs=use_ftrs)
+         ftr_types=ftr_types)
 
 
