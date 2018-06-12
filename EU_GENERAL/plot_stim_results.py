@@ -1,13 +1,14 @@
 """ This script loads the hypothetical stimulations and summarizes accuracy and amount of data across
 a list of patients. Plots are made too if plot_em==True"""
 
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
 import numpy as np
 import scipy.io as sio
 import os
 import sys
 import euGenFuncs as eu
-import matplotlib.pyplot as plt
-
 
 ## Start of main function
 if len(sys.argv)==1:
@@ -36,7 +37,10 @@ for raw_sub in temp:
 #subs=[264, 273, 862, 1125]
 #pth='lregSeAes8_nokdsamp_1'
 #pth='/home/dgroppe/GIT/SZR_ANT/MODELS/svmAesFinale_1'
-pth=os.path.join('/home/dgroppe/GIT/SZR_ANT/MODELS/',model_name)
+if sys.platform=='linux':
+    pth=os.path.join('/home/dgroppe/GIT/SZR_ANT/MODELS/',model_name)
+else:
+    pth = os.path.join('/Users/davidgroppe/PycharmProjects/SZR_ANT/MODELS/', model_name)
 n_subs=len(subs)
 try_thresh=np.arange(0.2,0.7,0.1)
 n_thresh=len(try_thresh)
