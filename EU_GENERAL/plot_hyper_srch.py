@@ -2,6 +2,8 @@
 hyperparameters for all models with the same stem name"""
 
 import numpy as np
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import os
@@ -117,7 +119,7 @@ plt.plot(np.log10(C_srch[lim_mx_id]),np.log10(gamma_srch[lim_mx_id]),'g*')
 plt.xlabel('log10(C)')
 plt.ylabel('log10(Gamma)')
 cbar=plt.colorbar()
-cbar.set_label('Balanced Accuracy', rotation=90)
+#cbar.set_label('Balanced Accuracy', rotation=90)
 plt.title('Validation Data')
 #plt.show()
 
@@ -131,7 +133,7 @@ plt.plot(np.log10(C_srch[lim_mx_id]),np.log10(gamma_srch[lim_mx_id]),'g*')
 plt.xlabel('log10(C)')
 # plt.ylabel('log10(Gamma)')
 cbar=plt.colorbar()
-cbar.set_label('Balanced Accuracy', rotation=90)
+#cbar.set_label('Balanced Accuracy', rotation=90)
 plt.title('Training Data')
 
 plt.subplot(1,3,3)

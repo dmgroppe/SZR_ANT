@@ -8,7 +8,6 @@
 # "patience": 0,
 # "use_ftrs": ["SE"]}
 #
-# TODO: currently code only works with one feature. Need to add others.
 
 import numpy as np
 import matplotlib.pyplot as plt

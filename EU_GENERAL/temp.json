@@ -1,9 +1,0 @@
-{"model_type": "logreg",
-"model_name": "temp",
-"gam": -7.5,
-"C": 1,
-"patience": 1,
-"equal_sub_wts": "True",
-"data_dir": "KDOWNSAMP_SE_UNBOUNDED_500", 
-"use_ftrs": ["SE"]}
-
