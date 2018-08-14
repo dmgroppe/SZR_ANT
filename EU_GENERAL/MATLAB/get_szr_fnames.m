@@ -58,7 +58,8 @@ end
 if ismac,
     % ?? TODO Temp hack, remove!!!
     %ieeg_root_dir='/Volumes/SgateOSExJnld/EU_TEMP/pat_FR_1096/adm_1096102';
-    ieeg_root_dir='/Volumes/SgateOSExJnld/EU_TEMP/inv/pat_FR_1096/adm_1096102';
+    %ieeg_root_dir='/Volumes/SgateOSExJnld/EU_TEMP/inv/pat_FR_1096/adm_1096102';
+    ieeg_root_dir='/Volumes/ValianteLabEuData/EU/inv/pat_FR_1096/adm_1096102';
 else
     ieeg_root_dir=fullfile(external_root,'ValianteLabEuData','EU',inv_dir, ...
         sprintf('pat_FR_%d',sub_id),sprintf('adm_%d102',sub_id));

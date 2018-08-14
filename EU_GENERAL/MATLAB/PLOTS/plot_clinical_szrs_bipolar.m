@@ -24,9 +24,10 @@
 %sub_id=1077;
 % sub_id=818;
 %subs=[115, 253, 442, 565, 590, 620]; DONE
-subs=[273, 862, 1077, 970]; % need to redo
+%subs=[273, 862, 1077, 970]; % need to redo
 %subs=[958, 970];
 %subs=[922];
+subs=1096;
 
 for sub_id=subs,
     
@@ -43,7 +44,11 @@ n_chan=size(bipolar_labels,1);
 
 %% Import bad channels
 bad_chan_fname=sprintf('bad_chans_%d.txt',sub_id);
-bad_chan_path='/home/dgroppe/GIT/SZR_ANT/EU_METADATA/BAD_CHANS';
+if ismac,
+    bad_chan_path='/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/BAD_CHANS';
+else
+    bad_chan_path='/home/dgroppe/GIT/SZR_ANT/EU_METADATA/BAD_CHANS';
+end
 bad_chan_csv=csv2Cell(fullfile(bad_chan_path,bad_chan_fname));
 
 bad_chan_ids=[];
