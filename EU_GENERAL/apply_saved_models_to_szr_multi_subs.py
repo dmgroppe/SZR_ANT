@@ -18,7 +18,7 @@ print(model_name)
 # model_name='genLogregSe_1'
 
 # Load test subjects
-in_fname='test_subs.txt'
+in_fname='test_subsAES.txt'
 text_file=open(in_fname,'r')
 temp=text_file.readlines()
 subs=list()
