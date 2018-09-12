@@ -95,10 +95,10 @@ def continuous_fnames(sub, cont_ftr_root, szr_ftr_root):
 
 ## Start of main function
 if len(sys.argv)==1:
-    print('Usage: apply_saved_models_to_all_clips.py sub_id model_name model_type')
+    print('Usage: apply_saved_models_to_all_clips_raw_yhat.py sub_id model_name model_type')
     exit()
 if len(sys.argv)!=4:
-    raise Exception('Error: apply_saved_models_to_all_clips.py requires 2 arguments: sub_id model_name model_type')
+    raise Exception('Error: apply_saved_models_to_all_clips_raw_yhat.py requires 2 arguments: sub_id model_name model_type')
 
 # Import Parameters from command line
 sub = int(sys.argv[1])
@@ -130,14 +130,11 @@ models = pickle.load(open(model_fname, 'rb'))
 n_models = len(models)
 print('# of models= %d' % n_models)
 
-# tpt span of moving window via which to smooth p(stim)
-mv_wind_len = 20  # Sampling rate is about 10 Hz, so this a 2 sec moving window
-
 # Outpath #TODO fix
 if sys.platform=='linux':
-    out_root = '/home/dgroppe/EU_YHAT/'
+    out_root = '/home/dgroppe/EU_YHAT_RAW/'
 else:
-    out_root = '/Users/davidgroppe/ONGOING/EU_YHAT/'
+    out_root = '/Users/davidgroppe/ONGOING/EU_YHAT_RAW`/'
 out_path = os.path.join(out_root, str(sub) + '_' + model_name)
 if os.path.exists(out_path) == False:
     os.mkdir(out_path)
@@ -155,11 +152,10 @@ for chan in soz_elec_names:
     # print('Loading %s' %
     temp_ftrs = sio.loadmat(os.path.join(subsamp_ftr_path, nonszr_fname))
     # Z-score features
+    #temp_mns, temp_sds = dg.trimmed_normalize(temp_ftrs['subsamp_se_ftrs'], 0.25,
+    #                                          zero_nans=False, verbose=False) # ?? WRONG NORM?!!
     temp_mns, temp_sds = dg.median_normalize(temp_ftrs['subsamp_se_ftrs'],
                                               zero_nans=False, verbose=False)
-    # ORIGINAL LINE
-    #temp_mns, temp_sds = dg.trimmed_normalize(temp_ftrs['subsamp_se_ftrs'], 0.25,
-    #                                          zero_nans=False, verbose=False)
     mns_dict[chan] = temp_mns
     sds_dict[chan] = temp_sds
 
@@ -191,17 +187,21 @@ for clip_ct, clip in enumerate(clip_list):
                 yhat += tmp_yhat_va / n_models
 
             # Smooth p(szr)
-            yhat_smooth = np.zeros(yhat.shape)
-            yhat_smooth[mv_wind_len - 1:] = dg.running_mean(yhat, mv_wind_len)
+            # yhat_smooth = np.zeros(yhat.shape)
+            # yhat_smooth[mv_wind_len - 1:] = dg.running_mean(yhat, mv_wind_len)
 
             # Collect max(p(szr)) for each time window
             if chan_ct == 0:
                 # first channel
-                max_yhat = np.copy(yhat_smooth)
-                yhat_soz_chans = np.zeros((n_chan, len(yhat_smooth)))
+                max_yhat = np.copy(yhat)
+                yhat_soz_chans = np.zeros((n_chan, len(yhat)))
+                #max_yhat = np.copy(yhat_smooth)
+                #yhat_soz_chans = np.zeros((n_chan, len(yhat_smooth)))
             else:
-                max_yhat = np.maximum(max_yhat, yhat_smooth)
-            yhat_soz_chans[chan_ct, :] = yhat_smooth
+                max_yhat = np.maximum(max_yhat, yhat)
+                #max_yhat = np.maximum(max_yhat, yhat_smooth)
+            #yhat_soz_chans[chan_ct, :] = yhat_smooth
+            yhat_soz_chans[chan_ct, :] = yhat
         else:
             # Clip is empty because it was too short to use EDM features
             max_yhat=np.nan
@@ -218,6 +218,5 @@ for clip_ct, clip in enumerate(clip_list):
     #          max_yhat=max_yhat,
     #          yhat_soz_chans=yhat_soz_chans,
     #          yhat_sec=temp_mat['se_time_sec'])  # note that time is relative to start of file (i.e., 0=first file tpt)
-    exit();
 
 print('Done.')
