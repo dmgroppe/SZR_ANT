@@ -218,6 +218,5 @@ for clip_ct, clip in enumerate(clip_list):
     #          max_yhat=max_yhat,
     #          yhat_soz_chans=yhat_soz_chans,
     #          yhat_sec=temp_mat['se_time_sec'])  # note that time is relative to start of file (i.e., 0=first file tpt)
-    exit();
 
 print('Done.')

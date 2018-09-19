@@ -31,22 +31,16 @@
 
 
 %% Choose Patient
-%sub_id=1096; % 
-%sub_id=1125; %
-%sub_id=620;
-%sub_id=264;
-% sub_id=590;
-%sub_id=253;
-% sub_id=565;
-% sub_id=273; %
-%sub_id=264; %
-%sub_id=862; % DONE (redone after bad szrs removed)
-%sub_id=922; % redone (after long szr relabelled as subclinical)
-%sub_id=565; % 
-%sub_id=115; % done
-
 subs=[115, 264, 273, 862, 1125];
-subs=1096;
+subs=1096;  %done
+subs=1077; %done
+subs=970;
+% 253
+% 565
+% 590
+% 620
+% 958
+
 
 for sub_id=subs,
 
