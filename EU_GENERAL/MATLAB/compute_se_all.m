@@ -34,6 +34,11 @@
 sub_id=1096; % redone, done 2018 Sept.
 sub_id=1077; % done 2018 Sept.
 sub_id=970;
+sub_id=253; %done 2018 Sept
+%sub_id=565; %done 2018 Sept
+%sub_id=590; %done 2018 Sept
+%sub_id=620; %done 2018 Sept
+%sub_id=958;
 %sub_id=264; % redone
 % sub_id=862; %need to redo
 %sub_id=565; % new train sub

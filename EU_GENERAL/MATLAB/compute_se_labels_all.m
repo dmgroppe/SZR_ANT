@@ -32,14 +32,13 @@
 
 %% Choose Patient
 subs=[115, 264, 273, 862, 1125];
-subs=1096;  %done
-subs=1077; %done
-subs=970;
-% 253
-% 565
-% 590
-% 620
-% 958
+subs=1096;  %done Sept 2018
+subs=1077; %done Setp 2018
+subs=970; %done Sept 2018
+subs=253; %done Sept 2018
+subs=565; %done Sept 2018
+subs=590; %done Sept 2018
+subs=[620, 958];
 
 
 for sub_id=subs,

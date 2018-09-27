@@ -1,4 +1,7 @@
-use_subs=[1096, 1077, 264, 273, 862, 1125];
+use_subs=[620, 565, 970, 1096, 1077, 264, 273, 862, 1125];
+%yhat error: 590, 253
+%use_subs=[565, 620];
+%use_subs=[620, 565, 273, 862, 1125];
 %redo 1096
 n_sub=length(use_subs);
 
@@ -41,9 +44,8 @@ plot(edm_wts,mean(mn_abs_stim,2),'r-o','linewidth',2);
 set(gca,'yscale','log');
 ylabel({'MEAN Absolute','Stim Latency (Seconds)'});
 v=axis();
-axis([edm_wts(1) edm_wts(end) 0 50]);
+axis([edm_wts(1) edm_wts(end) 0 1000]);
 set(gca,'ytick',[0 10 100]);
-legend(sub_str);
 
 subplot(4,1,2);
 plot(edm_wts,md_abs_stim,'-o'); hold on;
@@ -51,7 +53,7 @@ plot(edm_wts,mean(md_abs_stim,2),'r-o','linewidth',2);
 set(gca,'ytick',[0 10 100]);
 set(gca,'yscale','log');
 ylabel({'MEDIAN Absolute','Stim Latency (Seconds)'});
-axis([edm_wts(1) edm_wts(end) 0 50]);
+axis([edm_wts(1) edm_wts(end) 0 1000]);
 
 subplot(4,1,3);
 plot(edm_wts,pcnt_under_10sec,'-o'); hold on;
@@ -63,10 +65,11 @@ subplot(4,1,4);
 plot(edm_wts,fp_per_day,'-o'); hold on;
 plot(edm_wts,mean(fp_per_day,2),'r-o','linewidth',2);
 % set(gca,'yscale','log');
-xlabel('EDM Weight');
+xlabel('yhat EDM Weight');
 axis([edm_wts(1) edm_wts(end) 400 1200]);
 plot([edm_wts(1), edm_wts(end)],[1, 1]*600,'k--');
 ylabel({'MEAN False','Positives/Day'});
+legend(sub_str);
 
 set(gcf,'paperpositionmode','auto');
 %print -f1 -depsc stim_per_edm
