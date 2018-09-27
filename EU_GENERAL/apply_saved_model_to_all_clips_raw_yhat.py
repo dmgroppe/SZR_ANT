@@ -169,6 +169,7 @@ for clip_ct, clip in enumerate(clip_list):
         # Load features
         fname = str(sub) + '_' + mono_chans[0] + '_' + mono_chans[1] + '_' + clip + '.mat'
         f = os.path.join(cont_ftr_root, str(sub) + '_all', fname)
+        print('Loading file {}'.format(fname))
         temp_mat = sio.loadmat(f)
 
         # Estimate p(szr)
