@@ -2,7 +2,7 @@
 % various EDM yhat smoothing parameters and plots them
 
 % Gather results from each subject
-use_subs=[620, 565, 970, 1096, 1077, 264, 273, 862, 1125];
+use_subs=[253, 590, 620, 565, 970, 1096, 1077, 264, 273, 862, 1125];
 %yhat error: 590, 253
 %use_subs=[565, 620];
 %use_subs=[620, 565, 273, 862, 1125];
