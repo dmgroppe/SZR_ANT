@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>electrodes | epilepsiae.uniklinik-freiburg.de</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Matthias Ihle">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap.css" rel="stylesheet">
+    <link href="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-responsive.css" rel="stylesheet">
+    <link href="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/docs.css" rel="stylesheet">
+<!--    <link href="/media/js/prettify.css" rel="stylesheet">-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="http://epilepsiae.uniklinik-freiburg.de/media/ico/favicon.ico">
+    <link rel="apple-touch-icon" href="http://epilepsiae.uniklinik-freiburg.de/media/ico/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="http://epilepsiae.uniklinik-freiburg.de/media/ico/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="http://epilepsiae.uniklinik-freiburg.de/media/ico/apple-touch-icon-114x114.png">
+
+<!--    <link href="/media/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="/media/google-code-prettify/prettify.js"></script>
+    <script type="text/javascript" src="/media/google-code-prettify/lang-sql.js"></script>-->
+
+
+
+  </head>
+
+  <body>
+
+    <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner" style="background:white;">
+            <div class="container">
+
+
+    <div class="btn-toolbar"> 
+ 
+        <div class="btn-group"> 
+            <a class="btn" href="http://epilepsiae.uniklinik-freiburg.de/"><i class="icon-home"></i> EpLinkToronto home</a> 
+            <a class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a> 
+            <ul class="dropdown-menu"> 
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/packages/"> my packages</a></li> 
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/packages/inv_30"> -&gt; package inv_30</a></li> 
+                <li class="divider"></li> 
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/datasets/"> my datasets</a></li> 
+                <li class="divider"></li> 
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/accounts/logout">logout</a></li>
+            </ul> 
+        </div> 
+<!--        <div class="btn-group"> 
+            <a class="btn" href="/packages/"> packages</a> 
+            <a class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a> 
+            <ul class="dropdown-menu">
+                <li><a href="/packages/inv_30">inv_30</a></li> 
+            </ul> 
+        </div> -->
+ 
+        
+        <div class="btn-group"> 
+            <a class="btn" href="http://epilepsiae.uniklinik-freiburg.de/patients/FR_818"><i class="icon-user"></i> patient FR_818</a> 
+            <a class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a> 
+            <ul class="dropdown-menu"> 
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/patients/FR_818/seizures">all seizures</a></li> 
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/patients/FR_818/seizurelist">text-file seizures</a></li> 
+            </ul> 
+        </div> 
+        
+        
+            
+        <div class="btn-group"> 
+            <a class="btn" href="http://epilepsiae.uniklinik-freiburg.de/admissions/818102"><i class="icon-home"></i> adm_818102</a> 
+            <a class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a> 
+            <ul class="dropdown-menu">
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/admissions/818102/presurgical">pre-surgical evaluation</a></li>
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/admissions/818102/mri">MRI</a></li>
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/admissions/818102/electrodes">electrode setup</a></li>
+            </ul> 
+        </div> 
+            
+        
+
+
+
+
+    </div> 
+
+            </div>
+        </div><!-- /navbar-inner -->
+    </div><!-- /navbar -->
+
+
+<div class="container">
+<!-- <ul class="breadcrumb">
+    <li><a href="#">Home</a> <span class="divider">/</span></li>
+</ul>--> 
+
+</div>
+
+
+[&lt;Package: inv_30&gt;]
+    
+
+<div class="container">
+
+<!-- {AB}
+[&lt;Recording: id: 81800102; str_id: 091109aa; admission: 818102; begin: 2009-11-09T18:09:59; end: 2009-11-11T14:15:17; duration: 151741; blocks: 45; channels: 47; sample_rate: 1024; backgrhythm: None; eegslowing: None; ieegslowing: None; commentary: duration: 151741.0 (net), 158718.0 (gross), 95.6041532781% complete; &gt;, &lt;Recording: id: 81801102; str_id: 091111aa; admission: 818102; begin: 2009-11-11T15:49:11; end: 2009-11-13T10:44:14; duration: 154141; blocks: 44; channels: 71; sample_rate: 1024; backgrhythm: None; eegslowing: None; ieegslowing: None; commentary: duration: 154141.0 (net), 154503.0 (gross), 99.7657003424% complete; &gt;, &lt;Recording: id: 81802102; str_id: 091113aa; admission: 818102; begin: 2009-11-13T10:52:42; end: 2009-11-20T06:53:27; duration: 589388; blocks: 166; channels: 71; sample_rate: 1024; backgrhythm: None; eegslowing: None; ieegslowing: None; commentary: duration: 589388.0 (net), 590445.0 (gross), 99.8209824793% complete; &gt;]
+-->
+ <b>rec 1: </b>id: 81800102; str_id: 091109aa; admission: 818102; begin:
+ 2009-11-09T18:09:59; end: 2009-11-11T14:15:17; duration: 151741; 
+blocks: 45; channels: 47; sample_rate: 1024; backgrhythm: None; 
+eegslowing: None; ieegslowing: None; commentary: duration: 151741.0 
+(net), 158718.0 (gross), 95.6041532781% complete; <br>    <b>rec 2: </b>id:
+ 81801102; str_id: 091111aa; admission: 818102; begin: 
+2009-11-11T15:49:11; end: 2009-11-13T10:44:14; duration: 154141; blocks:
+ 44; channels: 71; sample_rate: 1024; backgrhythm: None; eegslowing: 
+None; ieegslowing: None; commentary: duration: 154141.0 (net), 154503.0 
+(gross), 99.7657003424% complete; <br>    <b>rec 3: </b>id: 81802102; 
+str_id: 091113aa; admission: 818102; begin: 2009-11-13T10:52:42; end: 
+2009-11-20T06:53:27; duration: 589388; blocks: 166; channels: 71; 
+sample_rate: 1024; backgrhythm: None; eegslowing: None; ieegslowing: 
+None; commentary: duration: 589388.0 (net), 590445.0 (gross), 
+99.8209824793% complete; <br>   
+<p>
+
+    </p><table class="table table-condensed">
+        <thead>
+        <tr>
+            <th>electrode_array</th>
+            <th>name</th><th>moniker</th><th>artifact</th><th>focus_relat</th>
+            <th>supplier</th><th>x</th><th>y</th><th>z</th><th>commentary</th>
+            <th>ch. in rec 1</th><th>ch. in rec 2</th><th>ch. in rec 3</th>
+        </tr>
+        </thead>
+        <tbody>
+    
+        <tr>
+            <!-- Array information -->
+            <td rowspan="32">96
+
+                    81800102: <b>G_</b> (grid )<br>
+                    
+            </td>
+            <!-- information about electrodes -->
+        
+            
+            <td title="electrode_id: {$e.id}"><b>GD4</b></td>
+            <td>(GD4)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>156.0</td>
+            <td>104.0</td>
+            <td>89.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">28: GD4</td><td title="091111aa">28: GD4</td><td title="091113aa">28: GD4</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GC8</b></td>
+            <td>(GC8)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>139.0</td>
+            <td>139.0</td>
+            <td>59.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">24: GC8</td><td title="091111aa">24: GC8</td><td title="091113aa">24: GC8</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GD1</b></td>
+            <td>(GD1)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>153.0</td>
+            <td>76.0</td>
+            <td>98.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">25: GD1</td><td title="091111aa">25: GD1</td><td title="091113aa">25: GD1</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GD2</b></td>
+            <td>(GD2)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>155.0</td>
+            <td>85.0</td>
+            <td>97.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">26: GD2</td><td title="091111aa">26: GD2</td><td title="091113aa">26: GD2</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GD3</b></td>
+            <td>(GD3)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>155.0</td>
+            <td>94.0</td>
+            <td>92.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">27: GD3</td><td title="091111aa">27: GD3</td><td title="091113aa">27: GD3</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GD5</b></td>
+            <td>(GD5)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>155.0</td>
+            <td>113.0</td>
+            <td>86.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">29: GD5</td><td title="091111aa">29: GD5</td><td title="091113aa">29: GD5</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GA2</b></td>
+            <td>(GA2)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>152.0</td>
+            <td>73.0</td>
+            <td>60.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">2: GA2</td><td title="091111aa">2: GA2</td><td title="091113aa">2: GA2</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GB4</b></td>
+            <td>(GB4)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>i</td>
+            <td>AdTech</td>
+            <td>153.0</td>
+            <td>96.0</td>
+            <td>65.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">12: GB4</td><td title="091111aa">12: GB4</td><td title="091113aa">12: GB4</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GB5</b></td>
+            <td>(GB5)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>150.0</td>
+            <td>107.0</td>
+            <td>62.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">13: GB5</td><td title="091111aa">13: GB5</td><td title="091113aa">13: GB5</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GB6</b></td>
+            <td>(GB6)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>145.0</td>
+            <td>118.0</td>
+            <td>57.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">14: GB6</td><td title="091111aa">14: GB6</td><td title="091113aa">14: GB6</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GB7</b></td>
+            <td>(GB7)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>140.0</td>
+            <td>126.0</td>
+            <td>52.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">15: GB7</td><td title="091111aa">15: GB7</td><td title="091113aa">15: GB7</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GB8</b></td>
+            <td>(GB8)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>135.0</td>
+            <td>136.0</td>
+            <td>50.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">16: GB8</td><td title="091111aa">16: GB8</td><td title="091113aa">16: GB8</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GC1</b></td>
+            <td>(GC1)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>i</td>
+            <td>AdTech</td>
+            <td>152.0</td>
+            <td>72.0</td>
+            <td>87.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">17: GC1</td><td title="091111aa">17: GC1</td><td title="091113aa">17: GC1</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GC3</b></td>
+            <td>(GC3)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>154.0</td>
+            <td>91.0</td>
+            <td>81.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">19: GC3</td><td title="091111aa">19: GC3</td><td title="091113aa">19: GC3</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GC2</b></td>
+            <td>(GC2)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>154.0</td>
+            <td>82.0</td>
+            <td>86.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">18: GC2</td><td title="091111aa">18: GC2</td><td title="091113aa">18: GC2</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GC4</b></td>
+            <td>(GC4)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>154.0</td>
+            <td>101.0</td>
+            <td>77.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">20: GC4</td><td title="091111aa">20: GC4</td><td title="091113aa">20: GC4</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GC5</b></td>
+            <td>(GC5)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>152.0</td>
+            <td>112.0</td>
+            <td>74.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">21: GC5</td><td title="091111aa">21: GC5</td><td title="091113aa">21: GC5</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GC6</b></td>
+            <td>(GC6)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>149.0</td>
+            <td>121.0</td>
+            <td>68.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">22: GC6</td><td title="091111aa">22: GC6</td><td title="091113aa">22: GC6</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GC7</b></td>
+            <td>(GC7)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>143.0</td>
+            <td>131.0</td>
+            <td>67.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">23: GC7</td><td title="091111aa">23: GC7</td><td title="091113aa">23: GC7</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GD6</b></td>
+            <td>(GD6)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>152.0</td>
+            <td>123.0</td>
+            <td>82.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">30: GD6</td><td title="091111aa">30: GD6</td><td title="091113aa">30: GD6</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GD7</b></td>
+            <td>(GD7)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>148.0</td>
+            <td>133.0</td>
+            <td>78.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">31: GD7</td><td title="091111aa">31: GD7</td><td title="091113aa">31: GD7</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GD8</b></td>
+            <td>(GD8)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>144.0</td>
+            <td>141.0</td>
+            <td>74.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">32: GD8</td><td title="091111aa">32: GD8</td><td title="091113aa">32: GD8</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GA3</b></td>
+            <td>(GA3)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>153.0</td>
+            <td>83.0</td>
+            <td>58.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">3: GA3</td><td title="091111aa">3: GA3</td><td title="091113aa">3: GA3</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GA4</b></td>
+            <td>(GA4)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>152.0</td>
+            <td>92.0</td>
+            <td>54.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">4: GA4</td><td title="091111aa">4: GA4</td><td title="091113aa">4: GA4</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GA5</b></td>
+            <td>(GA5)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>148.0</td>
+            <td>104.0</td>
+            <td>52.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">5: GA5</td><td title="091111aa">5: GA5</td><td title="091113aa">5: GA5</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GA6</b></td>
+            <td>(GA6)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>142.0</td>
+            <td>113.0</td>
+            <td>45.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">6: GA6</td><td title="091111aa">6: GA6</td><td title="091113aa">6: GA6</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GA7</b></td>
+            <td>(GA7)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>136.0</td>
+            <td>123.0</td>
+            <td>41.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">7: GA7</td><td title="091111aa">7: GA7</td><td title="091113aa">7: GA7</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GA8</b></td>
+            <td>(GA8)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>i</td>
+            <td>AdTech</td>
+            <td>133.0</td>
+            <td>132.0</td>
+            <td>40.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">8: GA8</td><td title="091111aa">8: GA8</td><td title="091113aa">8: GA8</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GB1</b></td>
+            <td>(GB1)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>152.0</td>
+            <td>68.0</td>
+            <td>75.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">9: GB1</td><td title="091111aa">9: GB1</td><td title="091113aa">9: GB1</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GB2</b></td>
+            <td>(GB2)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>i</td>
+            <td>AdTech</td>
+            <td>153.0</td>
+            <td>78.0</td>
+            <td>72.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">10: GB2</td><td title="091111aa">10: GB2</td><td title="091113aa">10: GB2</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GB3</b></td>
+            <td>(GB3)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>i</td>
+            <td>AdTech</td>
+            <td>154.0</td>
+            <td>87.0</td>
+            <td>70.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">11: GB3</td><td title="091111aa">11: GB3</td><td title="091113aa">11: GB3</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>GA1</b></td>
+            <td>(GA1)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>151.0</td>
+            <td>64.0</td>
+            <td>65.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">1: GA1</td><td title="091111aa">1: GA1</td><td title="091113aa">1: GA1</td>
+        </tr>
+        <!--<tr>-->
+        
+<!--            <th>array</th><th>name</th><th>moniker</th><th>artifact</th><th>focus_relat</th>
+            <th>supplier</th><th>x</th><th>y</th><th>z</th><th>commentary</th>
+        </tr> -->
+    
+        <tr>
+            <!-- Array information -->
+            <td rowspan="4">12
+
+                    81809102: <b>TBA</b> (strip)<br>
+                    
+            </td>
+            <!-- information about electrodes -->
+        
+            
+            <td title="electrode_id: {$e.id}"><b>TBA2</b></td>
+            <td>(TBA2)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>112.0</td>
+            <td>135.0</td>
+            <td>30.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">34: TBA2</td><td title="091111aa">34: TBA2</td><td title="091113aa">34: TBA2</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>TBA4</b></td>
+            <td>(TBA4)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>i</td>
+            <td>AdTech</td>
+            <td>108.0</td>
+            <td>116.0</td>
+            <td>34.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">36: TBA4</td><td title="091111aa">36: TBA4</td><td title="091113aa">36: TBA4</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>TBA3</b></td>
+            <td>(TBA3)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>109.0</td>
+            <td>125.0</td>
+            <td>29.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">35: TBA3</td><td title="091111aa">35: TBA3</td><td title="091113aa">35: TBA3</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>TBA1</b></td>
+            <td>(TBA1)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>121.0</td>
+            <td>142.0</td>
+            <td>34.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">33: TBA1</td><td title="091111aa">33: TBA1</td><td title="091113aa">33: TBA1</td>
+        </tr>
+        <!--<tr>-->
+        
+<!--            <th>array</th><th>name</th><th>moniker</th><th>artifact</th><th>focus_relat</th>
+            <th>supplier</th><th>x</th><th>y</th><th>z</th><th>commentary</th>
+        </tr> -->
+    
+        <tr>
+            <!-- Array information -->
+            <td rowspan="4">12
+
+                    81810102: <b>TBB</b> (strip)<br>
+                    
+            </td>
+            <!-- information about electrodes -->
+        
+            
+            <td title="electrode_id: {$e.id}"><b>TBB1</b></td>
+            <td>(TBB1)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>105.0</td>
+            <td>83.0</td>
+            <td>63.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">37: TBB1</td><td title="091111aa">37: TBB1</td><td title="091113aa">37: TBB1</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>TBB2</b></td>
+            <td>(TBB2)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>111.0</td>
+            <td>86.0</td>
+            <td>55.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">38: TBB2</td><td title="091111aa">38: TBB2</td><td title="091113aa">38: TBB2</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>TBB3</b></td>
+            <td>(TBB3)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>117.0</td>
+            <td>91.0</td>
+            <td>46.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">39: TBB3</td><td title="091111aa">39: TBB3</td><td title="091113aa">39: TBB3</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>TBB4</b></td>
+            <td>(TBB4)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>125.0</td>
+            <td>97.0</td>
+            <td>40.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">40: TBB4</td><td title="091111aa">40: TBB4</td><td title="091113aa">40: TBB4</td>
+        </tr>
+        <!--<tr>-->
+        
+<!--            <th>array</th><th>name</th><th>moniker</th><th>artifact</th><th>focus_relat</th>
+            <th>supplier</th><th>x</th><th>y</th><th>z</th><th>commentary</th>
+        </tr> -->
+    
+        <tr>
+            <!-- Array information -->
+            <td rowspan="6">18
+
+                    81811102: <b>TBC</b> (strip)<br>
+                    
+            </td>
+            <!-- information about electrodes -->
+        
+            
+            <td title="electrode_id: {$e.id}"><b>TBC6</b></td>
+            <td>(TBC6)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>138.0</td>
+            <td>81.0</td>
+            <td>44.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">46: TBC6</td><td title="091111aa">46: TBC6</td><td title="091113aa">46: TBC6</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>TBC5</b></td>
+            <td>(TBC5)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>130.0</td>
+            <td>73.0</td>
+            <td>46.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">45: TBC5</td><td title="091111aa">45: TBC5</td><td title="091113aa">45: TBC5</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>TBC4</b></td>
+            <td>(TBC4)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>123.0</td>
+            <td>66.0</td>
+            <td>50.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">44: TBC4</td><td title="091111aa">44: TBC4</td><td title="091113aa">44: TBC4</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>TBC3</b></td>
+            <td>(TBC3)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>115.0</td>
+            <td>60.0</td>
+            <td>52.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">43: TBC3</td><td title="091111aa">43: TBC3</td><td title="091113aa">43: TBC3</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>TBC2</b></td>
+            <td>(TBC2)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>108.0</td>
+            <td>52.0</td>
+            <td>52.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">42: TBC2</td><td title="091111aa">42: TBC2</td><td title="091113aa">42: TBC2</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>TBC1</b></td>
+            <td>(TBC1)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td>AdTech</td>
+            <td>99.0</td>
+            <td>45.0</td>
+            <td>52.0</td>
+            <td></td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">41: TBC1</td><td title="091111aa">41: TBC1</td><td title="091113aa">41: TBC1</td>
+        </tr>
+        <!--<tr>-->
+        
+<!--            <th>array</th><th>name</th><th>moniker</th><th>artifact</th><th>focus_relat</th>
+            <th>supplier</th><th>x</th><th>y</th><th>z</th><th>commentary</th>
+        </tr> -->
+    
+        <tr>
+            <!-- Array information -->
+            <td rowspan="2">4
+
+                    81802102: <b>10-10</b> (surf )<br>
+                    
+            </td>
+            <!-- information about electrodes -->
+        
+            
+            <td title="electrode_id: {$e.id}"><b>FT9</b></td>
+            <td>(T1)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">67: T1</td><td title="091113aa">67: T1</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>FT10</b></td>
+            <td>(T2)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">68: T2</td><td title="091113aa">68: T2</td>
+        </tr>
+        <!--<tr>-->
+        
+<!--            <th>array</th><th>name</th><th>moniker</th><th>artifact</th><th>focus_relat</th>
+            <th>supplier</th><th>x</th><th>y</th><th>z</th><th>commentary</th>
+        </tr> -->
+    
+        <tr>
+            <!-- Array information -->
+            <td rowspan="19">38
+
+                    81812102: <b>10-20</b> (surf )<br>
+                    
+            </td>
+            <!-- information about electrodes -->
+        
+            
+            <td title="electrode_id: {$e.id}"><b>FP1</b></td>
+            <td>(FP1)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">48: FP1</td><td title="091113aa">48: FP1</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>O1</b></td>
+            <td>(O1)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">56: O1</td><td title="091113aa">56: O1</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>P7</b></td>
+            <td>(T5)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">62: T5</td><td title="091113aa">62: T5</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>P8</b></td>
+            <td>(T6)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">63: T6</td><td title="091113aa">63: T6</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>T8</b></td>
+            <td>(T4)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">61: T4</td><td title="091113aa">61: T4</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>F4</b></td>
+            <td>(F4)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">51: F4</td><td title="091113aa">51: F4</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>FP2</b></td>
+            <td>(FP2)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">49: FP2</td><td title="091113aa">49: FP2</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>F3</b></td>
+            <td>(F3)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">50: F3</td><td title="091113aa">50: F3</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>C3</b></td>
+            <td>(C3)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">52: C3</td><td title="091113aa">52: C3</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>C4</b></td>
+            <td>(C4)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">53: C4</td><td title="091113aa">53: C4</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>P3</b></td>
+            <td>(P3)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">54: P3</td><td title="091113aa">54: P3</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>P4</b></td>
+            <td>(P4)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">55: P4</td><td title="091113aa">55: P4</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>PZ</b></td>
+            <td>(PZ)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">66: PZ</td><td title="091113aa">66: PZ</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>F8</b></td>
+            <td>(F8)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">59: F8</td><td title="091113aa">59: F8</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>T7</b></td>
+            <td>(T3)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">60: T3</td><td title="091113aa">60: T3</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>O2</b></td>
+            <td>(O2)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">57: O2</td><td title="091113aa">57: O2</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>F7</b></td>
+            <td>(F7)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">58: F7</td><td title="091113aa">58: F7</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>FZ</b></td>
+            <td>(FZ)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">64: FZ</td><td title="091113aa">64: FZ</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>CZ</b></td>
+            <td>(CZ)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td>e</td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">65: CZ</td><td title="091113aa">65: CZ</td>
+        </tr>
+        <!--<tr>-->
+        
+<!--            <th>array</th><th>name</th><th>moniker</th><th>artifact</th><th>focus_relat</th>
+            <th>supplier</th><th>x</th><th>y</th><th>z</th><th>commentary</th>
+        </tr> -->
+    
+        <tr>
+            <!-- Array information -->
+            <td rowspan="1">3
+
+                    81816102: <b>ECG</b> (ecg  )<br>
+                    
+            </td>
+            <!-- information about electrodes -->
+        
+            
+            <td title="electrode_id: {$e.id}"><b>ECG</b></td>
+            <td>(ECG)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td></td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>ecg electrode</td>
+            <!--<td>3:</td>-->
+            <td title="091109aa">47: ECG</td><td title="091111aa">47: ECG</td><td title="091113aa">47: ECG</td>
+        </tr>
+        <!--<tr>-->
+        
+<!--            <th>array</th><th>name</th><th>moniker</th><th>artifact</th><th>focus_relat</th>
+            <th>supplier</th><th>x</th><th>y</th><th>z</th><th>commentary</th>
+        </tr> -->
+    
+        <tr>
+            <!-- Array information -->
+            <td rowspan="2">4
+
+                    81817102: <b>EOG</b> (eog  )<br>
+                    
+            </td>
+            <!-- information about electrodes -->
+        
+            
+            <td title="electrode_id: {$e.id}"><b>EOG1</b></td>
+            <td>(EOG1)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td></td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>eog electrode (eyes)</td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">69: EOG1</td><td title="091113aa">69: EOG1</td>
+        </tr>
+        <!--<tr>-->
+        
+            
+            <tr><td title="electrode_id: {$e.id}"><b>EOG2</b></td>
+            <td>(EOG2)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td></td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>eog electrode (eyes)</td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">70: EOG2</td><td title="091113aa">70: EOG2</td>
+        </tr>
+        <!--<tr>-->
+        
+<!--            <th>array</th><th>name</th><th>moniker</th><th>artifact</th><th>focus_relat</th>
+            <th>supplier</th><th>x</th><th>y</th><th>z</th><th>commentary</th>
+        </tr> -->
+    
+        <tr>
+            <!-- Array information -->
+            <td rowspan="1">2
+
+                    81818102: <b>EMG</b> (emg  )<br>
+                    
+            </td>
+            <!-- information about electrodes -->
+        
+            
+            <td title="electrode_id: {$e.id}"><b>EMG</b></td>
+            <td>(EMG)</td>
+            <td>
+                    
+                    
+                    
+                    
+                    
+            </td>
+            <td></td>
+            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>emg electrode (muscular)</td>
+            <!--<td>2:</td>-->
+            <td title="091109aa">-</td><td title="091111aa">71: EMG</td><td title="091113aa">71: EMG</td>
+        </tr>
+        <!--<tr>-->
+        
+<!--            <th>array</th><th>name</th><th>moniker</th><th>artifact</th><th>focus_relat</th>
+            <th>supplier</th><th>x</th><th>y</th><th>z</th><th>commentary</th>
+        </tr> -->
+    
+        <tr><td colspan="10">9 electrode_array(s) retrieved</td></tr>
+    </tbody></table>
+
+
+
+
+
+
+
+ 
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/widgets.js"></script>
+    <script src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/jquery-1.js"></script>
+    <script src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/prettify.html"></script>
+    <script src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-transition.js"></script>
+    <script src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-alert.js"></script>
+    <script src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-modal.js"></script>
+    <script src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-dropdown.js"></script>
+    <script src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-scrollspy.js"></script>
+    <script src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-tab.js"></script>
+    <script src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-tooltip.js"></script>
+    <script src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-popover.js"></script>
+    <script src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-button.js"></script>
+    <script src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-collapse.js"></script>
+    <script src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-carousel.js"></script>
+    <script src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-typeahead.js"></script>
+    <script src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/application.html"></script>
+
+
+
+  
+ 
+</div><iframe scrolling="no" allowtransparency="true" src="electrodes%20|%20epilepsiae.uniklinik-freiburg.de_files/widget_iframe.html" title="Twitter settings iframe" style="display: none;" frameborder="0"></iframe><iframe id="rufous-sandbox" scrolling="no" allowtransparency="true" allowfullscreen="true" style="position: absolute; visibility: hidden; display: none; width: 0px; height: 0px; padding: 0px; border: medium none;" title="Twitter analytics iframe" frameborder="0"></iframe></body></html>

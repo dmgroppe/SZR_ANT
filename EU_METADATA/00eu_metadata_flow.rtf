@@ -87,7 +87,7 @@ This gets header information from\
 \f1\b0\fs22 \cf4 \CocoaLigature0 #/Users/davidgroppe/Dropbox/TWH_INFO/EU_METADATA/'\cf2 +sub+\cf4 '_headers/'
 \f0\fs20 \cf2 \cb3 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
-\cf2 \cb3 \
+\cf2 \
 And outputs files to:\
 \pard\tx543\pardeftab543\pardirnatural\partightenfactor0
 
@@ -112,6 +112,8 @@ Here\'92s an example:\
 \
 Note that grids get broken up into strips like GA, GB, GC, GD\
 \
+To collect html file with electrode info (which includes coordinates), go to the EU homepage (http://epilepsiae.uniklinik-freiburg.de/) and click on the # of electrodes. That gets you to a new webpage of elec info that I save in: \
+/Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/ELEC_HTML\
 \
 6. ***** Identify bad channels via interictal PSD\
 Run the following to estimate the power spectral density of all electrodes from non-ictal data:\
@@ -132,7 +134,9 @@ Figures are save to:\
 \
 Run plot_a_clinical_szrs_bipolar.m to plot just single szr with potentially longer pre and post onset time windows\
 \
-\
+\'97\'97\
+Misc Notes:\
+If you click on the \'93admission\'94 link on each EU patient\'92s homepage, you get a page of clinical info (e.g., PET results, seizure frequency, medications on each day of admission). Those data are stored in /Users/davidgroppe/PycharmProjects/SZR_ANT/EU_METADATA/CLINICAL_INFO_HTML\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
 \cf2 \
 }

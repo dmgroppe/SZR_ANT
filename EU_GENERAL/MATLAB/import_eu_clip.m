@@ -4,7 +4,7 @@ function [ieeg, time_dec, targ_raw_ieeg, targ_raw_ieeg_sec, targ_win_dec, szr_cl
 % Inputs:
 %  pat - Epilepsiae data object 
 %  chan1 - String of monopolar channel name
-%  chan2 - String of bipolar channel name
+%  chan2 - String of monopolar channel name
 %  targ_window - 
 %  szr_class - 0=no szr, 1=clinical szr, -1=subclinical szr
 %  Fs - sampling rate

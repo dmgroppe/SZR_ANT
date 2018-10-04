@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>digest | epilepsiae.uniklinik-freiburg.de</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Matthias Ihle">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap.css" rel="stylesheet">
+    <link href="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-responsive.css" rel="stylesheet">
+    <link href="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/docs.css" rel="stylesheet">
+<!--    <link href="/media/js/prettify.css" rel="stylesheet">-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="http://epilepsiae.uniklinik-freiburg.de/media/ico/favicon.ico">
+    <link rel="apple-touch-icon" href="http://epilepsiae.uniklinik-freiburg.de/media/ico/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="http://epilepsiae.uniklinik-freiburg.de/media/ico/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="http://epilepsiae.uniklinik-freiburg.de/media/ico/apple-touch-icon-114x114.png">
+
+<!--    <link href="/media/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="/media/google-code-prettify/prettify.js"></script>
+    <script type="text/javascript" src="/media/google-code-prettify/lang-sql.js"></script>-->
+
+
+
+  </head>
+
+  <body>
+
+    <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner" style="background:white;">
+            <div class="container">
+
+
+    <div class="btn-toolbar"> 
+ 
+        <div class="btn-group"> 
+            <a class="btn" href="http://epilepsiae.uniklinik-freiburg.de/"><i class="icon-home"></i> EpLinkToronto home</a> 
+            <a class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a> 
+            <ul class="dropdown-menu"> 
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/packages/"> my packages</a></li> 
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/packages/inv_30"> -&gt; package inv_30</a></li> 
+                <li class="divider"></li> 
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/datasets/"> my datasets</a></li> 
+                <li class="divider"></li> 
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/accounts/logout">logout</a></li>
+            </ul> 
+        </div> 
+<!--        <div class="btn-group"> 
+            <a class="btn" href="/packages/"> packages</a> 
+            <a class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a> 
+            <ul class="dropdown-menu">
+                <li><a href="/packages/inv_30">inv_30</a></li> 
+            </ul> 
+        </div> -->
+ 
+        
+        <div class="btn-group"> 
+            <a class="btn" href="http://epilepsiae.uniklinik-freiburg.de/patients/FR_384"><i class="icon-user"></i> patient FR_384</a> 
+            <a class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a> 
+            <ul class="dropdown-menu"> 
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/patients/FR_384/seizures">all seizures</a></li> 
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/patients/FR_384/seizurelist">text-file seizures</a></li> 
+            </ul> 
+        </div> 
+        
+        
+        <div class="btn-group"> 
+            <a class="btn" href="http://epilepsiae.uniklinik-freiburg.de/admissions/384102"><i class="icon-home"></i> adm_384102</a> 
+            <a class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a> 
+            <ul class="dropdown-menu">
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/admissions/384102/presurgical">pre-surgical evaluation</a></li>
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/admissions/384102/mri">MRI</a></li>
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/admissions/384102/electrodes">electrode setup</a></li>
+            </ul> 
+        </div> 
+        
+
+
+
+
+    
+    
+        
+        
+        <div class="btn-group"> 
+            <a class="btn" href="http://epilepsiae.uniklinik-freiburg.de/admissions/384102"><i class="icon-home"></i> adm_384102</a> 
+            <a class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a> 
+            <ul class="dropdown-menu">
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/admissions/384102/pre-sur">pre-surgical evaluation</a></li>
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/admissions/384102/mri">MRI</a></li>
+                <li><a href="http://epilepsiae.uniklinik-freiburg.de/electrodes/384102">electrode setup</a></li>
+            </ul> 
+        </div> 
+        
+        
+
+
+    </div> 
+
+            </div>
+        </div><!-- /navbar-inner -->
+    </div><!-- /navbar -->
+
+
+<div class="container">
+<!-- <ul class="breadcrumb">
+    <li><a href="#">Home</a> <span class="divider">/</span></li>
+</ul>--> 
+
+</div>
+
+
+
+    
+
+<style>
+.r { text-align:right; }
+.l { text-align:left; }
+</style>
+
+
+<div class="container">
+        <fieldset>
+            <legend>seizures</legend>
+            <table class="table table-condensed table-striped table-bordered">
+                <thead>
+                <tr><th>#</th><th>classif.</th><th>onset</th><th>offset</th><th>p.</th><th>vig.</th><th>origin</th><th>semiology</th></tr>
+                </thead>
+                <tbody>
+                
+                <tr>
+                    <td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400000102">1:</a></td>
+                    <td title="unclassified">UC</td>
+                    <td>eeg: 08.02.'05 23:49:51.442383
+                        
+                    </td>
+                    <td>eeg: 08.02.'05 23:50:38.500000
+                        
+                    </td>
+                    <td>b</td>
+                    <td>awake</td>
+                    <td>origin: IHB2,IHB3,IHB4<br>
+                        early: <br>
+                        late: GA1, GA2, GA3, GA4, GA5, GA6, GA7, GA8, 
+GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, GC1, GC2, GC3, GC4, GC5, GC6, 
+GC7, GC8, GD1, GD2, GD3, GD4, GD5, GD6, GD7, GD8, GE3, GE4, GE5, GE6, 
+GE7, GE8, GF5, GF6, GF7, GF8, GG4, GG5, GG6, GG7, GG8, GH1, GH2, GH3, 
+GH4, GH5, GH6, GH7, GH8, FLB1, FLB2, FLB3, FLB4, FLB5, FBB1, FBB2, FBB3,
+ FBB4, IHA1, IHA2, IHA3, IHA4, IHA5, IHA6, IHB1
+                    </td>
+                    <td></td>
+                    
+                </tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB2,IHB3,IHB4<br><strong title="">early prop:</strong> <strong title="GA1, GA2, GA3, GA4, GA5, GA6, GA7, GA8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, GC1, GC2, GC3, GC4, GC5, GC6, GC7, GC8, GD1, GD2, GD3, GD4, GD5, GD6, GD7, GD8, GE3, GE4, GE5, GE6, GE7, GE8, GF5, GF6, GF7, GF8, GG4, GG5, GG6, GG7, GG8, GH1, GH2, GH3, GH4, GH5, GH6, GH7, GH8, FLB1, FLB2, FLB3, FLB4, FLB5, FBB1, FBB2, FBB3, FBB4, IHA1, IHA2, IHA3, IHA4, IHA5, IHA6, IHB1">late prop:</strong></td>
+                </tr>-->
+                
+                <tr>
+                    <td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400100102">2:</a></td>
+                    <td title="complex partial">CP</td>
+                    <td>eeg: 09.02.'05 02:28:49.141602
+                        
+                    </td>
+                    <td>eeg: 09.02.'05 02:29:47.583008
+                        
+                    </td>
+                    <td>b</td>
+                    <td>unclear</td>
+                    <td>origin: IHB2,IHB3,IHB4<br>
+                        early: <br>
+                        late: IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, 
+GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, 
+FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, 
+FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, 
+GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, 
+GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, 
+GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, 
+FLB6, GD1, GD6, FLB1, FLB2, FLB3
+                    </td>
+                    <td></td>
+                    
+                </tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB2,IHB3,IHB4<br><strong title="">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr>
+                    <td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400200102">3:</a></td>
+                    <td title="complex partial">CP</td>
+                    <td>eeg: 09.02.'05 06:46:51.908203
+                        
+                    </td>
+                    <td>eeg: 09.02.'05 06:48:22.666992
+                        
+                    </td>
+                    <td>l</td>
+                    <td>unclear</td>
+                    <td>origin: IHB3,IHB4,GA1,GA2,GA3,GA4,GB2,GB3,GC2,GC3,GD3,GD4,GE4,GF5<br>
+                        early: GB1, GC1<br>
+                        late: IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, 
+GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, 
+FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, 
+FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, 
+GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, 
+GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, 
+GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, 
+FLB6, GD1, GD6, FLB1, FLB2, FLB3
+                    </td>
+                    <td></td>
+                    
+                </tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4,GA1,GA2,GA3,GA4,GB2,GB3,GC2,GC3,GD3,GD4,GE4,GF5<br><strong title="GB1, GC1">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr>
+                    <td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400001102">4:</a></td>
+                    <td title="complex partial">CP</td>
+                    <td>eeg: 10.02.'05 00:05:11.866211
+                        
+                    </td>
+                    <td>eeg: 10.02.'05 00:06:16.008789
+                        
+                    </td>
+                    <td>l</td>
+                    <td>sleep stage II</td>
+                    <td>origin: IHB3,IHB4<br>
+                        early: IHB2, GA1, GA2, GA3, GA4, GB1, GB2, GB3, 
+GB4, GC1, GC2, GC3, GC4, GD2, GD3, GD4, GD5, GF5, GF6, GG4, GG5, GG6<br>
+                        late: IHB4, IHB1, IHB3, IHB2, O2, O1, GE5, GE4, 
+GE7, GE6, GE1, GE3, GE2, GE8, FP2, GB1, GB2, GB3, GB4, GB5, GB6, GB7, 
+GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, PZ, GC8, GD5, FBA2, P3,
+ P4, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, FZ,
+ GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, C3, C4, CZ, IHA4, IHA5, IHA6, 
+IHA1, IHA2, IHA3, F3, F4, F7, F8, GF8, GF4, GF5, GF6, GF7, GF1, GF2, 
+GF3, FLA1, FP1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, P8, 
+T8, P7, FT10, T7, FT9, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, 
+GD4, EMG1, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3
+                    </td>
+                    <td></td>
+                    
+                </tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4<br><strong title="IHB2, GA1, GA2, GA3, GA4, GB1, GB2, GB3, GB4, GC1, GC2, GC3, GC4, GD2, GD3, GD4, GD5, GF5, GF6, GG4, GG5, GG6">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, O2, O1, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, FP2, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, PZ, GC8, GD5, FBA2, P3, P4, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, FZ, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, C3, C4, CZ, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, F3, F4, F7, F8, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, FP1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, P8, T8, P7, FT10, T7, FT9, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, EMG1, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr>
+                    <td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400101102">5:</a></td>
+                    <td title="simple partial">SP</td>
+                    <td>eeg: 10.02.'05 07:51:03.733398
+                        
+                    </td>
+                    <td>eeg: 10.02.'05 07:53:14.650391
+                        
+                    </td>
+                    <td>l</td>
+                    <td>sleep stage II</td>
+                    <td>origin: GA1,GA2,GA3,IHB3,IHB4<br>
+                        early: IHB2, GA4, GA5, GB1, GB2, GB3, GB4, GC1, 
+GC2, GC3, GC4, GD2, GD3, GD4, GD5, GE5, GF5, GH2, GH3, GH4, GH5, GH6, 
+GH7<br>
+                        late: IHB4, IHB1, IHB3, IHB2, O2, O1, GE5, GE4, 
+GE7, GE6, GE1, GE3, GE2, GE8, FP2, GB1, GB2, GB3, GB4, GB5, GB6, GB7, 
+GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, PZ, GC8, GD5, FBA2, P3,
+ P4, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, FZ,
+ GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, C3, C4, CZ, IHA4, IHA5, IHA6, 
+IHA1, IHA2, IHA3, F3, F4, F7, F8, GF8, GF4, GF5, GF6, GF7, GF1, GF2, 
+GF3, FLA1, FP1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, P8, 
+T8, P7, FT10, T7, FT9, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, 
+GD4, EMG1, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3
+                    </td>
+                    <td></td>
+                    
+                </tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> GA1,GA2,GA3,IHB3,IHB4<br><strong title="IHB2, GA4, GA5, GB1, GB2, GB3, GB4, GC1, GC2, GC3, GC4, GD2, GD3, GD4, GD5, GE5, GF5, GH2, GH3, GH4, GH5, GH6, GH7">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, O2, O1, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, FP2, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, PZ, GC8, GD5, FBA2, P3, P4, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, FZ, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, C3, C4, CZ, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, F3, F4, F7, F8, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, FP1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, P8, T8, P7, FT10, T7, FT9, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, EMG1, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr>
+                    <td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400201102">6:</a></td>
+                    <td title="complex partial">CP</td>
+                    <td>eeg: 10.02.'05 13:59:38.691406
+                        
+                    </td>
+                    <td>eeg: 10.02.'05 14:00:38.400391
+                        
+                    </td>
+                    <td>l</td>
+                    <td>awake</td>
+                    <td>origin: IHB3,IHB4,GD3,GB3<br>
+                        early: <br>
+                        late: IHB4, IHB1, IHB3, IHB2, O2, O1, GE5, GE4, 
+GE7, GE6, GE1, GE3, GE2, GE8, FP2, GB1, GB2, GB3, GB4, GB5, GB6, GB7, 
+GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, PZ, GC8, GD5, FBA2, P3,
+ P4, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, FZ,
+ GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, C3, C4, CZ, IHA4, IHA5, IHA6, 
+IHA1, IHA2, IHA3, F3, F4, F7, F8, GF8, GF4, GF5, GF6, GF7, GF1, GF2, 
+GF3, FLA1, FP1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, P8, 
+T8, P7, FT10, T7, FT9, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, 
+GD4, EMG1, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3
+                    </td>
+                    <td></td>
+                    
+                </tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4,GD3,GB3<br><strong title="">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, O2, O1, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, FP2, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, PZ, GC8, GD5, FBA2, P3, P4, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, FZ, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, C3, C4, CZ, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, F3, F4, F7, F8, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, FP1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, P8, T8, P7, FT10, T7, FT9, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, EMG1, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr>
+                    <td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400301102">7:</a></td>
+                    <td title="complex partial">CP</td>
+                    <td>eeg: 11.02.'05 00:07:32.375000
+                        
+                    </td>
+                    <td>eeg: 11.02.'05 00:09:03.216797
+                        
+                    </td>
+                    <td>l</td>
+                    <td>sleep stage II</td>
+                    <td>origin: IHB1,IHB2,IHB3,IHB4<br>
+                        early: <br>
+                        late: IHB4, IHB1, IHB3, IHB2, O2, O1, GE5, GE4, 
+GE7, GE6, GE1, GE3, GE2, GE8, FP2, GB1, GB2, GB3, GB4, GB5, GB6, GB7, 
+GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, PZ, GC8, GD5, FBA2, P3,
+ P4, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, FZ,
+ GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, C3, C4, CZ, IHA4, IHA5, IHA6, 
+IHA1, IHA2, IHA3, F3, F4, F7, F8, GF8, GF4, GF5, GF6, GF7, GF1, GF2, 
+GF3, FLA1, FP1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, P8, 
+T8, P7, FT10, T7, FT9, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, 
+GD4, EMG1, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3
+                    </td>
+                    <td></td>
+                    
+                </tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB1,IHB2,IHB3,IHB4<br><strong title="">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, O2, O1, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, FP2, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, PZ, GC8, GD5, FBA2, P3, P4, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, FZ, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, C3, C4, CZ, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, F3, F4, F7, F8, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, FP1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, P8, T8, P7, FT10, T7, FT9, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, EMG1, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr>
+                    <td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400401102">8:</a></td>
+                    <td title="complex partial">CP</td>
+                    <td>eeg: 11.02.'05 06:15:34.733398
+                        
+                    </td>
+                    <td>eeg: 11.02.'05 06:16:56.275391
+                        
+                    </td>
+                    <td>b</td>
+                    <td>sleep stage II</td>
+                    <td>origin: IHB2,IHB3,IHB4<br>
+                        early: GD3, GD4, GA1, GA2, GA3, GA4, GA5, GB1, GB2, GB3<br>
+                        late: IHB4, IHB1, IHB3, IHB2, O2, O1, GE5, GE4, 
+GE7, GE6, GE1, GE3, GE2, GE8, FP2, GB1, GB2, GB3, GB4, GB5, GB6, GB7, 
+GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, PZ, GC8, GD5, FBA2, P3,
+ P4, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, FZ,
+ GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, C3, C4, CZ, IHA4, IHA5, IHA6, 
+IHA1, IHA2, IHA3, F3, F4, F7, F8, GF8, GF4, GF5, GF6, GF7, GF1, GF2, 
+GF3, FLA1, FP1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, P8, 
+T8, P7, FT10, T7, FT9, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, 
+GD4, EMG1, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3
+                    </td>
+                    <td></td>
+                    
+                </tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB2,IHB3,IHB4<br><strong title="GD3, GD4, GA1, GA2, GA3, GA4, GA5, GB1, GB2, GB3">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, O2, O1, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, FP2, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, PZ, GC8, GD5, FBA2, P3, P4, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, FZ, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, C3, C4, CZ, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, F3, F4, F7, F8, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, FP1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, P8, T8, P7, FT10, T7, FT9, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, EMG1, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr>
+                    <td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400002102">9:</a></td>
+                    <td title="unclassified">UC</td>
+                    <td>eeg: 11.02.'05 23:20:30.949219
+                        
+                    </td>
+                    <td>eeg: 11.02.'05 23:20:55.000000
+                        
+                    </td>
+                    <td>b</td>
+                    <td>unclear</td>
+                    <td>origin: IHB3,IHB4<br>
+                        early: IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, 
+GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, 
+FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, 
+FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, 
+GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, 
+GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, 
+GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, 
+FLB6, GD1, GD6, FLB1, FLB2, FLB3<br>
+                        late: 
+                    </td>
+                    <td></td>
+                    
+                </tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4<br><strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">early prop:</strong> <strong title="">late prop:</strong></td>
+                </tr>-->
+                
+                <tr>
+                    <td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400102102">10:</a></td>
+                    <td title="unclassified">UC</td>
+                    <td>eeg: 12.02.'05 01:59:46.042969
+                        
+                    </td>
+                    <td>eeg: 12.02.'05 02:00:50.714844
+                        
+                    </td>
+                    <td>b</td>
+                    <td>unclear</td>
+                    <td>origin: IHB3,IHB4<br>
+                        early: IHB2, GA1, GA2, GA3, GB1, GB2, GB3, GD3, GD4, GD5<br>
+                        late: IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, 
+GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, 
+FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, 
+FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, 
+GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, 
+GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, 
+GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, 
+FLB6, GD1, GD6, FLB1, FLB2, FLB3
+                    </td>
+                    <td></td>
+                    
+                </tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4<br><strong title="IHB2, GA1, GA2, GA3, GB1, GB2, GB3, GD3, GD4, GD5">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr>
+                    <td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400202102">11:</a></td>
+                    <td title="unclassified">UC</td>
+                    <td>eeg: 12.02.'05 06:35:04.964844
+                        
+                    </td>
+                    <td>eeg: 12.02.'05 06:35:38.250000
+                        
+                    </td>
+                    <td>m</td>
+                    <td>unclear</td>
+                    <td>origin: IHB2,IHB3,IHB4<br>
+                        early: FBB3, FBB4<br>
+                        late: IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, 
+GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, 
+FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, 
+FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, 
+GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, 
+GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, 
+GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, 
+FLB6, GD1, GD6, FLB1, FLB2, FLB3
+                    </td>
+                    <td></td>
+                    
+                </tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB2,IHB3,IHB4<br><strong title="FBB3, FBB4">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr>
+                    <td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400302102">12:</a></td>
+                    <td title="complex partial">CP</td>
+                    <td>eeg: 13.02.'05 01:52:36.714844
+                        
+                    </td>
+                    <td>eeg: 13.02.'05 01:53:35.992188
+                        
+                    </td>
+                    <td>b</td>
+                    <td>unclear</td>
+                    <td>origin: IHB3,IHB4<br>
+                        early: IHB2, GA1, GA2, GA3, GB1, GB2, GB3, GC7, GD6, GD7, GE6, GE7, GE8<br>
+                        late: IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, 
+GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, 
+FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, 
+FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, 
+GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, 
+GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, 
+GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, 
+FLB6, GD1, GD6, FLB1, FLB2, FLB3
+                    </td>
+                    <td></td>
+                    
+                </tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4<br><strong title="IHB2, GA1, GA2, GA3, GB1, GB2, GB3, GC7, GD6, GD7, GE6, GE7, GE8">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr>
+                    <td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400402102">13:</a></td>
+                    <td title="unclassified">UC</td>
+                    <td>eeg: 13.02.'05 07:57:50.941406
+                        
+                    </td>
+                    <td>eeg: 13.02.'05 07:58:46.417969
+                        
+                    </td>
+                    <td>b</td>
+                    <td>unclear</td>
+                    <td>origin: IHB3,IHB4<br>
+                        early: IHB2, GA1, GA2, GA3, GA4, GB1, GB2, GB3, GC1, GC2, GD3, GD4, GE5<br>
+                        late: IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, 
+GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, 
+FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, 
+FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, 
+GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, 
+GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, 
+GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, 
+FLB6, GD1, GD6, FLB1, FLB2, FLB3
+                    </td>
+                    <td></td>
+                    
+                </tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4<br><strong title="IHB2, GA1, GA2, GA3, GA4, GB1, GB2, GB3, GC1, GC2, GD3, GD4, GE5">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr>
+                    <td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400502102">14:</a></td>
+                    <td title="unclassified">UC</td>
+                    <td>eeg: 14.02.'05 00:24:03.316406
+                        
+                    </td>
+                    <td>eeg: 14.02.'05 00:24:23.500000
+                        
+                    </td>
+                    <td>b</td>
+                    <td>unclear</td>
+                    <td>origin: IHB3,IHB4<br>
+                        early: FLB2, FLB3, FLB4, FLB5, FLB6, FBB3, FBB4,
+ IHB2, GA1, GA2, GA3, GA4, GA5, GA6, GA7, GA8, GB1, GB2, GB3, GB4, GB5, 
+GB6, GB7, GB8, GC1, GC2, GC3, GC4, GC5, GC6, GC7, GC8, GD1, GD2, GD3, 
+GD4, GD5, GD6, GD7, GD8, GE5, GE6, GE7, GE8, GF6, GF7, GF8, GG1, GG2, 
+GG3, GG4, GG5, GG6, GG7, GG8, GH1, GH2, GH3, GH4, GH5, GH6, GH7, GH8<br>
+                        late: IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, 
+GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, 
+FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, 
+FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, 
+GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, 
+GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, 
+GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, 
+FLB6, GD1, GD6, FLB1, FLB2, FLB3
+                    </td>
+                    <td></td>
+                    
+                </tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4<br><strong title="FLB2, FLB3, FLB4, FLB5, FLB6, FBB3, FBB4, IHB2, GA1, GA2, GA3, GA4, GA5, GA6, GA7, GA8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, GC1, GC2, GC3, GC4, GC5, GC6, GC7, GC8, GD1, GD2, GD3, GD4, GD5, GD6, GD7, GD8, GE5, GE6, GE7, GE8, GF6, GF7, GF8, GG1, GG2, GG3, GG4, GG5, GG6, GG7, GG8, GH1, GH2, GH3, GH4, GH5, GH6, GH7, GH8">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr>
+                    <td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400602102">15:</a></td>
+                    <td title="unclassified">UC</td>
+                    <td>eeg: 14.02.'05 05:44:01.957031
+                        
+                    </td>
+                    <td>eeg: 14.02.'05 05:45:02.234375
+                        
+                    </td>
+                    <td>l</td>
+                    <td>unclear</td>
+                    <td>origin: IHB3,IHB4<br>
+                        early: IHB2, GA1, GA2, GA3, GB1, GB2, GB3, GC6, GC7, GD6, GD7, GD8<br>
+                        late: IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, 
+GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, 
+FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, 
+FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, 
+GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, 
+GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, 
+GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, 
+FLB6, GD1, GD6, FLB1, FLB2, FLB3
+                    </td>
+                    <td></td>
+                    
+                </tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4<br><strong title="IHB2, GA1, GA2, GA3, GB1, GB2, GB3, GC6, GC7, GD6, GD7, GD8">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                </tbody>
+            </table>
+          </fieldset>
+
+    <div class="row">
+        <div class="span8">
+
+
+
+        <fieldset>
+            <legend>seizures</legend>
+            <table class="table table-condensed table-striped table-bordered">
+                <thead>
+                <tr><th>#</th><th>classif.</th><th>onset</th><th>pattern</th><th>vigilance</th><th>origin</th></tr>
+                </thead>
+                <tbody>
+                
+                <tr><td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400000102">1:</a></td><td title="unclassified">UC</td>
+                    <td>eeg: 08.02.'05 23:49:51.442383
+                        
+                    </td>
+                    <td>rhythmic beta waves</td>
+                    <td>awake</td><td>IHB2,IHB3,IHB4</td></tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB2,IHB3,IHB4<br><strong title="">early prop:</strong> <strong title="GA1, GA2, GA3, GA4, GA5, GA6, GA7, GA8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, GC1, GC2, GC3, GC4, GC5, GC6, GC7, GC8, GD1, GD2, GD3, GD4, GD5, GD6, GD7, GD8, GE3, GE4, GE5, GE6, GE7, GE8, GF5, GF6, GF7, GF8, GG4, GG5, GG6, GG7, GG8, GH1, GH2, GH3, GH4, GH5, GH6, GH7, GH8, FLB1, FLB2, FLB3, FLB4, FLB5, FBB1, FBB2, FBB3, FBB4, IHA1, IHA2, IHA3, IHA4, IHA5, IHA6, IHB1">late prop:</strong></td>
+                </tr>-->
+                
+                <tr><td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400100102">2:</a></td><td title="complex partial">CP</td>
+                    <td>eeg: 09.02.'05 02:28:49.141602
+                        
+                    </td>
+                    <td>rhythmic beta waves</td>
+                    <td>unclear</td><td>IHB2,IHB3,IHB4</td></tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB2,IHB3,IHB4<br><strong title="">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr><td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400200102">3:</a></td><td title="complex partial">CP</td>
+                    <td>eeg: 09.02.'05 06:46:51.908203
+                        
+                    </td>
+                    <td>low amplitude fast activity (lafa)</td>
+                    <td>unclear</td><td>IHB3,IHB4,GA1,GA2,GA3,GA4,GB2,GB3,GC2,GC3,GD3,GD4,GE4,GF5</td></tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4,GA1,GA2,GA3,GA4,GB2,GB3,GC2,GC3,GD3,GD4,GE4,GF5<br><strong title="GB1, GC1">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr><td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400001102">4:</a></td><td title="complex partial">CP</td>
+                    <td>eeg: 10.02.'05 00:05:11.866211
+                        
+                    </td>
+                    <td>low amplitude fast activity (lafa)</td>
+                    <td>sleep stage II</td><td>IHB3,IHB4</td></tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4<br><strong title="IHB2, GA1, GA2, GA3, GA4, GB1, GB2, GB3, GB4, GC1, GC2, GC3, GC4, GD2, GD3, GD4, GD5, GF5, GF6, GG4, GG5, GG6">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, O2, O1, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, FP2, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, PZ, GC8, GD5, FBA2, P3, P4, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, FZ, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, C3, C4, CZ, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, F3, F4, F7, F8, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, FP1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, P8, T8, P7, FT10, T7, FT9, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, EMG1, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr><td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400101102">5:</a></td><td title="simple partial">SP</td>
+                    <td>eeg: 10.02.'05 07:51:03.733398
+                        
+                    </td>
+                    <td>low amplitude fast activity (lafa)</td>
+                    <td>sleep stage II</td><td>GA1,GA2,GA3,IHB3,IHB4</td></tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> GA1,GA2,GA3,IHB3,IHB4<br><strong title="IHB2, GA4, GA5, GB1, GB2, GB3, GB4, GC1, GC2, GC3, GC4, GD2, GD3, GD4, GD5, GE5, GF5, GH2, GH3, GH4, GH5, GH6, GH7">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, O2, O1, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, FP2, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, PZ, GC8, GD5, FBA2, P3, P4, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, FZ, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, C3, C4, CZ, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, F3, F4, F7, F8, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, FP1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, P8, T8, P7, FT10, T7, FT9, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, EMG1, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr><td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400201102">6:</a></td><td title="complex partial">CP</td>
+                    <td>eeg: 10.02.'05 13:59:38.691406
+                        
+                    </td>
+                    <td>low amplitude fast activity (lafa)</td>
+                    <td>awake</td><td>IHB3,IHB4,GD3,GB3</td></tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4,GD3,GB3<br><strong title="">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, O2, O1, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, FP2, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, PZ, GC8, GD5, FBA2, P3, P4, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, FZ, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, C3, C4, CZ, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, F3, F4, F7, F8, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, FP1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, P8, T8, P7, FT10, T7, FT9, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, EMG1, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr><td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400301102">7:</a></td><td title="complex partial">CP</td>
+                    <td>eeg: 11.02.'05 00:07:32.375000
+                        
+                    </td>
+                    <td>low amplitude fast activity (lafa)</td>
+                    <td>sleep stage II</td><td>IHB1,IHB2,IHB3,IHB4</td></tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB1,IHB2,IHB3,IHB4<br><strong title="">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, O2, O1, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, FP2, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, PZ, GC8, GD5, FBA2, P3, P4, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, FZ, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, C3, C4, CZ, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, F3, F4, F7, F8, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, FP1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, P8, T8, P7, FT10, T7, FT9, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, EMG1, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr><td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400401102">8:</a></td><td title="complex partial">CP</td>
+                    <td>eeg: 11.02.'05 06:15:34.733398
+                        
+                    </td>
+                    <td>rhythmic beta waves</td>
+                    <td>sleep stage II</td><td>IHB2,IHB3,IHB4</td></tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB2,IHB3,IHB4<br><strong title="GD3, GD4, GA1, GA2, GA3, GA4, GA5, GB1, GB2, GB3">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, O2, O1, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, FP2, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, PZ, GC8, GD5, FBA2, P3, P4, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, FZ, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, C3, C4, CZ, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, F3, F4, F7, F8, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, FP1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, P8, T8, P7, FT10, T7, FT9, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, EMG1, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr><td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400002102">9:</a></td><td title="unclassified">UC</td>
+                    <td>eeg: 11.02.'05 23:20:30.949219
+                        
+                    </td>
+                    <td>rhythmic beta waves</td>
+                    <td>unclear</td><td>IHB3,IHB4</td></tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4<br><strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">early prop:</strong> <strong title="">late prop:</strong></td>
+                </tr>-->
+                
+                <tr><td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400102102">10:</a></td><td title="unclassified">UC</td>
+                    <td>eeg: 12.02.'05 01:59:46.042969
+                        
+                    </td>
+                    <td>rhythmic beta waves</td>
+                    <td>unclear</td><td>IHB3,IHB4</td></tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4<br><strong title="IHB2, GA1, GA2, GA3, GB1, GB2, GB3, GD3, GD4, GD5">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr><td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400202102">11:</a></td><td title="unclassified">UC</td>
+                    <td>eeg: 12.02.'05 06:35:04.964844
+                        
+                    </td>
+                    <td>amplitude depression</td>
+                    <td>unclear</td><td>IHB2,IHB3,IHB4</td></tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB2,IHB3,IHB4<br><strong title="FBB3, FBB4">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr><td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400302102">12:</a></td><td title="complex partial">CP</td>
+                    <td>eeg: 13.02.'05 01:52:36.714844
+                        
+                    </td>
+                    <td>rhythmic beta waves</td>
+                    <td>unclear</td><td>IHB3,IHB4</td></tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4<br><strong title="IHB2, GA1, GA2, GA3, GB1, GB2, GB3, GC7, GD6, GD7, GE6, GE7, GE8">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr><td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400402102">13:</a></td><td title="unclassified">UC</td>
+                    <td>eeg: 13.02.'05 07:57:50.941406
+                        
+                    </td>
+                    <td>rhythmic beta waves</td>
+                    <td>unclear</td><td>IHB3,IHB4</td></tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4<br><strong title="IHB2, GA1, GA2, GA3, GA4, GB1, GB2, GB3, GC1, GC2, GD3, GD4, GE5">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr><td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400502102">14:</a></td><td title="unclassified">UC</td>
+                    <td>eeg: 14.02.'05 00:24:03.316406
+                        
+                    </td>
+                    <td>rhythmic beta waves</td>
+                    <td>unclear</td><td>IHB3,IHB4</td></tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4<br><strong title="FLB2, FLB3, FLB4, FLB5, FLB6, FBB3, FBB4, IHB2, GA1, GA2, GA3, GA4, GA5, GA6, GA7, GA8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, GC1, GC2, GC3, GC4, GC5, GC6, GC7, GC8, GD1, GD2, GD3, GD4, GD5, GD6, GD7, GD8, GE5, GE6, GE7, GE8, GF6, GF7, GF8, GG1, GG2, GG3, GG4, GG5, GG6, GG7, GG8, GH1, GH2, GH3, GH4, GH5, GH6, GH7, GH8">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                <tr><td><a href="http://epilepsiae.uniklinik-freiburg.de/seizures/38400602102">15:</a></td><td title="unclassified">UC</td>
+                    <td>eeg: 14.02.'05 05:44:01.957031
+                        
+                    </td>
+                    <td>low amplitude fast activity (lafa)</td>
+                    <td>unclear</td><td>IHB3,IHB4</td></tr>
+                    <!--<tr><td></td><td colspan='5'><strong>origin:</strong> IHB3,IHB4<br><strong title="IHB2, GA1, GA2, GA3, GB1, GB2, GB3, GC6, GC7, GD6, GD7, GD8">early prop:</strong> <strong title="IHB4, IHB1, IHB3, IHB2, GE5, GE4, GE7, GE6, GE1, GE3, GE2, GE8, GB1, GB2, GB3, GB4, GB5, GB6, GB7, GB8, FLA5, FLA4, GC1, FBA4, GC7, GC6, FLA3, GC4, GC8, GD5, FBA2, FBB2, FBB3, FBB1, FBB4, GH6, GH7, GH4, GH5, GH2, GH3, GH1, GH8, GA8, GA1, GA3, GA2, GA5, GA4, GA7, GA6, IHA4, IHA5, IHA6, IHA1, IHA2, IHA3, GF8, GF4, GF5, GF6, GF7, GF1, GF2, GF3, FLA1, GG8, GG7, GG6, GG5, GG4, GG3, GG2, GG1, GC3, GC2, GD2, FLA6, GD3, FBA3, FBA1, GC5, FLA2, GD7, GD8, GD4, FLB4, FLB5, FLB6, GD1, GD6, FLB1, FLB2, FLB3">late prop:</strong></td>
+                </tr>-->
+                
+                </tbody>
+            </table>
+          </fieldset>
+
+        </div>
+        <div class="span4">
+
+
+            <h3>Subclinical Seizures</h3>
+            <table class="table table-striped table-condensed table-bordered">
+                
+                <tbody>
+                
+                </tbody>
+                <tfoot><tr><td>total:</td><th colspan="2">0 subclinical seizure(s)</th></tr></tfoot>
+            </table>
+
+        </div>
+        <div class="span4">
+
+            <h3>Interictal Events</h3>
+
+            <table class="table table-striped table-condensed table-bordered">
+                
+                <thead>
+                <tr><th>type</th><th>pattern</th><!--<th>peak</th>--><th>electrode</th></tr>
+                </thead>
+                
+                <tbody>
+                
+                <tr>
+                    <td>1</td>
+                    <td>sharp waves</td>
+<!--                    <td>08 Feb &#39;05 11:51:55</td>-->
+                    <td title="FBA3, IHA1, GB6, GB7, GB8">FLA4</td>
+                </tr>
+                
+                <tr>
+                    <td>2</td>
+                    <td>sharp waves</td>
+<!--                    <td>08 Feb &#39;05 11:59:56</td>-->
+                    <td title="GF3">FBA3</td>
+                </tr>
+                
+                <tr>
+                    <td>3</td>
+                    <td>repetitive sharp/spike waves</td>
+<!--                    <td>08 Feb &#39;05 13:56:12</td>-->
+                    <td title="GC5, GB5, GB6, GB7, GB8">GC6</td>
+                </tr>
+                
+                <tr>
+                    <td>4</td>
+                    <td>lafa</td>
+<!--                    <td>08 Feb &#39;05 22:45:04</td>-->
+                    <td title="GD4">GD3</td>
+                </tr>
+                
+                <tr>
+                    <td>5</td>
+                    <td>lafa</td>
+<!--                    <td>11 Feb &#39;05 05:19:55</td>-->
+                    <td title="">FBB3</td>
+                </tr>
+                
+                <tr>
+                    <td>6</td>
+                    <td>sharp waves</td>
+<!--                    <td>11 Feb &#39;05 05:24:51</td>-->
+                    <td title="">FLA2</td>
+                </tr>
+                
+                <tr>
+                    <td>7</td>
+                    <td>sharp waves</td>
+<!--                    <td>11 Feb &#39;05 05:24:53</td>-->
+                    <td title="FBB3">FBB1</td>
+                </tr>
+                
+                </tbody>
+                <tfoot><tr><td>total:</td><th colspan="2">7 interictal event(s)</th></tr></tfoot>
+            </table>
+
+        </div>
+        </div>
+
+
+        
+    </div>
+
+
+
+ 
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/widgets.js"></script>
+    <script src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/jquery-1.js"></script>
+    <script src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/prettify.html"></script>
+    <script src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-transition.js"></script>
+    <script src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-alert.js"></script>
+    <script src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-modal.js"></script>
+    <script src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-dropdown.js"></script>
+    <script src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-scrollspy.js"></script>
+    <script src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-tab.js"></script>
+    <script src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-tooltip.js"></script>
+    <script src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-popover.js"></script>
+    <script src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-button.js"></script>
+    <script src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-collapse.js"></script>
+    <script src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-carousel.js"></script>
+    <script src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/bootstrap-typeahead.js"></script>
+    <script src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/application.html"></script>
+
+
+
+  
+ 
+<iframe scrolling="no" allowtransparency="true" src="digest%20|%20epilepsiae.uniklinik-freiburg.de_files/widget_iframe.html" title="Twitter settings iframe" style="display: none;" frameborder="0"></iframe><iframe id="rufous-sandbox" scrolling="no" allowtransparency="true" allowfullscreen="true" style="position: absolute; visibility: hidden; display: none; width: 0px; height: 0px; padding: 0px; border: medium none;" title="Twitter analytics iframe" frameborder="0"></iframe></body></html>

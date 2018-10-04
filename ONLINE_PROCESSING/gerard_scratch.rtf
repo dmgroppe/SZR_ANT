@@ -1,0 +1,112 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
+{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fnil\fcharset0 Monaco;\f2\fmodern\fcharset0 Courier;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue0;\red255\green255\blue255;
+\red160\green32\blue240;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\csgenericrgb\c0\c0\c0;\csgenericrgb\c100000\c100000\c100000\c85000;
+\csgenericrgb\c62745\c12549\c94118;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\sl280\partightenfactor0
+
+\f0\fs24 \cf2 \expnd0\expndtw0\kerning0
+PICKUP\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \kerning1\expnd0\expndtw0 \CocoaLigature0 /Users/davidgroppe/PycharmProjects/TWH_NURIP_Clinical_Trial/matlab/NURIP/Feature_Extraction/online/EDMSE/\
+patient_general_online.m
+\f0\fs24 \cf2 \cb1 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf2 \
+Need to choose output filter edm values\
+\
+\
+\'97\
+SVM CODE: /Users/davidgroppe/PycharmProjects/TWH_NURIP_Clinical_Trial/matlab/NURIP/SVM/SVM_EXAMPLE\
+\
+ONLINE CODE\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \kerning1\expnd0\expndtw0 \CocoaLigature0 /Users/davidgroppe/PycharmProjects/TWH_NURIP_Clinical_Trial/matlab/Main/
+\f0\fs24 \cf2 \cb1 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf2 edit 
+\f1\fs20 \cf3 \cb4 \kerning1\expnd0\expndtw0 \CocoaLigature0 TWH247_ProcessEURecords_DG.m
+\f0\fs24 \cf2 \cb1 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\
+@=done\
+\
+The latest FE code is here:\
+TWH_NURIP_Clinical_Trial/matlab/NURIP/Feature_Extraction/online/EDMSE/run_EDMSE_online.m\
+TWH_NURIP_Clinical_Trial/matlab/NURIP/Feature_Extraction/online/PLV/run_PLV_online_multisamp.m\
+\
+\pard\pardeftab720\sl280\partightenfactor0
+
+\b \cf2 The SVM model processing code is here:
+\b0 \
+TWH_NURIP_Clinical_Trial/matlab/NURIP/SVM/svm.m <-@ I replaced this with svm_rbf.m\
+My final model is: seSvmDsamp500TestFullFinal_2\
+\
+
+\b main OFFLINE function:
+\b0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \kerning1\expnd0\expndtw0 \CocoaLigature0 /Users/davidgroppe/PycharmProjects/TWH_NURIP_Clinical_Trial/matlab/Main/TWH247_ProcessEURecords.m
+\f0\fs24 \cf2 \cb1 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf2 (main.m)\
+\
+matrix of 512 samples (256 Hz; 40k Hz; 1 channel at a time)\
+\
+\pard\pardeftab720\sl280\partightenfactor0
+
+\b \cf2 ONLINE CODE:
+\b0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \kerning1\expnd0\expndtw0 \CocoaLigature0 /Users/davidgroppe/GIT/TWH_Neuralynx_Shared/Gerard/neuralynx_test
+\f0\fs24 \cf2 \cb1 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf2 start_nlx.m<-is the online version, run_CNS  \
+\
+start_nlx.m calls run_CNS.m  [
+\f2\fs20 \cf0 \kerning1\expnd0\expndtw0 run_CNS(eeg_data\'92)];
+\fs24 \
+
+\f0 \cf2 \expnd0\expndtw0\kerning0
+run_CNS.m calls 
+\f2\fs20 \cf0 \kerning1\expnd0\expndtw0 EDMSE_online_multisamp.m
+\fs24 \
+
+\f0 \cf2 \expnd0\expndtw0\kerning0
+\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20 \cf0 \kerning1\expnd0\expndtw0 [B, A]=butter(4,flt(2)*2/srate,\cf5 'low'\cf0 );
+\fs24 \
+
+\fs20 data(chan,:)=filter(B,A,squeeze(data(chan,:)));\
+\
+The filter is a "Direct Form II Transposed"\
+    implementation of the standard difference equation:\
+ \
+    a(1)*y(n) = b(1)*x(n) + b(2)*x(n-1) + ... + b(nb+1)*x(n-nb)\
+                          - a(2)*y(n-1) - ... - a(na+1)*y(n-na)\
+ \
+    If a(1) is not equal to 1, filter normalizes the filter\
+    coefficients by a(1). 
+\fs24 \
+\pard\pardeftab720\sl280\partightenfactor0
+
+\f0 \cf2 \expnd0\expndtw0\kerning0
+\
+\
+\
+}
