@@ -7,7 +7,7 @@ f=dir(stem);
 n_files=length(f);
 fprintf('%d total files found:\n',n_files);
 if n_files==0
-   error('Run compute_acc_with_refractoryh_edm.py dufus!'); 
+   error('Run compute_acc_with_refractory_edm.py dufus!'); 
 end
 for ff=1:n_files
    disp(f(ff).name); 

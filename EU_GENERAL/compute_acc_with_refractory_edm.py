@@ -107,57 +107,58 @@ for edm_wt in range(max_edm_wt+1):
         #print('Analyzing file %s' % yhat_fname)
         # yhat_npz = np.load(os.path.join(yhat_path, yhat_fname))
         yhat_fname=root_fname+'_yhat.mat'
-        print('Analyzing file %s' % yhat_fname)
-        yhat_npz = sio.loadmat(os.path.join(yhat_path, yhat_fname))
-        if np.isnan(yhat_npz['max_yhat'][0,0])==False:
-            # File is long enough to have EDM features and classifier outputs
-            #??yhat_edm=np.zeros(yhat_npz['yhat_soz_chans'].shape)
-            #n_wind=yhat_npz['max_yhat'].shape[1]
-            n_chan, n_wind=yhat_npz['yhat_soz_chans'].shape
-            yhat_edm=np.nan_to_num(yhat_npz['yhat_soz_chans'])
-            yhat_max=np.zeros(n_wind)
-            for tloop in range(1,n_wind):
-                for cloop in range(n_chan):
-                    yhat_edm[cloop,tloop]=yhat_edm[cloop,tloop]*now_wt+past_wt*yhat_edm[cloop,tloop-1]
-                yhat_max[tloop]=np.max(yhat_edm[:,tloop])
+        if os.path.isfile(os.path.join(yhat_path, yhat_fname)):
+            print('Analyzing file %s' % yhat_fname)
+            yhat_npz = sio.loadmat(os.path.join(yhat_path, yhat_fname))
+            if np.isnan(yhat_npz['max_yhat'][0,0])==False:
+                # File is long enough to have EDM features and classifier outputs
+                #??yhat_edm=np.zeros(yhat_npz['yhat_soz_chans'].shape)
+                #n_wind=yhat_npz['max_yhat'].shape[1]
+                n_chan, n_wind=yhat_npz['yhat_soz_chans'].shape
+                yhat_edm=np.nan_to_num(yhat_npz['yhat_soz_chans'])
+                yhat_max=np.zeros(n_wind)
+                for tloop in range(1,n_wind):
+                    for cloop in range(n_chan):
+                        yhat_edm[cloop,tloop]=yhat_edm[cloop,tloop]*now_wt+past_wt*yhat_edm[cloop,tloop-1]
+                    yhat_max[tloop]=np.max(yhat_edm[:,tloop])
 
-            # Compute # of seconds in file
-            file_dur_hr = n_wind / (Fs * 3600)
-            total_hrs += file_dur_hr
-            #print('total_hrs=%f' % total_hrs)
+                # Compute # of seconds in file
+                file_dur_hr = n_wind / (Fs * 3600)
+                total_hrs += file_dur_hr
+                #print('total_hrs=%f' % total_hrs)
 
-            # Load clinician labels for this clip
-            y_fname = str(sub) + '_y_' + root_fname + '.mat'
-            label_f = os.path.join(label_path, y_fname)
-            #print('Loading file %s' % y_fname)
-            label_mat = sio.loadmat(label_f)
+                # Load clinician labels for this clip
+                y_fname = str(sub) + '_y_' + root_fname + '.mat'
+                label_f = os.path.join(label_path, y_fname)
+                #print('Loading file %s' % y_fname)
+                label_mat = sio.loadmat(label_f)
 
-            time_ptr=on_off_df['StartSec'].iloc[hdr_ct]+edge_pts/Fs # First feature time point
-            # if first_hdr_file==True:
-            #     time_ptr=0 #set to start of first file
-            #     first_hdr_file==False
+                time_ptr=on_off_df['StartSec'].iloc[hdr_ct]+edge_pts/Fs # First feature time point
+                # if first_hdr_file==True:
+                #     time_ptr=0 #set to start of first file
+                #     first_hdr_file==False
 
-            # Compute hypothetical stimulations with refractory periods
-            stim = np.zeros(n_wind)
-            #  for wind_ct, yhat in enumerate(yhat_npz['max_yhat'][0,:]):
-            for wind_ct, yhat in enumerate(yhat_max):
-                if wind_ct>0:
-                    time_ptr+=time_step
-                if yhat > stim_thresh and ((time_ptr-last_stim) > refract_sec):
-                    # Hypotheticaly stimulate
-                    stim[wind_ct] = 1
-                    stim_sec.append(time_ptr)
-                    last_stim = time_ptr
+                # Compute hypothetical stimulations with refractory periods
+                stim = np.zeros(n_wind)
+                #  for wind_ct, yhat in enumerate(yhat_npz['max_yhat'][0,:]):
+                for wind_ct, yhat in enumerate(yhat_max):
+                    if wind_ct>0:
+                        time_ptr+=time_step
+                    if yhat > stim_thresh and ((time_ptr-last_stim) > refract_sec):
+                        # Hypotheticaly stimulate
+                        stim[wind_ct] = 1
+                        stim_sec.append(time_ptr)
+                        last_stim = time_ptr
 
 
-            # Compute false positives
-            se_szr_class = np.squeeze(label_mat['se_szr_class'])
-            # print('Min se_szr_class: %f' % np.min(se_szr_class))
-            # Note, this ignores subclinical szrs (se_szr_class=-1) and clinical szrs (se_szr_class=1)
-            nonszr_bool = se_szr_class == 0 # TODO extend this 5 sec before clinician onset,
-            # should probably make a separate matlab variable
-            #print('false+ %d' % np.sum(stim[nonszr_bool]))
-            n_false_pos += np.sum(stim[nonszr_bool])
+                # Compute false positives
+                se_szr_class = np.squeeze(label_mat['se_szr_class'])
+                # print('Min se_szr_class: %f' % np.min(se_szr_class))
+                # Note, this ignores subclinical szrs (se_szr_class=-1) and clinical szrs (se_szr_class=1)
+                nonszr_bool = se_szr_class == 0 # TODO extend this 5 sec before clinician onset,
+                # should probably make a separate matlab variable
+                #print('false+ %d' % np.sum(stim[nonszr_bool]))
+                n_false_pos += np.sum(stim[nonszr_bool])
 
         if False:
             # Plot szr class and hypothetical stimulations for this clip
@@ -179,6 +180,7 @@ for edm_wt in range(max_edm_wt+1):
                                    'szr_on_off_FR_' + str(sub) + '.pkl')
     szr_df = pickle.load(open(szr_times_fname, 'rb'))
     n_szr = szr_df.shape[0]
+
 
     # np.savez('sbox.npz',stim_sec=stim_sec)
     # Loop over szrs and:

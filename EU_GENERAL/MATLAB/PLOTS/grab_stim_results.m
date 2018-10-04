@@ -1,6 +1,6 @@
-use_subs=[620, 565, 970, 1096, 1077, 264, 273, 862, 1125];
+use_subs=[253, 590, 620, 565, 970, 1096, 1077, 264, 273, 862, 1125];
 %yhat error: 590, 253
-%use_subs=[565, 620];
+%use_subs=[590, 253];
 %use_subs=[620, 565, 273, 862, 1125];
 %redo 1096
 n_sub=length(use_subs);
@@ -66,8 +66,10 @@ plot(edm_wts,fp_per_day,'-o'); hold on;
 plot(edm_wts,mean(fp_per_day,2),'r-o','linewidth',2);
 % set(gca,'yscale','log');
 xlabel('yhat EDM Weight');
-axis([edm_wts(1) edm_wts(end) 400 1200]);
-plot([edm_wts(1), edm_wts(end)],[1, 1]*600,'k--');
+axis([edm_wts(1) edm_wts(end) 400 3000]);
+plot([edm_wts(1), edm_wts(end)],[1, 1]*600,'k--'); % NeuroPace lower bound
+plot([edm_wts(1), edm_wts(end)],[1, 1]*2000,'k--'); % NeuroPace lower bound
+plot([edm_wts(1), edm_wts(end)],[1, 1]*2880,'m--'); % Max rate (stim every 30 sec)
 ylabel({'MEAN False','Positives/Day'});
 legend(sub_str);
 
